@@ -1,6 +1,9 @@
 import csv
 import pandas as pd
 from isbnlib import isbn_from_words, desc
+import os
+os.chdir('/Users/dannykim/Documents/Pycharm Projects/ZMD_SWE_Geffen/tagFinder/')
+#print("Current working directory:", os.getcwd())
 
 #converts csv into lists
 #zmdSorted = list of books and tags
@@ -188,9 +191,14 @@ def splitPhrases(phrases):
             # Add new sublist for the phrase
             result.append([part.strip() for part in split_parts])
     return result
-
+#==============================
 #formatTags()
-makeBookList()
-getBooksTag(BOOKLIST)
+#makeBookList()
+#getBooksTag(BOOKLIST)
+#==============================
 
-
+testIsbn = isbn_from_words("the giving tree")
+print("here")
+print(testIsbn)
+#print(desc(testIsbn))
+print("done")
