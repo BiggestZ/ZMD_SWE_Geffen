@@ -7,32 +7,32 @@ os.chdir('/Users/dannykim/Documents/Pycharm Projects/ZMD_SWE_Geffen/tagFinder/')
 
 #converts csv into lists
 #zmdSorted = list of books and tags
-with open('zmdSorted.csv', 'r') as csvfile:
-    csv_reader = csv.reader(csvfile)
-    rows = []
-    for row in csv_reader:
-        rows.append(row)
-#bookTerms = desired tags
-with open('bookTerms.csv', 'r') as csvfile:
-    csv_reader = csv.reader(csvfile)
-    bank = []
-    for row in csv_reader:
-        bank.append(row)
+# with open('zmdSorted.csv', 'r') as csvfile:
+#     csv_reader = csv.reader(csvfile)
+#     rows = []
+#     for row in csv_reader:
+#         rows.append(row)
+# #bookTerms = desired tags
+# with open('bookTerms.csv', 'r') as csvfile:
+#     csv_reader = csv.reader(csvfile)
+#     bank = []
+#     for row in csv_reader:
+#         bank.append(row)
 
-#================================================
-#cleans up data (remove whitespace and convert to lower case)
-tempBank = []
-for i in bank:
-    if i[0][len(i)-2] == " ":
+# #================================================
+# #cleans up data (remove whitespace and convert to lower case)
+# tempBank = []
+# for i in bank:
+#     if i[0][len(i)-2] == " ":
 
-        tempword = i[0][:-1]
-        tempBank.append(tempword.lower())
+#         tempword = i[0][:-1]
+#         tempBank.append(tempword.lower())
 
-    else:
+#     else:
 
-        tempBank.append(i[0].lower())
-tempBank.pop(0)
-bank = tempBank
+#         tempBank.append(i[0].lower())
+# tempBank.pop(0)
+# bank = tempBank
 #======================================
 #intakes data (one "row" at a time) and returns a list with desired tags (Tags) and undesired tags (nullTags)
 # original code 
@@ -123,6 +123,8 @@ firstColumnEmptyBookList = [["Title", "Author", "Tags", "Null-Tags","Isbn"]]
 #         writer.writerow(x)
 
 #=================
+#input: FormatedTags.csv 
+#output: [['actions and consequences'], ['activism'], ['adaptation'], ['advocacy'], ..., ]
 def formatTags():
     print("Start formatTags")
     tempList = []
@@ -141,12 +143,14 @@ def formatTags():
             partialRow.pop()
             tempList.append(partialRow)
    
-   # print(tempList)
+    #print(tempList)
         
     print("End formatTags")
     return tempList
 #=================
-#
+#input: none (uses global BOOKLIST )
+#output: changes BOOKLIST
+# [1123456789101, '7 ate 9: the untold story', 'Tara Lazar', ' ', ' ', 'culture:similarities, culture:differences', nan], ... ,]
 BOOKLIST = []
 def makeBookList():
     print("Start makeBookList")
@@ -157,17 +161,40 @@ def makeBookList():
         if pd.isna(row[1]) == False:
             tempRow = row
         BOOKLIST.append(tempRow)
+
     #print(BOOKLIST)
+
     print("End makeBookList") 
 #======================================
+#input: expects BOOKLIST
+#output: alters BOOKLIST[5]
+#gets the book tags and isbns into BOOKLIST 
 def getBooksTag(bookList):
-    print("Start getBooksTag")
+    # print(BOOKLIST)
+    # print("Start getBooksTag")
+    # print("\n")
+    # print(bookList)
+    # print("\n")
     for row in bookList:
+        # print("\n")
+        # print(row)
+        # print("\n")
         tempRow = row[5]
+        #print(tempRow)
         tempRow = tempRow.split(',')
-        row = splitPhrases(tempRow)
+        phrase = splitPhrases(tempRow)
+        row[4] = phrase
+        row[0] = isbn_from_words(row[1])
+        row[3] = desc(row[0])
+        #print(phrase)
+        #===================
+        #formatting 
+        row.pop()
+        row.pop()
+        #===================
+    print("\n")
+    #print(BOOKLIST)
     
-    print(BOOKLIST)
 
         
         
@@ -192,13 +219,24 @@ def splitPhrases(phrases):
             result.append([part.strip() for part in split_parts])
     return result
 #==============================
-#formatTags()
-#makeBookList()
-#getBooksTag(BOOKLIST)
+def listToCSV(list, filename="test3.csv"):
+    # Create a DataFrame from the list
+    df = pd.DataFrame(list)
+    
+    # Save DataFrame to CSV
+    df.to_csv(filename, index=False, header = ["ISBN","Title","Author","Description","Tags"])
+    print("listToCSV done")
+#==============================
+formatTags()
+makeBookList()
+getBooksTag(BOOKLIST)
+listToCSV(BOOKLIST)
 #==============================
 
-testIsbn = isbn_from_words("the giving tree")
-print("here")
-print(testIsbn)
-#print(desc(testIsbn))
+# testIsbn = isbn_from_words("the giving tree")
+# print("here")
+# print(testIsbn)
+# #print(desc(testIsbn))
 print("done")
+print("\n")
+#print(BOOKLIST)
