@@ -3,9 +3,9 @@ CREATE DATABASE Geffen_db;
 USE Geffen_db;
 CREATE TABLE Books (
     ISBN VARCHAR(13) PRIMARY KEY,
-    Title VARCHAR(255),
-    Author VARCHAR(255),
-    PublicationYear INT
+    Title VARCHAR(500),
+    Author VARCHAR(255)
+    -- PublicationYear INT
 );
 
 CREATE TABLE Topics (

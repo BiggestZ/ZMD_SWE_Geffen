@@ -1,4 +1,4 @@
-# Where I will use python to interact with the database
+# Where I will use python to interact with the database: Add in topics and subtopics
 
 from numpy import NAN
 import pandas as pd
@@ -16,11 +16,9 @@ except:
 
 cursor = connection.cursor() 
 
-print(os.getcwd())
-
 # Read the CSV file using pandas
 with open('Database/Python/test.csv') as file:
-    data = pd.read_csv(file)
+    data = pd.read_csv(file, na_values = [""])
     next(data.iterrows()) # Skip the first row
 # Insert the main topic if it's not already in the table
 for index, row in data.iterrows():
