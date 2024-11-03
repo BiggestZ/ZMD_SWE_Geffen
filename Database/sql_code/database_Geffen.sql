@@ -1,4 +1,5 @@
 -- Where the database is created and the tables are created
+-- This is the backup incase someone messses up
 CREATE DATABASE Geffen_db;
 USE Geffen_db;
 CREATE TABLE Books (
@@ -6,13 +7,14 @@ CREATE TABLE Books (
     Title VARCHAR(500),
     Author VARCHAR(255)
     -- PublicationYear INT
+    -- BookDesc LONGTEXT
 );
 
 CREATE TABLE Topics (
     TopicID INT PRIMARY KEY AUTO_INCREMENT,  -- Auto-incrementing primary key
     TopicName VARCHAR(100) UNIQUE  -- Topic names should be unique
 );
-
+-- Change this, link books to subtopics
 CREATE TABLE Book_Topics (
     ISBN VARCHAR(13),  -- Foreign key to the Books table
     TopicID INT,       -- Foreign key to the Topics table
