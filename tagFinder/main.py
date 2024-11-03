@@ -3,54 +3,6 @@ import pandas as pd
 from isbnlib import isbn_from_words, desc
 import os
 os.chdir('/Users/dannykim/Documents/Pycharm Projects/ZMD_SWE_Geffen/tagFinder/')
-#print("Current working directory:", os.getcwd())
-
-#converts csv into lists
-#zmdSorted = list of books and tags
-# with open('zmdSorted.csv', 'r') as csvfile:
-#     csv_reader = csv.reader(csvfile)
-#     rows = []
-#     for row in csv_reader:
-#         rows.append(row)
-# #bookTerms = desired tags
-# with open('bookTerms.csv', 'r') as csvfile:
-#     csv_reader = csv.reader(csvfile)
-#     bank = []
-#     for row in csv_reader:
-#         bank.append(row)
-
-# #================================================
-# #cleans up data (remove whitespace and convert to lower case)
-# tempBank = []
-# for i in bank:
-#     if i[0][len(i)-2] == " ":
-
-#         tempword = i[0][:-1]
-#         tempBank.append(tempword.lower())
-
-#     else:
-
-#         tempBank.append(i[0].lower())
-# tempBank.pop(0)
-# bank = tempBank
-#======================================
-#intakes data (one "row" at a time) and returns a list with desired tags (Tags) and undesired tags (nullTags)
-# original code 
-#  def getTag(list, bank):
-#     temp = list.split(',')
-#     Tags = []
-#     nullTags = []
-#     for word in temp:
-#         if word[0] == " ":
-#             word = word.replace(" ", '',1)
-#         if word.lower() in bank:
-#             Tags.append(word)
-#         else:
-
-#             nullTags.append(word)
-#     sortedTags = [Tags, nullTags]
-
-#     return  sortedTags
 #======================================
 def getTag(list, bank):
     temp = list.split(',')
@@ -70,57 +22,11 @@ def getTag(list, bank):
     sortedTags = [Tags, nullTags]
 
     return  sortedTags
-#======================================
-#formats the sorted tags into FinalFinalList, matches tags with author and title
-# FinalFinalList = [["Title", "Author", "Tags", "Null-Tags","Isbn"]]
-# def sortCSV(csv):
-#     counter = 0
-
-#     for row in csv:
-#         finalTags = getTag(row[4],bank)
-#         finalRow = [row[0], row[1],finalTags[0],finalTags[1],isbn_from_words(row[0])]
-#         #==================
-#         #print("finalTags[0]:",finalTags[0])
-#         #print("finalTags[1]:", finalTags[1])
-#         if (finalTags[0] == []  and finalTags[1] == ['0']):
-#             emptyBookList.append(finalRow)
-#         if (finalTags[0] == []  and finalTags[1] != ['0']):
-#             firstColumnEmptyBookList.append(finalRow)
-
-
-#         #==================
-#         FinalFinalList.append(finalRow)
-#         counter +=1
 
 #======================================
 emptyBookList = [["Title", "Author", "Tags", "Null-Tags","Isbn"]]
 firstColumnEmptyBookList = [["Title", "Author", "Tags", "Null-Tags","Isbn"]]
 
-# print("start")
-# #sortCSV(rows)
-# print("done")
-
-#======================================
-#writes data from FinalFinalList to test.csv
-# with open('test.csv', 'w', newline='') as file:
-#     writer = csv.writer(file)
-#     #writer.writerow(FinalFinalList[x])
-
-#     for x in FinalFinalList:
-#         writer.writerow(x)
-
-
-# with open('emptyBooks.csv', 'w', newline='') as file:
-#     writer1 = csv.writer(file)
-
-#     for x in emptyBookList:
-#         writer1.writerow(x)
-
-# with open('firstColumnEmptyBookList.csv', 'w', newline='') as file:
-#     writer = csv.writer(file)
-
-#     for x in firstColumnEmptyBookList:
-#         writer.writerow(x)
 
 #=================
 #input: FormatedTags.csv 
@@ -170,35 +76,20 @@ def makeBookList():
 #output: alters BOOKLIST[5]
 #gets the book tags and isbns into BOOKLIST 
 def getBooksTag(bookList):
-    # print(BOOKLIST)
-    # print("Start getBooksTag")
-    # print("\n")
-    # print(bookList)
-    # print("\n")
+    
     for row in bookList:
-        # print("\n")
-        # print(row)
-        # print("\n")
         tempRow = row[5]
-        #print(tempRow)
         tempRow = tempRow.split(',')
         phrase = splitPhrases(tempRow)
         row[4] = phrase
         row[0] = isbn_from_words(row[1])
         row[3] = desc(row[0])
-        #print(phrase)
+        
         #===================
         #formatting 
         row.pop()
         row.pop()
         #===================
-    print("\n")
-    #print(BOOKLIST)
-    
-
-        
-        
-
     print("End getBooksTag")
 
 #======================================
@@ -232,11 +123,6 @@ makeBookList()
 getBooksTag(BOOKLIST)
 listToCSV(BOOKLIST)
 #==============================
-
-# testIsbn = isbn_from_words("the giving tree")
-# print("here")
-# print(testIsbn)
-# #print(desc(testIsbn))
 print("done")
 print("\n")
 #print(BOOKLIST)
