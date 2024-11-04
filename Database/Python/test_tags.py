@@ -4,7 +4,8 @@ from numpy import NAN
 import pandas as pd
 import pymysql, os
 
-# Connect to the database
+# Connect to the database 
+# REMINDER: REMOVE THE PASSWORD BEFORE COMMITTING
 try:
     connection = pymysql.connect(host='localhost',
                                 user='root',

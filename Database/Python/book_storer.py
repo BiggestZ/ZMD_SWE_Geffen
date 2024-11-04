@@ -49,6 +49,29 @@ def get_or_create_topic(topic_name):
         print(f"Inserted topic: {topic_name} (ID: {topic_id})")
     return topic_id
 
+# FOR DANNY: Modify this function to read in the 'Final Tags' column, separate the tags by colons, and insert them into the database properly
+# Right now it has the same code as the topics but change as needed.
+def get_or_create_subtopic(subtopic_name, topic_id):
+    # Create a cursor
+    cursor = connection.cursor()
+    
+    # Check if the subtopic exists and get its ID
+    cursor.execute("SELECT SubtopicID FROM Subtopics WHERE SubtopicName = %s AND TopicID = %s", (subtopic_name, topic_id))
+    subtopic_result = cursor.fetchone()  # Fetch the first result
+    if subtopic_result:
+        subtopic_id = subtopic_result[0]  # Get the subtopic ID
+    else:
+        # Insert the subtopic and get the new ID
+        cursor.execute("INSERT INTO Subtopics (SubtopicName, TopicID) VALUES (%s, %s)", (subtopic_name, topic_id))
+        subtopic_id = cursor.lastrowid  # Get the last inserted ID
+        print(f"Inserted subtopic: {subtopic_name} (ID: {subtopic_id})")
+    
+    # Close the cursor
+    cursor.close()
+    
+    return subtopic_id
+
+
 # Insert the books into the database
 def insert_books():
     cursor = connection.cursor() # Create a cursor object
@@ -57,8 +80,8 @@ def insert_books():
         # cursor.execute("INSERT INTO Books (ISBN, Title, Author) VALUES (%s, %s, %s)", (isbn, title, author))
         # fetch the topic ID
         topic_id = get_or_create_topic(final_tags)
-        print(f"Topic ID: {topic_id}")
-        cursor.execute("INSERT INTO Book_Topics (ISBN, TopicID) VALUES (%s, %s)", (isbn, topic_id))
+        print(f"Topic ID: {topic_id}") 
+        cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, topic_id))
     connection.commit() # Commit the transaction
     cursor.close() # Close the cursor
     connection.close() # Close the connection

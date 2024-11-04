@@ -7,7 +7,7 @@ CREATE TABLE Books (
     Title VARCHAR(500),
     Author VARCHAR(255)
     -- PublicationYear INT
-    -- BookDesc LONGTEXT
+    BookDesc LONGTEXT
 );
 
 CREATE TABLE Topics (
@@ -15,12 +15,12 @@ CREATE TABLE Topics (
     TopicName VARCHAR(100) UNIQUE  -- Topic names should be unique
 );
 -- Change this, link books to subtopics
-CREATE TABLE Book_Topics (
+CREATE TABLE Book_SubTopics (
     ISBN VARCHAR(13),  -- Foreign key to the Books table
-    TopicID INT,       -- Foreign key to the Topics table
-    PRIMARY KEY (ISBN, TopicID),  -- Composite primary key (both ISBN and TopicID)
+    SubtopicID INT,       -- Foreign key to the Topics table
+    PRIMARY KEY (ISBN, SubtopicID),  -- Composite primary key (both ISBN and TopicID)
     FOREIGN KEY (ISBN) REFERENCES Books(ISBN),
-    FOREIGN KEY (TopicID) REFERENCES Topics(TopicID)
+    FOREIGN KEY (SubtopicID) REFERENCES Subtopics(SubtopicID)
 );
 
 CREATE TABLE Subtopics (

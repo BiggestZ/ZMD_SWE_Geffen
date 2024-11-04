@@ -12,9 +12,9 @@ const BookComponent = ({
     <>
       {results.map((item: Book, index: number) => (
         <div key={index}>
-          <div>{item.title}</div>
+          <div>{item.Title}</div>
           <div>
-            By <b>{item.author}</b> ISBN: &bull; {item.isbn}
+            By <b>{item.Author}</b> ISBN: &bull; {item.ISBN}
           </div>
         </div>
       ))}

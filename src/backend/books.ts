@@ -19,3 +19,7 @@ const booksAPIService: BookAPI = {
     },
 };
 export { booksAPIService };
+
+function getBookData(): Book[] | PromiseLike<Book[]> {
+    throw new Error("Function not implemented.");
+}
