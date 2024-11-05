@@ -74,29 +74,68 @@ def split_topic(unformatted_phrase):
     phrase = splitPhrases(unformatted_phrase)
     return phrase
 #=======================================
+# Danny - NEED: 
+# subtopic_in: 'culture' or 'similarities' or 'differences'
+# return subtopic id if one exists, else crete one and return subtopic id
+def get_subtopic_id(subtopic_in):
+    subtopic_id = "12345"
+    return subtopic_id
+#=======================================
+# Danny - NEED: 
+# topic_in: 'culture' or 'similarities' or 'differences'
+# return topic id if one exists, else crete one and return subtopic id
+def get_topic_id(topic_in):
+    topic_id = "54321"
+    return topic_id
+#=======================================
 # DANNY: 
-# subtopic: [['culture', 'similarities', 'differences']]
-# 
-# 
-def subtopic_to_databse(subtopic_in):
-    topic = subtopic_in[0]
-    if len(subtopic_in) == 2:
-        #only one subtopic
-        print("len = 2")
-        print("* input subtopic into database here *")
-        subtopic = subtopic_in[1]
-        #FIXME input subtopic into database
-        #1: check if subtopic is in the database
-        #2a: if subtopic is already in, do nothing
-        #2b: if subtopic is not found, input into database
-        print("subtag put in database")
-    else:
-        for subtags in subtopic_in[1:]:
-            print("len > 2")
-            print("* input subtopic into database here *")
-            #FIXME input subtopic into database
-            print("subtag put in database")
-    return
+# inputs information from csv to database
+def insert_books():
+    cursor = connection.cursor() # Create a cursor object
+    for index, row in data.iterrows():
+        isbn, title, author, final_tags = row['ISBN'], row['Title'], row['Author'], row['Final Tags']
+        # cursor.execute("INSERT INTO Books (ISBN, Title, Author) VALUES (%s, %s, %s)", (isbn, title, author))
+        # fetch the topic ID
+        #===========
+        #Danny: 
+        final_tags = split_topic(final_tags)
+        # final_tags= [['culture', 'similarities', 'differences']]
+        for tag_list in final_tags:
+            #tag_list = ['culture', 'similarities', 'differences']
+            if (len(tag_list) == 2):
+                #['Topic', 'Topic'] or ['Topic", subTopic]
+                if (tag_list[0] == tag_list[1]):
+                    #['Topic', 'Topic']
+                    #input topic id into database
+                    topicId = get_topic_id(tag_list[0])
+
+                    #FIXME
+                    cursor.execute("INSERT INTO Book_Topics (ISBN, topicID) VALUES (%s, %s)", (isbn, topicId))
+
+                else:
+                    #['Topic', 'subTopic']
+                    #input subtopic id into database
+                    subtopicId = get_subtopic_id(tag_list[1])
+
+                    #FIXME
+                    cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopicId))
+
+            else:
+                #['Topic", subTopic, subTopic, ... , subTopic]
+                topicId = get_topic_id(tag_list[0])
+                for tag in tag_list[1:]:
+                    #tag = 'subTopic'
+                     subtopicId = get_subtopic_id(tag)
+
+                     #FIXME
+                     cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, topic_id))
+                
+                
+
+    connection.commit() # Commit the transaction
+    cursor.close() # Close the cursor
+    connection.close() # Close the connection
+    print("Books inserted into the database")
 #=======================================
 # DANNY:
 def splitPhrases(phrases):
@@ -116,6 +155,8 @@ def splitPhrases(phrases):
             result.append([part.strip() for part in split_parts])
     return result
 #=======================================
+#=======================================
+
 def get_or_create_subtopic(subtopic_name, topic_id):
     # Create a cursor
     cursor = connection.cursor()
