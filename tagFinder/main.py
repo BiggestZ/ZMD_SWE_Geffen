@@ -48,8 +48,9 @@ def formatTags():
                     partialRow.append(subTag.lower())
             partialRow.pop()
             tempList.append(partialRow)
-   
-    #print(tempList)
+    # print("\n")
+    # print(tempList)
+    # print("\n")
         
     print("End formatTags")
     return tempList
@@ -67,13 +68,14 @@ def makeBookList():
         if pd.isna(row[1]) == False:
             tempRow = row
         BOOKLIST.append(tempRow)
-
-    #print(BOOKLIST)
+    # print("\n")
+    # print(BOOKLIST)
+    # print("\n")
 
     print("End makeBookList") 
 #======================================
-#input: expects BOOKLIST
-#output: alters BOOKLIST[5]
+#input: expects BOOKLIST (culture:similarities, culture:differences)
+#output: alters BOOKLIST[5] ([['culture', 'similarities', 'differences']])
 #gets the book tags and isbns into BOOKLIST 
 def getBooksTag(bookList):
     
@@ -125,4 +127,3 @@ listToCSV(BOOKLIST)
 #==============================
 print("done")
 print("\n")
-#print(BOOKLIST)
