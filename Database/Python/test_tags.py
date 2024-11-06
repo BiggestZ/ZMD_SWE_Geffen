@@ -9,7 +9,7 @@ import pymysql,os
 try:
     connection = pymysql.connect(host='localhost',
                                 user='root',
-                                password='KEY',# Will fill in when needed
+                                password='',# Will fill in when needed
                                 db='Geffen_db')
     print("Connected to database")
 except:

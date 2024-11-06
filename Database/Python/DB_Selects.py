@@ -7,7 +7,7 @@ def connect_to_db():
         connection = pymysql.connect(
             host='localhost',
             user='root',
-            password='KEY', # Will fill in when needed
+            password='', # Will fill in when needed
             database='geffen_db',
             cursorclass=pymysql.cursors.DictCursor  # Ensures results are returned as dictionaries
         )
