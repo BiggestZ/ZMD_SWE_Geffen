@@ -67,8 +67,8 @@ def get_or_create_topic(topic_name):
 # "culture:similarities, culture:differences" to input back into subtopic and topic table - finding the difference between len=1 and len > 1
 #=======================================
 # DANNY: 
-# unformatted_phrase: "culture:similarities, culture:differences"
-# return: [['culture', 'similarities', 'differences']]
+# unformatted_phrase: "culture:similarities, culture:differences, Cognition:Attention"
+# return: [['culture', 'similarities', 'differences'][Cognition, Attention]]
 def split_topic(unformatted_phrase):
     unformatted_phrase = unformatted_phrase.split(',')
     phrase = splitPhrases(unformatted_phrase)
@@ -98,27 +98,18 @@ def insert_books():
         # fetch the topic ID
         #===========
         #Danny: 
+
+        # If we have just 1 thing, we just check the subtopic of it 
+
         final_tags = split_topic(final_tags)
-        # final_tags= [['culture', 'similarities', 'differences']]
+        # final_tags= [['culture', 'similarities', 'differences'],[Cognition]] -> Cognition: Cognition
         for tag_list in final_tags:
             #tag_list = ['culture', 'similarities', 'differences']
-            if (len(tag_list) == 2):
-                #['Topic', 'Topic'] or ['Topic", subTopic]
-                if (tag_list[0] == tag_list[1]):
-                    #['Topic', 'Topic']
-                    #input topic id into database
-                    topicId = get_topic_id(tag_list[0])
-
-                    #FIXME
-                    cursor.execute("INSERT INTO Book_Topics (ISBN, topicID) VALUES (%s, %s)", (isbn, topicId))
-
-                else:
-                    #['Topic', 'subTopic']
-                    #input subtopic id into database
-                    subtopicId = get_subtopic_id(tag_list[1])
-
-                    #FIXME
-                    cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopicId))
+            if (len(tag_list) == 1):
+                #tag_list = ['Topic'] 
+                subtopicId = get_subtopic_id(tag_list[1])
+                #FIXME
+                cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopicId))
 
             else:
                 #['Topic", subTopic, subTopic, ... , subTopic]
@@ -128,9 +119,9 @@ def insert_books():
                      subtopicId = get_subtopic_id(tag)
 
                      #FIXME
-                     cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, topic_id))
+                     cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopicId))
                 
-                
+    # cursor.execute("INSERT INTO Books (ISBN, Title, Author) VALUES (%s, %s, %s)", (isbn, title, author))            
 
     connection.commit() # Commit the transaction
     cursor.close() # Close the cursor
