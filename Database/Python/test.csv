@@ -1,33 +1,36 @@
 Topic,Subtopic
-Acceptance,
-Actions and consequences,
-Activism,
-Adaptation,
-Advocacy,
-Aging,
-Affection,
-Animal sounds,
-Anthropomorphizing,
-Beauty standards,
-Biological sex,
+Acceptance,Acceptance
+Actions and consequences,Actions and consequences
+Activism,Activism
+Adaptation,Adaptation
+Advocacy,Advocacy
+Aging,Aging
+Affection,Affection
+Animal sounds,Animal sounds
+Anthropomorphizing,Anthropomorphizing
+Beauty standards,Beauty standards
+Biological sex,Biological
+Body,Body
 Body,Bodily Autonomy
 Body,Consent
 Body,Gestures
 Body,Image
 Body,Language
 Body,Parts
-Borders,
-Bravery,
-Breaking norms,
-Categories,
+Borders,Borders
+Bravery,Bravery
+Breaking norms,Breaking norms
+Categories,Categories
+Celebration,Celebration
 Celebration,Birthday
 Celebration,Diwali
 Celebration,First Thanksgiving
 Celebration,Party
 Celebration,Holidays
-Challenges in a new place,
-Change,
-Changing perspective,
+Challenges in a new place,Challenges in a new place
+Change,Change
+Changing perspective,Changing perspective
+Cognition,Cognition
 Cognition,Attention
 Cognition,Awareness
 Cognition,Cause and effect
@@ -47,14 +50,15 @@ Cognition,Problem-solving
 Cognition,Reasoning and decision making skills
 Cognition,Stages of consciousness
 Cognition,Theory of mind
-Comfort,
-Community,
-Community support,
-Comparison,
-Competition,
-Conflict,
-Cooking,
-Creativity,
+Comfort,Comfort
+Community,Community
+Community support,Community support
+Comparison,Comparison
+Competition,Competition
+Conflict,Conflict
+Cooking,Cooking
+Creativity,Creativity
+Culture,Culture
 Culture,Activities
 Culture,Beliefs
 Culture,Competence
@@ -71,8 +75,9 @@ Culture,Sense of culture
 Culture,Similarities
 Culture,Traditions
 Culture,Values
-Daily tasks/activities,
-Discontinuous development,
+Daily tasks/activities,Daily tasks/activities
+Discontinuous development,Discontinuous development
+Differences,Differences
 Different,Being different
 Different,Comparisons
 Different,Embracing differences
@@ -81,6 +86,7 @@ Different,Individual differences
 Different,Isn’t bad or wrong
 Different,Perspectives
 Different,Sociocultural differences
+Difficult topics,Difficult topics
 Difficult topics,Challenging stereotypes
 Difficult topics,Colonization
 Difficult topics,Discrimination
@@ -95,6 +101,7 @@ Difficult topics,Slavery
 Difficult topics,Stereotypes
 Difficult topics,Talking about difficult topics
 Difficult topics,Xenophobia
+(Dis)ability,(Dis)ability
 (Dis)ability,ADHD
 (Dis)ability,Americans With Disabilities Act
 (Dis)ability,Autism
@@ -110,12 +117,13 @@ Difficult topics,Xenophobia
 (Dis)ability,Nonverbal child and family
 (Dis)ability,Prosthetics
 (Dis)ability,Wheelchairs
-Diversity,
-Diverse main character,
-Dream big/following dreams,
-Dreams,
-Education,
-Elaboration,
+Diversity,Diversity
+Diverse main character,Diverse main character
+Dream big/following dreams,Dream big/following dreams
+Dreams,Dreams
+Education,Education
+Elaboration,Elaboration
+Emotions,Emotions
 Emotions,Anger
 Emotions,Anxiety
 Emotions,Boredom
@@ -140,11 +148,12 @@ Emotions,Sadness
 Emotions,Separation anxiety
 Emotions,Shame
 Emotions,Worrying what others think
-Empowerment,
-Equality,
-Ethnic diversity,
-Everyone has their own skills,
-Fairy tales,
+Empowerment,Empowerment
+Equality,Equality
+Ethnic diversity,Ethnic
+Everyone has their own skills,Everyone has their own skills
+Fairy tales,Fairy tales
+Family,Family
 Family,Activities
 Family,Adoption
 Family,Authoritarian parenting
@@ -175,14 +184,15 @@ Family,Sibling relationships
 Family,Structures
 Family,Time
 Family,Traditions
-Female empowerment,
-Feminism,
-First day of school,
-First Nation,
-Food,
-Function of the skin,
-Fundamental attribution error,
-Gay marriage,
+Female empowerment,Female empowerment
+Feminism,Feminism
+First day of school,First day of school
+First Nation,First Nation
+Food,Food
+Function of the skin,Function of the skin
+Fundamental attribution error,Fundamental attribution error
+Gay marriage,Gay marriage
+Gender,Gender
 Gender,Assignment
 Gender,Breaking norms
 Gender,Breaking the binary
@@ -206,42 +216,43 @@ Gender,Stereotypes
 Gender,Transgender
 Gender,Transition
 Gender,Transgender child
-Gestures,
-Getting organized,
-Good vs. evil,
-Growing cycle,
-Growing up,
-Growth,
-Have to use pictures to decipher meaning,
-Heroism,
-Holding a grudge,
-Home,
-Honoring traditions,
-Humor,
-Hope,
-Ideas,
-Identity,
-Identity crisis,
-Identity expression,
-Imagination,
-Imitating instrument sounds,
-Immigration,
-Includes additional resources,
-Indigenous people,
-Individual strengths,
-Inhibition,
-Inner beauty,
-Inner strength,
-Inspiring children/students,
-Interconnected habitat,
-Interesting mix of words and pictures,
-Internal motivation to learn,
-Intersectionality,
-Introduces new concept,
-It's okay to make mistakes,
-Knock knock jokes,
-Knowledge,
-Labels,
+Gestures,Gestures
+Getting organized,Getting organized
+Good vs. evil,Good vs. evil
+Growing cycle,Growing cycle
+Growing up,Growing up
+Growth,Growth
+Have to use pictures to decipher meaning,Have to use pictures to decipher meaning
+Heroism,Heroism
+Holding a grudge,Holding a grudge
+Home,Home
+Honoring traditions,Honoring traditions
+Humor,Humor
+Hope,Hope
+Ideas,Ideas
+Identity,Identity
+Identity crisis,Identity crisis
+Identity expression,Identity expression
+Imagination,Imagination
+Imitating instrument sounds,Imitating instrument sounds
+Immigration,Immigration
+Includes additional resources,Includes additional resources
+Indigenous people,Indigenous people
+Individual strengths,Individual strengths
+Inhibition,Inhibition
+Inner beauty,Inner beauty
+Inner strength,Inner strength
+Inspiring children/students,Inspiring children/students
+Interconnected habitat,Interconnected habitat
+Interesting mix of words and pictures,Interesting mix of words and pictures
+Internal motivation to learn,Internal motivation to learn
+Intersectionality,Intersectionality
+Introduces new concept,Introduces new concept
+It's okay to make mistakes,It's okay to make mistakes
+Knock knock jokes,Knock knock jokes
+Knowledge,Knowledge
+Labels,Labels
+Language,Language
 Language,Adjectives
 Language,Almost every word has two 'oo's
 Language,Alternative rhyme scheme
@@ -285,19 +296,20 @@ Language,Word segmentation
 Language,Verbs
 Language,Visual/contextual word learning
 Language,Word object associations
-Leaving comfort zone,
-Legacy,
-Library,
-Life skills,
-Listening,
-Literal and concrete thinking style,
-Major life events,
-Majority of characters are white,
-Makes more sense to someone who knows skateboarding,
-Manners,
-Masculinity,
-"Maslow’s hierarchy of needs (drives, needs, self-actualization)",
-Matching,
+Leaving comfort zone,Leaving comfort zone
+Legacy,Legacy
+Library,Library
+Life skills,Life skills
+Listening,Listening
+Literal and concrete thinking style,Literal and concrete thinking style
+Major life events,Major life events
+Majority of characters are white,Majority of characters are white
+Makes more sense to someone who knows skateboarding,Makes more sense to someone who knows skateboarding
+Manners,Manners
+Masculinity,Masculinity
+"Maslow’s hierarchy of needs (drives,needs,self-actualization)","Maslow’s hierarchy of needs (drives,needs,self-actualization)"
+Matching,Matching
+Math,Math
 Math,Basic math
 Math,Counting
 Math,Doubling
@@ -305,35 +317,38 @@ Math,Economics
 Math,Large number comprehension
 Math,Numbers
 Math,Number concepts
-Meaning,
+Meaning,Meaning
+Memory,Memory
 Memory,Episodic memory
 Memory,memory loss
-Military,
-Moral development,
-Moral-reasoning,
-Women in nontraditional jobs,
-Moving,
-Multiculturalism,
+Military,Military
+Moral development,Moral development
+Moral-reasoning,Moral-reasoning
+Women in nontraditional jobs,Women in nontraditional jobs
+Moving,Moving
+Multiculturalism,Multiculturalism
+Multilingual text,Multilingual text
 Multilingual text,Code-switching
-Multilingual text,"Mandarin Chinese, Taiwanese Hokkien, and English"
+Multilingual text,"Mandarin Chinese,Taiwanese Hokkien,and English"
 Multilingual text,Mandarin Chinese tones with comparable English examples
 Multilingual text,Spanish and English
 Multilingual text,Yiddish
-Multiple aspects of identity,
-Multiple meanings,
-Multiple ways to be a warrior,
-Music,
-Names have meaning,
-Naming,
-Not finishing what you start,
-Object permanence,
-Oral storytelling,
-Outer beauty,
-Parental guide,
-Parody,
-Patience,
-Paying it forward,
-People are multifaceted,
+Multiple aspects of identity,Multiple aspects of identity
+Multiple meanings,Multiple meanings
+Multiple ways to be a warrior,Multiple ways to be a warrior
+Music,Music
+Names have meaning,Names have meaning
+Naming,Naming
+Not finishing what you start,Not finishing what you start
+Object permanence,Object permanence
+Oral storytelling,Oral storytelling
+Outer beauty,Outer beauty
+Parental guide,Parental guide
+Parody,Parody
+Patience,Patience
+Paying it forward,Paying it forward
+People are multifaceted, People are multifaceted
+Perception,Perception
 Perception,Bold colors
 Perception,Changing light
 Perception,Color
@@ -361,70 +376,72 @@ Perception,Texture gradient
 Perception,Vision
 Perception,Visual attention
 Perception,Use of color
-Perfectionism,
-Persistence,
-Personal history,
-Personal space,
-Personal style,
-Perspective,
-Perspective-taking,
-Picky eaters,
-Pictures without words,
-Playing to your strengths,
-Positive psychology,
-Positive reinforcement,
-Power of knowledge/books,
-Practice,
-Pride in name,
-Process of solving a mystery,
-Promotes diversity,
-Psychological condition,
-Puberty,
-Punctuation marks,
-Race,
-Racial diversity,
-Racial style,
-Relations of elements to each other,
-Relationship changes with time,
-Religious diversity,
-Religious references,
-Resilience,
-Resolution,
-Responsibility,
-Revised nursery rhymes,
-Rhythm,
-Rituals,
-Routine fixedness/adaptability,
-Routines,
-Science behind light,
-Search strategies,
-Seasonal activities,
-Seasons,
-Self-acceptance,
-Self-concept,
-Self-confidence,
-Self-esteem,
-Self-expression,
-Self-identity,
-Self-love,
-Self-perception,
+Perfectionism,Perfectionism
+Persistence,Persistence
+Personal history,Personal history
+Personal space,Personal space
+Personal style,Personal style
+Perspective,Perspective
+Perspective-taking,Perspective-taking
+Picky eaters,Picky eaters
+Pictures without words,Pictures without words
+Playing to your strengths,Playing to your strengths
+Positive psychology,Positive psychology
+Positive reinforcement,Positive reinforcement
+Power of knowledge/books,Power of knowledge/books
+Practice,Practice
+Pride in name,Pride in name
+Process of solving a mystery,Process of solving a mystery
+Promotes diversity,Promotes diversity
+Psychological condition,Psychological condition
+Puberty,Puberty
+Punctuation marks,Punctuation
+Race,Race
+Racial diversity,Racial diversity
+Racial style,Racial style
+Relations of elements to each other,Relations of elements to each other
+Relationship changes with time,Relationship changes with time
+Religious diversity,Religious diversity
+Religious references,Religious references
+Resilience,Resilience
+Resolution,Resolution
+Responsibility,Responsibility
+Revised nursery rhymes,Revised nursery rhymes
+Rhythm,Rhythm
+Rituals,Rituals
+Routine fixedness/adaptability,Routine fixedness/adaptability
+Routines,Routines
+Science behind light,Science behind light
+Search strategies,Search strategies
+Seasonal activities,Seasonal activities
+Seasons,Seasons
+Self-acceptance,Self-acceptance
+Self-concept,Self-concept
+Self-confidence,Self-confidence
+Self-esteem,Self-esteem
+Self-expression,Self-expression
+Self-identity,Self-identity
+Self-love,Self-love
+Self-perception,Self-perception
+Self,Self
 Self,Being yourself
 Self,Believing in yourself
 Self,Developing a positive self-concept
 Self,Younger kids' sense of self is based on physical characteristics
-Selfishness,
-Sensory processing challenges,
-Sex roles,
-Sex-typing,
-Sexual attraction spectrum,
-Shapes,
-Shows the same rooms,
-Similarity,
-Skateboarding,
-Skills,
-Skin pigmentation,
-Skin tone,
-Sleep,
+Selfishness,Selfishness
+Sensory processing challenges,Sensory processing challenges
+Sex roles,Sex roles
+Sex-typing,Sex-typing
+Sexual attraction spectrum,Sexual attraction spectrum
+Shapes,Shapes
+Shows the same rooms,Shows the same rooms
+Similarity,Similarity
+Skateboarding,Skateboarding
+Skills,Skills
+Skin pigmentation,Skin pigmentation
+Skin tone,Skin tone
+Sleep,Sleep
+Social,Social
 Social,Attachment/secure attachment
 Social,Belonging
 Social,Bullying
@@ -474,28 +491,28 @@ Social,Understanding your place
 Social,Very one-sided relationship
 Social,What brings friends together and separates them
 Social,Withdrawn rejected child category
-Socio communicative challenges,
-Sociocultural expectations,
-Sociocultural perspective,
-Sometimes imperfect is just right,
-Starting at a new school,
-Starting school,
-Storytelling,
-Support,
-Synesthesia,
-Taking care of shared space,
-Teachers’ impact on students' lives,
-Teaches children to find ways to shine during difficult times,
-Teaching children animal sounds,
-Telenovela cultural aspect,
-Time,
-Tolerance,
-Traditions,
-Transitions,
-Tutorial on manners,
-Two houses but same activities,
-Uniqueness,
-Values,
-Women in nontraditional jobs,
-You know best,
-Empty Tag,
+Socio communicative challenges,Socio communicative challenges
+Sociocultural expectations,Sociocultural expectations
+Sociocultural perspective,Sociocultural perspective
+Sometimes imperfect is just right,Sometimes imperfect is just right
+Starting at a new school,Starting at a new school
+Starting school,Starting school
+Storytelling,Storytelling
+Support,Support
+Synesthesia,Synesthesia
+Taking care of shared space,Taking care of shared space
+Teachers’ impact on students' lives,Teachers’ impact on students' lives
+Teaches children to find ways to shine during difficult times,Teaches children to find ways to shine during difficult times
+Teaching children animal sounds,Teaching children animal sounds
+Telenovela cultural aspect,Telenovela cultural aspect
+Time,Time
+Tolerance,Tolerance
+Traditions,Traditions
+Transitions,Transitions
+Tutorial on manners,Tutorial on manners
+Two houses but same activities,Two houses but same activities
+Uniqueness,Uniqueness
+Values,Values
+Women in nontraditional jobs,Women in nontraditional jobs
+You know best,You know best
+Empty Tag,Empty Tag
