@@ -2,7 +2,7 @@ import { Book } from "@/types";
 import { TagsContainer } from "./tagsContainer";
 import { Plus } from "phosphor-react";
 
-const BookEntry : React.FC<Book>= ({ Title, Author, ISBN }) => {
+const BookEntry : React.FC<Book>= ({ Title,Author,ISBN }) => {
     return(
         <div className="flex">
             <div className="w-full p-2 h-fit bg-slate-200 rounded-md border-solid border border-slate-500">

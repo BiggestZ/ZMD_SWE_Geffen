@@ -10,7 +10,7 @@ const BookComponent = ({
     <div>Nothing found</div>
   ) : (
     <>
-      {results.map((item: Book, index: number) => (
+      {results.map((item: Book,index: number) => (
         <div key={index}>
           <div>{item.Title}</div>
           <div>

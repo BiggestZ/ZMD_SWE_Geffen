@@ -22,4 +22,4 @@ type BookAPI = {
     // not really sure what this does actually
 };
 
-export type { Book, Subtopic, BookAPI };
+export type { Book,Subtopic,BookAPI };
