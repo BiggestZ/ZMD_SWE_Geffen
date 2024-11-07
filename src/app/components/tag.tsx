@@ -6,5 +6,4 @@ const Tag = ({ SubtopicName }: Subtopic) => {
     )
 }
 
-export default Tag;
-//default?
+export { Tag };

@@ -1,5 +1,5 @@
 import { Book } from "@/types";
-import TagsContainer from "./tagsContainer";
+import { TagsContainer } from "./tagsContainer";
 import { Plus } from "phosphor-react";
 
 const BookEntry : React.FC<Book>= ({ Title, Author, ISBN }) => {
@@ -9,9 +9,8 @@ const BookEntry : React.FC<Book>= ({ Title, Author, ISBN }) => {
                 <div className="flex space-x-4 text-base">
                     <div className="font-bold capitalize">{ Title }</div>
                     <div className="capitalize">{ Author }</div>
-                    <div className="grow text-right">
-                        <b>ISBN: </b>{ ISBN }
-                    </div>
+                    <div className="grow text-right"><b>ISBN: </b>{ ISBN }</div>
+                    
                 </div>
                 <div className="text-sm p-2">description</div>
                 <TagsContainer />
@@ -21,6 +20,6 @@ const BookEntry : React.FC<Book>= ({ Title, Author, ISBN }) => {
     );
 };
 
-export default BookEntry;
+export { BookEntry };
 
-//                         <button onClick={( Title )} className="rounded-md"><Plus size={20} /></button>
+//<div className="grow text-right"><button onClick={() => } className="rounded-md"><Plus size={20} /></button></div>            

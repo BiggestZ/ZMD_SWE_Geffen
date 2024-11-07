@@ -5,7 +5,6 @@ type Book = {
     PublicationYear: number;
     // Tags: Array<Subtopic>;
     // tags: ?
-    // look into prisma.io for db integration - may need to fuck with packages/dependencies first
 }; 
 
 type Subtopic = {
@@ -13,6 +12,9 @@ type Subtopic = {
     SubtopicID: number;
     TopicID: number;
 }
+
+// every subtopic will be back-linked to the big topics
+// subtopics will be assigned to ISBNs as book IDs
 
 type BookAPI = {
     find: () => Promise<Book[]>;
