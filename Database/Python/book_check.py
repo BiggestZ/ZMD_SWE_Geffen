@@ -1,3 +1,5 @@
+# For a given book name, this script finds all subtopics associated with that book.
+
 import pymysql
 
 

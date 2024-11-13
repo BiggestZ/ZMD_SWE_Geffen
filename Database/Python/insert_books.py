@@ -77,27 +77,44 @@ def split_topic(unformatted_phrase):
 # Danny - NEED: 
 # subtopic_in: 'culture' or 'similarities' or 'differences'
 # return subtopic id if one exists, else crete one and return subtopic id
-def get_subtopic_id(subtopic_in):
+'''def get_subtopic_id(subtopic_in):
     subtopic_id = "12345"
-    return subtopic_id
+    return subtopic_id'''
 #=======================================
 # Danny - NEED: 
 # topic_in: 'culture' or 'similarities' or 'differences'
 # return topic id if one exists, else crete one and return subtopic id
-def get_topic_id(topic_in):
+'''def get_topic_id(topic_in):
     topic_id = "54321"
-    return topic_id
+    return topic_id'''
 #=======================================
 # DANNY: 
 # inputs information from csv to database
 def insert_books():
     cursor = connection.cursor() # Create a cursor object
     for index, row in data.iterrows():
-        isbn, title, author, final_tags = row['ISBN'], row['Title'], row['Author'], row['Final Tags']
+        isbn, title, author, final_tags = row['ISBN'], row['Title'], row['Author'], row['Final Tags'] # add ,row['Langauge']
         cursor.execute("INSERT INTO Books (ISBN, Title, Author) VALUES (%s, %s, %s)", (isbn, title, author))
         # fetch the topic ID
         #===========
         #Danny: 
+
+        # Will be adding in here to check associated languages and inserting into book_language table
+        '''
+        for language in row['Language']:
+            # Make sure to preprocess language (lowercase, no whitespace)
+            cursor.execute("SELECT LanguageID FROM Language WHERE LanguageName = %s", (language,))
+            result = cursor.fetchone()
+            if result: # If the language exists
+                language_id = result[0]
+            else: # If the language doesn't exist
+                # If we do not want to change the language name
+                print("Could not find language, try again")
+                return
+                cursor.execute("INSERT INTO Language (LanguageName) VALUES (%s)", (language,))
+                language_id = cursor.lastrowid
+                
+        '''
 
         # If we have just 1 thing, we just check the subtopic of it 
 
@@ -106,7 +123,7 @@ def insert_books():
         for tag_list in final_tags:
             #tag_list = ['culture', 'similarities', 'differences']
             if (len(tag_list) == 1):
-                print('Lenght is 1')
+                print('Length is 1')
                 #tag_list = ['Topic'] 
                 print(str(tag_list) + ' 1')
                 subtopicId = get_or_create_subtopic(tag_list[0].lower())

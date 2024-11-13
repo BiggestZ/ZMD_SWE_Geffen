@@ -14,6 +14,14 @@ CREATE TABLE Topics (
     TopicID INT PRIMARY KEY AUTO_INCREMENT, -- Auto-incrementing primary key
     TopicName VARCHAR(100) UNIQUE  -- Topic names should be unique
 );
+
+CREATE TABLE Subtopics (
+    SubtopicID INT PRIMARY KEY AUTO_INCREMENT, -- Auto-incrementing primary key
+    SubtopicName VARCHAR(100) UNIQUE, -- Subtopic names should be unique
+    TopicID INT, -- Foreign key to the Topics table
+    FOREIGN KEY (TopicID) REFERENCES Topics(TopicID)
+);
+
 -- Change this,link books to subtopics
 CREATE TABLE Book_SubTopics (
     ISBN VARCHAR(13), -- Foreign key to the Books table
@@ -21,13 +29,6 @@ CREATE TABLE Book_SubTopics (
     PRIMARY KEY (ISBN,SubtopicID), -- Composite primary key (both ISBN and TopicID)
     FOREIGN KEY (ISBN) REFERENCES Books(ISBN),
     FOREIGN KEY (SubtopicID) REFERENCES Subtopics(SubtopicID)
-);
-
-CREATE TABLE Subtopics (
-    SubtopicID INT PRIMARY KEY AUTO_INCREMENT, -- Auto-incrementing primary key
-    SubtopicName VARCHAR(100) UNIQUE, -- Subtopic names should be unique
-    TopicID INT, -- Foreign key to the Topics table
-    FOREIGN KEY (TopicID) REFERENCES Topics(TopicID)
 );
 
 CREATE TABLE Language (
