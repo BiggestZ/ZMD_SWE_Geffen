@@ -2,9 +2,6 @@ interface Book {
     Title: string;
     Author: string;
     ISBN: string;
-    PublicationYear: number;
-    // Tags: Array<Subtopic>;
-    // tags: ?
 }; 
 
 type Subtopic = {

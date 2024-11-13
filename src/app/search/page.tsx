@@ -1,48 +1,38 @@
-//import BooksContainer from "../components/booksContainer";
 import { Book } from "@/types";
 import axios from "axios";
 import { BookEntry } from "../components/book";
-///import { Book } from "phosphor-react";
+import { json } from "stream/consumers";
 
 
 export default async function Home() {
+    
+    let booksList : string = '';
 
-    let booksList : Array<Book> = [];
-
-        await axios
+    await axios
         .get('http://localhost:3000/api/books', {responseType : "json"})
         .then(function (response) {
-            booksList.push(response.data);
+            booksList = response.data;
         })
         .catch((err) => console.log("couldn't read db"));
-        Promise.all(booksList);
 
-    console.log('test', booksList);
+    console.log('test new', booksList);
+
+    let bookArray = booksList.map((book : Book) => {
+        // map is highlighted as an error here but it's working anyway?
+        return (
+            <BookEntry key={book.ISBN}    Title={book.Title} Author={book.Author} ISBN={book.ISBN} />
+        )
+    })
 
     return (
         <div>
             <h1>search test</h1>
-            
-                {booksList.map((book) => {
-                    return (
-                        <div className="grid grid-cols-2 place-content-start p-5 gap-5"> 
-                        <div className="flex">
-                            <BookEntry key={book.Title} Title={book.Title} Author={book.Author} ISBN={book.ISBN} PublicationYear={0} />
-
-                            <div className="w-full p-2 h-fit bg-slate-200 rounded-md border-solid border border-slate-500">     
-                                <div className="flex space-x-4 text-base">
-                                    <div className="font-bold capitalize"></div>
-                                    <div className="capitalize">book.Author</div>
-                                    <div className="grow text-right"><b>ISBN: </b>book.ISBN</div>
-                                </div>
-                                <div className="text-sm p-2">description</div>
-                            </div>
-                        </div>
-                        </div>  
-                    )
-                })}
-            </div>
-            
+            <div className="grid grid-cols-2 place-content-start p-5 gap-5">
+                { bookArray }
+            </div>           
+        </div>             
     );
 };
     
+// <BookEntry key={book.Title} Title={book.Title} Author={book.Author} ISBN={book.ISBN} />
+/////{booksList.map((book) => {})}

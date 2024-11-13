@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import mysql from 'mysql2/promise';
 
-const connectionParameters = {
+export const connectionParameters = {
     host: 'sql.cianci.io',       // Your MySQL host
     user: 'acheng2',  // Your MySQL username
     password: 'cl6g*t5URndDuZxe', // Your MySQL password
@@ -17,6 +17,7 @@ export async function GET (request : NextRequest) {
         const [books] = await connection.execute(query)
 
         return NextResponse.json(books)
+
     } catch(err) {
         console.log('ERROR: API - ', (err as Error).message)
         
