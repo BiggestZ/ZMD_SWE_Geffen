@@ -3,10 +3,10 @@
 import csv from "csvtojson";
 import type { Book,BookAPI } from "../types.js";
 
-/*const getBookData: () => Promise<Book[]> = async () => {
-    const result: Book[] await csv().fromFile();
+const getBookData: () => Promise<Book[]> = async () => {
+    const result: Book[] await csv().fromFile("test-shared.csv");
     return result;
-};*/
+};
 
 const booksAPIService: BookAPI = {
     find: async () => {
