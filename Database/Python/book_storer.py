@@ -10,10 +10,10 @@ filepath = os.path.join(os.path.dirname(__file__), fp)
 # Connect to the database
 # REMINDER: REMOVE THE PASSWORD BEFORE COMMITTING
 try:
-    connection = pymysql.connect(host='localhost',
-                                user='root',
+    connection = pymysql.connect(host='',
+                                user='',
                                 password='', # Will fill in when needed
-                                db='Geffen_db')
+                                db='')
     print("Connected to database")
 except:
     # If there's an error connecting to the database, print an error message

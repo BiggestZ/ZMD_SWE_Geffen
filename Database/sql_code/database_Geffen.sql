@@ -7,7 +7,7 @@ CREATE TABLE Books (
     Title VARCHAR(500),
     Author VARCHAR(255)
     -- PublicationYear INT
-    BookDesc LONGTEXT
+    BookDesc LONGTEXT -- Not implemented yet
 );
 
 CREATE TABLE Topics (
@@ -30,4 +30,16 @@ CREATE TABLE Subtopics (
     FOREIGN KEY (TopicID) REFERENCES Topics(TopicID)
 );
 
+CREATE TABLE Language (
+    LanguageID INT PRIMARY KEY AUTO_INCREMENT, -- Auto-incrementing primary key
+    LanguageName VARCHAR(100) UNIQUE -- Language names should be unique
+);
+
+CREATE TABLE Books_Language (
+    ISBN VARCHAR(13), -- Foreign key to the Books table
+    LanguageID INT, -- Foreign key to the Language table
+    PRIMARY KEY (ISBN,LanguageID), -- Composite primary key (both ISBN and LanguageID)
+    FOREIGN KEY (ISBN) REFERENCES Books(ISBN),
+    FOREIGN KEY (LanguageID) REFERENCES Language(LanguageID)
+);
 

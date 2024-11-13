@@ -7,10 +7,13 @@ import pymysql,os
 # Connect to the database 
 # REMINDER: REMOVE THE PASSWORD BEFORE COMMITTING
 try:
-    connection = pymysql.connect(host='localhost',
-                                user='root',
-                                password='',# Will fill in when needed
-                                db='Geffen_db')
+    connection = pymysql.connect(
+            host='',
+            user='',
+            password='', # Will fill in when needed
+            database='',
+            # cursorclass=pymysql.cursors.DictCursor  # Ensures results are returned as dictionaries
+        )
     print("Connected to database")
 except:
     print("Error connecting to database")
