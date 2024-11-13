@@ -47,6 +47,7 @@ export default function TagTable() {
         aria-label="Default select example"
         onChange={handleSelectChange}
       >
+        <option value="0">Select a tag</option>
         <option value="1">culture</option>
         <option value="2">social</option>
         <option value="3">family</option>
