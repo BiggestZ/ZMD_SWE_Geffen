@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function TagTable() {
   // State to hold the list of sub-tags to display as checkboxes
@@ -8,6 +8,8 @@ export default function TagTable() {
   
   // State to track selected tags across categories
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [topics, setTopics] = useState<any[]>([]);
+
 
   // Function to handle the subTag_View logic and update the displayed sub-tags
   const subTag_View = (selectedValue: "1" | "2" | "3") => {
@@ -38,6 +40,27 @@ export default function TagTable() {
       }
     });
   };
+
+  //=====
+  useEffect(() => {
+    const fetchTopics = async () => {
+      try {
+        // Call the API endpoint to get the list of topics
+        const response = await fetch('/api/getTopics');
+        if (response.ok) {
+          const data = await response.json();  // Parse the JSON response
+          setTopics(data);  // Store topics in the state
+        } else {
+          console.error('Error fetching topics');
+        }
+      } catch (error) {
+        console.error('Error fetching topics:', error);
+      }
+    };
+
+    fetchTopics();
+  }, []);
+  //=====
 
   return (
     <div>
