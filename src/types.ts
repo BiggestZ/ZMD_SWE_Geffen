@@ -1,4 +1,4 @@
-type Book = {
+interface Book {
     Title: string;
     Author: string;
     ISBN: string;
@@ -13,6 +13,14 @@ type Subtopic = {
     TopicID: number;
 }
 
+type BookList = {
+    books: Book | Book[]
+}
+
+type SubtopicsList =  {
+    children: JSX.Element | JSX.Element[]
+}
+
 // every subtopic will be back-linked to the big topics
 // subtopics will be assigned to ISBNs as book IDs
 
@@ -22,4 +30,4 @@ type BookAPI = {
     // not really sure what this does actually
 };
 
-export type { Book,Subtopic,BookAPI };
+export type { Book,Subtopic,BookAPI,BookList };
