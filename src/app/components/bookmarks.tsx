@@ -4,7 +4,6 @@ export
 
 
 function addBookmark(book : BookEntry) {
-    book = 
 
     // what this should do:
     // make a new csv locally
