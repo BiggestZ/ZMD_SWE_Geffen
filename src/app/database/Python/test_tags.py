@@ -7,13 +7,10 @@ import pymysql,os
 # Connect to the database 
 # REMINDER: REMOVE THE PASSWORD BEFORE COMMITTING
 try:
-    connection = pymysql.connect(
-            host='localhost',
-            user='root',
-            password='', # Will fill in when needed
-            database='geffen_db',
-            # cursorclass=pymysql.cursors.DictCursor  # Ensures results are returned as dictionaries
-        )
+    connection = pymysql.connect(host='localhost',
+                                user='root',
+                                password='',# Will fill in when needed
+                                db='Geffen_db')
     print("Connected to database")
 except:
     print("Error connecting to database")
@@ -21,10 +18,10 @@ except:
 cursor = connection.cursor() 
 
 # Read the CSV file using pandas
-with open('Database/Python/CSVs/test.csv') as file:
+with open('Database/Python/test.csv') as file:
     data = pd.read_csv(file,na_values = [""])
     next(data.iterrows()) # Skip the first row
-# Insert the main topic if iåt's not already in the table
+# Insert the main topic if it's not already in the table
 for index,row in data.iterrows():
     topic,subtopic = row['Topic'],row['Subtopic']
     

@@ -1,0 +1,255 @@
+import connectToDb from "./connectToDB";
+import mysql from "mysql2/promise";
+
+// Book interface
+interface Book {
+    title: string;
+    author: string;
+    isbn: string;
+    bookDesc?: string;
+  }
+
+// Function to search for books by title
+async function searchBookByTitle(title: string): Promise<void> {
+    const connection = await connectToDb();
+    if (!connection) return;
+    try {
+        const [result] = await connection.execute(
+            "SELECT * FROM Books WHERE Title LIKE ?",
+            [`%${title}%`]
+        );
+
+        const books = result as any[];
+
+        if (books.length > 0) {
+            console.log("Search Results:");
+            for (const book of books) {
+                console.log(`Title: ${book.Title}`);
+                console.log(`Author: ${book.Author}`);
+                console.log(`ISBN: ${book.ISBN}`);
+                console.log(`Description: ${book.BookDesc}`);
+                console.log("-".repeat(40));
+            }
+        } else {
+            console.log("No books found with that title.");
+        }
+    } catch (error) {
+        console.error(`Error searching for book: ${(error as Error).message}`);
+    } finally {
+        await connection.end();
+    }
+}
+
+// Function to validate author's name
+function isValidAuthorName(author: string): boolean {
+    return /^[A-Za-z\s]+$/.test(author);
+}
+
+// Function to get subtopic ID
+async function getSubtopicId(subtopicName: string, topicName: string, connection: mysql.Connection): Promise<number | null> {
+    if (!connection) return null;
+    const [topicResult] = await connection.execute(
+        "SELECT TopicID FROM Topics WHERE TopicName = ?",
+        [topicName]
+    );
+    const topic = (topicResult as any[])[0];
+
+    if (!topic) {
+        console.log(`Topic '${topicName}' does not exist in the database.`);
+        return null;
+    }
+
+    const [subtopicResult] = await connection.execute(
+        "SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ? AND TopicID = ?",
+        [subtopicName, topic.TopicID]
+    );
+    const subtopic = (subtopicResult as any[])[0];
+
+    if (!subtopic) {
+        console.log(`Subtopic '${subtopicName}' under topic '${topicName}' does not exist in the database.`);
+        return null;
+    }
+
+    return subtopic.SubtopicID;
+}
+
+// Function to add a book with multiple topics and subtopics
+async function addBook(title: string, author: string, isbn: string, description: string): Promise<void> {
+    const connection = await connectToDb();
+    if (!connection) return;
+    try {
+        // Validate ISBN length
+        if (isbn.length !== 13 || !/^\d+$/.test(isbn)) {
+            console.log("Error: ISBN must be exactly 13 characters long and contain only numbers.");
+            return;
+        }
+
+        // Validate author's name
+        if (!isValidAuthorName(author)) {
+            console.log("Error: Author name can only contain letters and spaces.");
+            return;
+        }
+
+        // Insert the book
+        await connection.execute(
+            "INSERT INTO Books (Title, Author, ISBN, BookDesc) VALUES (?, ?, ?, ?)",
+            [title, author, isbn, description]
+        );
+        await connection.commit();
+        console.log(`Book '${title}' added successfully.`);
+
+        // Prompt for topics and subtopics
+        while (true) {
+            const topicName = prompt("Enter topic name (or 'done' to finish): ");
+            if (topicName && topicName.toLowerCase() === 'done') break;
+
+            const subtopicName = prompt("Enter subtopic name (optional, press Enter to skip): ") || topicName;
+
+            // Check if the topic and subtopic exist in the database
+            const subtopicId = await getSubtopicId(subtopicName!, topicName!, connection);
+
+            // Only link the book if the subtopic exists
+            if (subtopicId) {
+                await connection.execute(
+                    "INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (?, ?)",
+                    [isbn, subtopicId]
+                );
+                await connection.commit();
+                console.log(`Linked '${title}' to topic '${topicName}' and subtopic '${subtopicName}'.`);
+            } else {
+                console.log(`Cannot link '${title}' to topic '${topicName}' and subtopic '${subtopicName}' as they are not found in the database.`);
+            }
+        }
+    } catch (error) {
+        console.error(`Error adding book: ${(error as Error).message}`);
+    } finally {
+        await connection.end();
+    }
+}
+
+// Function to drop a book by title or ISBN
+async function dropBook(titleOrIsbn: string): Promise<void> {
+    const connection = await connectToDb();
+    if (!connection) return;
+    try {
+        const [bookResult] = await connection.execute("SELECT ISBN FROM Books WHERE Title = ?", [titleOrIsbn]);
+        const book = (bookResult as any[])[0];
+
+        if (!book) {
+            console.log(`No book found with title: '${titleOrIsbn}'.`);
+            return;
+        }
+
+        const isbn = book.ISBN;
+
+        // Delete all related entries in Book_SubTopics
+        await connection.execute("DELETE FROM Book_SubTopics WHERE ISBN = ?", [isbn]);
+        console.log(`Deleted all subtopic links for book with ISBN ${isbn}.`);
+
+        // Delete the book itself
+        await connection.execute("DELETE FROM Books WHERE ISBN = ?", [isbn]);
+        await connection.commit();
+        console.log(`Book with ISBN ${isbn} deleted successfully.`);
+
+    } catch (error) {
+        console.error(`Error dropping book: ${(error as Error).message}`);
+    } finally {
+        await connection.end();
+    }
+}
+
+async function editBook(searchTerm: string): Promise<void> {
+    const connection = await connectToDb();
+    if (!connection) return;
+    try {
+        const [bookResult] = await connection.execute("SELECT * FROM Books WHERE Title = ?", [searchTerm]);
+        const book = (bookResult as any[])[0];
+
+        if (!book) {
+            console.log(`No book found with title '${searchTerm}'.`);
+            return;
+        }
+  
+      console.log(`Editing book: ${book.title} by ${book.author}`);
+  
+      // Prompt for updates on book details
+      const newTitle = prompt("Enter new title (or leave blank to keep current): ") || book.title;
+      const newAuthor = prompt("Enter new author (or leave blank to keep current): ") || book.author;
+      const newIsbn = prompt("Enter new ISBN (or leave blank to keep current): ") || book.isbn;
+      const newDescription = prompt("Enter new description (or leave blank to keep current): ") || book.bookDesc;
+  
+      // Check if the ISBN is changing
+      const isIsbnChanging = newIsbn !== book.isbn;
+  
+      // Disable foreign key checks
+      await connection.query("SET FOREIGN_KEY_CHECKS=0");
+  
+      // Update the book in the database
+      await connection.query(
+        "UPDATE Books SET title = ?, author = ?, isbn = ?, bookDesc = ? WHERE isbn = ?",
+        [newTitle, newAuthor, newIsbn, newDescription, book.isbn]
+      );
+  
+      if (isIsbnChanging) {
+        await connection.query("UPDATE Book_SubTopics SET ISBN = ? WHERE ISBN = ?", [newIsbn, book.isbn]);
+        await connection.query("UPDATE Book_Language SET ISBN = ? WHERE ISBN = ?", [newIsbn, book.isbn]);
+        console.log(`ISBN updated from '${book.isbn}' to '${newIsbn}' across all related tables.`);
+      }
+  
+      await connection.query("SET FOREIGN_KEY_CHECKS=1");
+      console.log("Book details updated successfully.");
+  
+      // Update subtopics (optional)
+      const updateSubtopics = prompt("Would you like to update the subtopics associated with this book? (yes/no): ")?.toLowerCase();
+  
+      if (updateSubtopics === "yes") {
+        const action = prompt("Choose an option:\n1) Delete all existing subtopics and add new ones\n2) Add new subtopics to existing ones\n3) Leave existing subtopics as is\nEnter 1, 2, or 3: ");
+  
+        if (action === '1') {
+          await connection.query("DELETE FROM Book_SubTopics WHERE ISBN = ?", [newIsbn]);
+          console.log("Existing subtopics cleared. Please add new subtopics.");
+  
+          while (true) {
+            const topicName = prompt("Enter topic name (or 'done' to finish): ");
+            if (!topicName || topicName.toLowerCase() === 'done') break;
+  
+            const subtopicName = prompt("Enter subtopic name (optional, press Enter to skip): ") || topicName;
+            const subtopicId = await getSubtopicId(subtopicName, topicName, connection);
+  
+            if (subtopicId) {
+              await connection.query("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (?, ?)", [newIsbn, subtopicId]);
+              console.log(`Linked '${newTitle}' to topic '${topicName}' and subtopic '${subtopicName}'.`);
+            } else {
+              console.log(`Cannot link '${newTitle}' to topic '${topicName}' and subtopic '${subtopicName}' as they are not found in the database.`);
+            }
+          }
+        } else if (action === '2') {
+          console.log("Adding additional subtopics without deleting existing ones.");
+          while (true) {
+            const topicName = prompt("Enter topic name (or 'done' to finish): ");
+            if (!topicName || topicName.toLowerCase() === 'done') break;
+  
+            const subtopicName = prompt("Enter subtopic name (optional, press Enter to skip): ") || topicName;
+            const subtopicId = await getSubtopicId(subtopicName, topicName, connection);
+  
+            if (subtopicId) {
+              await connection.query("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (?, ?)", [newIsbn, subtopicId]);
+              console.log(`Linked '${newTitle}' to topic '${topicName}' and subtopic '${subtopicName}'.`);
+            } else {
+              console.log(`Cannot link '${newTitle}' to topic '${topicName}' and subtopic '${subtopicName}' as they are not found in the database.`);
+            }
+          }
+        } else if (action === '3') {
+          console.log("No changes made to subtopics; existing subtopics are retained.");
+        } else {
+          console.log("Invalid choice. No changes made to subtopics.");
+        }
+      }
+    } catch (error) {
+      console.error(`Error updating book: ${error}`);
+    } finally {
+      connection.end();
+    }
+}
+
+export { searchBookByTitle, addBook, dropBook, editBook };

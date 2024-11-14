@@ -6,14 +6,18 @@ const PORT = 8081;
 
 // Create a MySQL connection pool
 const db = createPool({
-  host: 'localhost',       // Your MySQL host
-  user: 'root',  // Your MySQL username
-  password: '', // Your MySQL password
-  database: 'geffen_db',  // Your MySQL database name
+  host: 'sql.cianci.io',       // Your MySQL host
+  user: 'acheng2',  // Your MySQL username
+  password: 'cl6g*t5URndDuZxe', // Your MySQL password
+  database: '2024fall_comp367_geffen',  // Your MySQL database name
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
+
+export default db;
+
+
 
 // Test route to check database connection
 app.get('/test-connection',(req,res) => {
