@@ -5,10 +5,10 @@ def connect_to_db():
     # REMEMBER TO REPLACE THE PASSWORD BEFORE COMMITTING
     try:
         connection = pymysql.connect(
-            host='',
-            user='',
+            host='localhost',
+            user='root',
             password='',
-            database='',
+            database='geffen_db',
             cursorclass=pymysql.cursors.DictCursor  # Ensures results are returned as dictionaries
         )
         return connection
@@ -198,22 +198,15 @@ def add_book(title, author, isbn, description):
         connection.close()
 
 # Function to drop a book and all related subtopics
-def drop_book(title_or_isbn, search_by="title"):
+def drop_book(title_or_isbn):
     connection = connect_to_db()
     try:
         with connection.cursor() as cursor:
             # Find the book by title or ISBN
-            if search_by == "title":
-                cursor.execute("SELECT ISBN FROM Books WHERE Title = %s", (title_or_isbn,))
-            elif search_by == "isbn":
-                cursor.execute("SELECT ISBN FROM Books WHERE ISBN = %s", (title_or_isbn,))
-            else:
-                print("Invalid search parameter.")
-                return
-
+            cursor.execute("SELECT ISBN FROM Books WHERE Title = %s", (title_or_isbn,))
             book = cursor.fetchone()
             if not book:
-                print(f"No book found with {search_by} '{title_or_isbn}'.")
+                print(f"No book found with title: '{title_or_isbn}'.")
                 return
             
             isbn = book['ISBN']
@@ -234,23 +227,75 @@ def drop_book(title_or_isbn, search_by="title"):
 
 # Edit elements of a Book
 # Function to edit a book's details and subtopics based on title or ISBN
-def edit_book(search_term, search_by="title"):
+# def edit_book(search_term):
+#     connection = connect_to_db()
+#     try:
+#         with connection.cursor() as cursor:
+#             # Verify if the book exists
+#             try:
+#                 cursor.execute("SELECT * FROM Books WHERE Title = %s", (search_term,))
+#             except pymysql.MySQLError:
+#                 print("Invalid search parameter.")
+#                 return
+            
+#             book = cursor.fetchone()
+            
+#             if not book:
+#                 print(f"No book found with title '{search_term}'.")
+#                 return  # Exit if book does not exist
+
+#             print(f"Editing book: {book['Title']} by {book['Author']}")
+
+#             # Prompt for updates on book details
+#             new_title = input(f"Enter new title (or leave blank to keep current): ") or book['Title']
+#             new_author = input(f"Enter new author (or leave blank to keep current): ") or book['Author']
+#             new_isbn = input(f"Enter new ISBN (or leave blank to keep current): ") or book['ISBN']
+#             new_description = input(f"Enter new description (or leave blank to keep current): ") or book['BookDesc']
+
+#             # Update the book in the database
+#             update_sql = "UPDATE Books SET Title = %s, Author = %s, ISBN = %s, BookDesc = %s WHERE ISBN = %s"
+#             cursor.execute(update_sql, (new_title, new_author, new_isbn, new_description, book['ISBN']))
+#             connection.commit()
+#             print("Book details updated successfully.")
+
+#             # Update subtopics (optional)
+#             update_subtopics = input("Would you like to update the subtopics associated with this book? (yes/no): ").lower()
+#             if update_subtopics == "yes":
+#                 cursor.execute("DELETE FROM Book_SubTopics WHERE ISBN = %s", (book['ISBN'],))
+#                 connection.commit()
+#                 print("Existing subtopics cleared. Please add new subtopics.")
+
+#                 # Add new subtopics
+#                 while True:
+#                     topic_name = input("Enter topic name (or 'done' to finish): ")
+#                     if topic_name.lower() == 'done':
+#                         break
+#                     subtopic_name = input("Enter subtopic name (optional, press Enter to skip): ") or topic_name
+
+#                     # Verify subtopic
+#                     subtopic_id = get_subtopic_id(subtopic_name, topic_name, connection)
+#                     if subtopic_id:
+#                         cursor.execute("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (%s, %s)", (book['ISBN'], subtopic_id))
+#                         connection.commit()
+#                         print(f"Linked '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}'.")
+#                     else:
+#                         print(f"Cannot link '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}' as they are not found in the database.")
+
+#     except pymysql.MySQLError as e:
+#         print(f"Error updating book: {e}")
+#     finally:
+#         connection.close()
+
+def edit_book(search_term):
     connection = connect_to_db()
     try:
         with connection.cursor() as cursor:
             # Verify if the book exists
-            if search_by == "title":
-                cursor.execute("SELECT * FROM Books WHERE Title = %s", (search_term,))
-            elif search_by == "isbn":
-                cursor.execute("SELECT * FROM Books WHERE ISBN = %s", (search_term,))
-            else:
-                print("Invalid search parameter.")
-                return
-            
+            cursor.execute("SELECT * FROM Books WHERE Title = %s", (search_term,))
             book = cursor.fetchone()
             
             if not book:
-                print(f"No book found with {search_by} '{search_term}'.")
+                print(f"No book found with title '{search_term}'.")
                 return  # Exit if book does not exist
 
             print(f"Editing book: {book['Title']} by {book['Author']}")
@@ -261,40 +306,110 @@ def edit_book(search_term, search_by="title"):
             new_isbn = input(f"Enter new ISBN (or leave blank to keep current): ") or book['ISBN']
             new_description = input(f"Enter new description (or leave blank to keep current): ") or book['BookDesc']
 
+            # Check if the ISBN is changing
+            is_isbn_changing = new_isbn != book['ISBN']
+
+            # Disable foreign key checks
+            cursor.execute("SET FOREIGN_KEY_CHECKS=0")
+
             # Update the book in the database
             update_sql = "UPDATE Books SET Title = %s, Author = %s, ISBN = %s, BookDesc = %s WHERE ISBN = %s"
             cursor.execute(update_sql, (new_title, new_author, new_isbn, new_description, book['ISBN']))
+
+            # If the ISBN is changing, update related tables
+            if is_isbn_changing:
+                update_subtopics_query = "UPDATE Book_SubTopics SET ISBN = %s WHERE ISBN = %s"
+                cursor.execute(update_subtopics_query, (new_isbn, book['ISBN']))
+
+                update_language_query = "UPDATE Book_Language SET ISBN = %s WHERE ISBN = %s"
+                cursor.execute(update_language_query, (new_isbn, book['ISBN']))
+
+                print(f"ISBN updated from '{book['ISBN']}' to '{new_isbn}' across all related tables.")
+
+            # Re-enable foreign key checks
+            cursor.execute("SET FOREIGN_KEY_CHECKS=1")
             connection.commit()
             print("Book details updated successfully.")
-
-            # Update subtopics (optional)
+# Update subtopics (optional)
             update_subtopics = input("Would you like to update the subtopics associated with this book? (yes/no): ").lower()
             if update_subtopics == "yes":
-                cursor.execute("DELETE FROM Book_SubTopics WHERE ISBN = %s", (book['ISBN'],))
-                connection.commit()
-                print("Existing subtopics cleared. Please add new subtopics.")
+                action = input("Choose an option:\n1) Delete all existing subtopics and add new ones\n2) Add new subtopics to existing ones\n3) Leave existing subtopics as is\nEnter 1, 2, or 3: ")
 
-                # Add new subtopics
-                while True:
-                    topic_name = input("Enter topic name (or 'done' to finish): ")
-                    if topic_name.lower() == 'done':
-                        break
-                    subtopic_name = input("Enter subtopic name (optional, press Enter to skip): ") or topic_name
+                if action == '1':
+                    # Delete all subtopics related to the book
+                    cursor.execute("DELETE FROM Book_SubTopics WHERE ISBN = %s", (new_isbn,))
+                    connection.commit()
+                    print("Existing subtopics cleared. Please add new subtopics.")
 
-                    # Verify subtopic
-                    subtopic_id = get_subtopic_id(subtopic_name, topic_name, connection)
-                    if subtopic_id:
-                        cursor.execute("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (%s, %s)", (book['ISBN'], subtopic_id))
-                        connection.commit()
-                        print(f"Linked '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}'.")
-                    else:
-                        print(f"Cannot link '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}' as they are not found in the database.")
+                    # Add new subtopics
+                    while True:
+                        topic_name = input("Enter topic name (or 'done' to finish): ")
+                        if topic_name.lower() == 'done':
+                            break
+                        subtopic_name = input("Enter subtopic name (optional, press Enter to skip): ") or topic_name
+
+                        # Verify subtopic
+                        subtopic_id = get_subtopic_id(subtopic_name, topic_name, connection)
+                        if subtopic_id:
+                            cursor.execute("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (%s, %s)", (new_isbn, subtopic_id))
+                            connection.commit()
+                            print(f"Linked '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}'.")
+                        else:
+                            print(f"Cannot link '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}' as they are not found in the database.")
+
+                elif action == '2':
+                    # Add additional subtopics without deleting existing ones
+                    print("Adding additional subtopics without deleting existing ones.")
+                    while True:
+                        topic_name = input("Enter topic name (or 'done' to finish): ")
+                        if topic_name.lower() == 'done':
+                            break
+                        subtopic_name = input("Enter subtopic name (optional, press Enter to skip): ") or topic_name
+
+                        # Verify subtopic
+                        subtopic_id = get_subtopic_id(subtopic_name, topic_name, connection)
+                        if subtopic_id:
+                            cursor.execute("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (%s, %s)", (new_isbn, subtopic_id))
+                            connection.commit()
+                            print(f"Linked '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}'.")
+                        else:
+                            print(f"Cannot link '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}' as they are not found in the database.")
+
+                elif action == '3':
+                    print("No changes made to subtopics; existing subtopics are retained.")
+                else:
+                    print("Invalid choice. No changes made to subtopics.")
+
+            # # Update subtopics (optional)
+            # update_subtopics = input("Would you like to update the subtopics associated with this book? (yes/no): ").lower()
+            # if update_subtopics == "yes":
+            #     cursor.execute("DELETE FROM Book_SubTopics WHERE ISBN = %s", (new_isbn,))
+            #     connection.commit()
+            #     print("Existing subtopics cleared. Please add new subtopics.")
+
+            #     # Add new subtopics
+            #     while True:
+            #         topic_name = input("Enter topic name (or 'done' to finish): ")
+            #         if topic_name.lower() == 'done':
+            #             break
+            #         subtopic_name = input("Enter subtopic name (optional, press Enter to skip): ") or topic_name
+
+            #         # Verify subtopic
+            #         subtopic_id = get_subtopic_id(subtopic_name, topic_name, connection)
+            #         if subtopic_id:
+            #             cursor.execute("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (%s, %s)", (new_isbn, subtopic_id))
+            #             connection.commit()
+            #             print(f"Linked '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}'.")
+            #         else:
+            #             print(f"Cannot link '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}' as they are not found in the database.")
 
     except pymysql.MySQLError as e:
         print(f"Error updating book: {e}")
+        connection.rollback()
     finally:
         connection.close()
 
+# Function to search for topics and their associated subtopics
 def check_topic_subtopic(topic_name, subtopic_name, connection):
     with connection.cursor() as cursor:
         # Check if topic exists
@@ -409,7 +524,65 @@ def add_subtopic(topic_name, subtopic_name):
     finally:
         connection.close()
 
-# Edit an existing subtopic
+# def edit_book(original_isbn, new_title=None, new_author=None, new_isbn=None, new_description=None):
+#     connection = connect_to_db()
+#     try:
+#         with connection.cursor() as cursor:
+#             # Start a transaction
+#             connection.begin()
+
+#             # Retrieve the current book to check if the ISBN is changing
+#             cursor.execute("SELECT * FROM Books WHERE ISBN = %s", (original_isbn,))
+#             book = cursor.fetchone()
+
+#             if not book:
+#                 print(f"No book found with ISBN '{original_isbn}'.")
+#                 connection.rollback()
+#                 return
+
+#             # Check if the ISBN is changing
+#             is_isbn_changing = new_isbn and new_isbn != original_isbn
+
+#             # Update the Books table
+#             update_book_query = """
+#                 UPDATE Books 
+#                 SET Title = %s, Author = %s, ISBN = %s, BookDesc = %s 
+#                 WHERE ISBN = %s
+#             """
+#             cursor.execute(update_book_query, (
+#                 new_title or book['Title'],
+#                 new_author or book['Author'],
+#                 new_isbn or original_isbn,
+#                 new_description or book.get('BookDesc'),
+#                 original_isbn,
+#             ))
+
+#             # If the ISBN is changing, update related tables
+#             if is_isbn_changing:
+#                 # Update Book_SubTopics table
+#                 update_subtopics_query = "UPDATE Book_SubTopics SET ISBN = %s WHERE ISBN = %s"
+#                 cursor.execute(update_subtopics_query, (new_isbn, original_isbn))
+
+#                 # Update Book_Language table
+#                 update_language_query = "UPDATE Book_Language SET ISBN = %s WHERE ISBN = %s"
+#                 cursor.execute(update_language_query, (new_isbn, original_isbn))
+
+#                 print(f"ISBN updated from '{original_isbn}' to '{new_isbn}' across all related tables.")
+#             else:
+#                 print("Book information updated without changing ISBN.")
+
+#             # Commit the transaction if all queries succeed
+#             connection.commit()
+#             print("Book details updated successfully.")
+
+#     except pymysql.MySQLError as e:
+#         print(f"Error updating book: {e}")
+#         connection.rollback()
+
+#     finally:
+#         connection.close()
+
+# Zahir Solution
 def edit_subtopic(topic_name, old_subtopic_name, new_subtopic_name):
     connection = connect_to_db()
     try:
@@ -432,12 +605,73 @@ def edit_subtopic(topic_name, old_subtopic_name, new_subtopic_name):
             cursor.execute("UPDATE Subtopics SET SubtopicName = %s WHERE SubtopicID = %s", (new_subtopic_name, subtopic['SubtopicID']))
             connection.commit()
             print(f"Subtopic '{old_subtopic_name}' updated to '{new_subtopic_name}' under topic '{topic_name}'.")
+
+            # Prompt user for action on additional subtopics
+            action = input("Do you want to (1) delete all existing subtopics and add new ones or (2) add new subtopics without deleting? (Enter 1 or 2): ")
+
+            if action == '1':
+                # Delete all subtopics related to the topic
+                cursor.execute("DELETE FROM Subtopics WHERE TopicID = %s", (topic['TopicID'],))
+                connection.commit()
+                print(f"All subtopics under topic '{topic_name}' have been deleted. Please add new subtopics.")
+
+                # Add new subtopics
+                while True:
+                    new_subtopic_name = input("Enter new subtopic name (or 'done' to finish): ")
+                    if new_subtopic_name.lower() == 'done':
+                        break
+                    cursor.execute("INSERT INTO Subtopics (SubtopicName, TopicID) VALUES (%s, %s)", (new_subtopic_name, topic['TopicID']))
+                    connection.commit()
+                    print(f"Subtopic '{new_subtopic_name}' added under topic '{topic_name}'.")
+
+            elif action == '2':
+                # Add additional subtopics without deleting existing ones
+                while True:
+                    additional_subtopic_name = input("Enter additional subtopic name (or 'done' to finish): ")
+                    if additional_subtopic_name.lower() == 'done':
+                        break
+                    cursor.execute("INSERT INTO Subtopics (SubtopicName, TopicID) VALUES (%s, %s)", (additional_subtopic_name, topic['TopicID']))
+                    connection.commit()
+                    print(f"Additional subtopic '{additional_subtopic_name}' added under topic '{topic_name}'.")
+
+            else:
+                print("Invalid choice. No changes made to subtopics.")
+
     except pymysql.MySQLError as e:
         print(f"Error editing subtopic: {e}")
+        connection.rollback()
     finally:
         connection.close()
 
-# Delete a specific subtopic under a given topic
+# Edit an existing subtopic
+# def edit_subtopic(topic_name, old_subtopic_name, new_subtopic_name):
+#     connection = connect_to_db()
+#     try:
+#         with connection.cursor() as cursor:
+#             # Verify the topic exists
+#             cursor.execute("SELECT TopicID FROM Topics WHERE TopicName = %s", (topic_name,))
+#             topic = cursor.fetchone()
+#             if not topic:
+#                 print(f"No topic found with the name '{topic_name}'.")
+#                 return
+
+#             # Check if the subtopic exists
+#             cursor.execute("SELECT SubtopicID FROM Subtopics WHERE SubtopicName = %s AND TopicID = %s", (old_subtopic_name, topic['TopicID']))
+#             subtopic = cursor.fetchone()
+#             if not subtopic:
+#                 print(f"No subtopic found with the name '{old_subtopic_name}' under topic '{topic_name}'.")
+#                 return
+
+#             # Update the subtopic name
+#             cursor.execute("UPDATE Subtopics SET SubtopicName = %s WHERE SubtopicID = %s", (new_subtopic_name, subtopic['SubtopicID']))
+#             connection.commit()
+#             print(f"Subtopic '{old_subtopic_name}' updated to '{new_subtopic_name}' under topic '{topic_name}'.")
+#     except pymysql.MySQLError as e:
+#         print(f"Error editing subtopic: {e}")
+#     finally:
+#         connection.close()
+
+# # Delete a specific subtopic under a given topic
 def delete_subtopic(topic_name, subtopic_name):
     connection = connect_to_db()
     try:

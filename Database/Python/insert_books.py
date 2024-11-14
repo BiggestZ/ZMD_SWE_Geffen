@@ -4,16 +4,17 @@ import pymysql, os
 from numpy import NAN
 
 # Path to the csv file
-fp = 'test_books.csv'
-filepath = os.path.join(os.path.dirname(__file__), fp)
+fp = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/test_books.csv'
+#filepath = os.path.join(os.path.dirname(__file__), fp)
+filepath = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/test_books.csv'
 
 # Connect to the database
 # REMINDER: REMOVE THE PASSWORD BEFORE COMMITTING
 try:
-    connection = pymysql.connect(host='',
-                                user='',
+    connection = pymysql.connect(host='localhost',
+                                user='root',
                                 password='', # Will fill in when needed
-                                db='')
+                                db='geffen_db')
     print("Connected to database")
 except:
     # If there's an error connecting to the database, print an error message
