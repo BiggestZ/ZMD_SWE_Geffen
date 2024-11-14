@@ -252,4 +252,111 @@ async function editBook(searchTerm: string): Promise<void> {
     }
 }
 
+// Find all books related to a given topic
+async function searchBooksByTopic(topicName: string): Promise<void> {
+  const connection = await connectToDb();
+  if (!connection) {
+      console.error("Failed to connect to the database.");
+      return;
+  }
+
+  try {
+      // Find the topic ID
+      const [topicRows] = await connection.execute(
+          "SELECT TopicID FROM Topics WHERE TopicName = ?",
+          [topicName]
+      );
+
+      if (Array.isArray(topicRows) && topicRows.length === 0) {
+          console.log(`No topic found with name '${topicName}'.`);
+          return;
+      }
+
+      const topicId = (topicRows as any[])[0].TopicID;
+
+      // Find all books linked to the topic through subtopics
+      const [bookRows] = await connection.execute(
+          `
+          SELECT b.Title, b.Author, b.ISBN, b.BookDesc
+          FROM Books b
+          JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+          JOIN Subtopics s ON bs.SubtopicID = s.SubtopicID
+          WHERE s.TopicID = ?
+          `,
+          [topicId]
+      );
+
+      // Display results
+      if (Array.isArray(bookRows) && bookRows.length > 0) {
+          console.log(`Books related to topic '${topicName}':`);
+          bookRows.forEach((book: any) => {
+              console.log(`Title: ${book.Title}`);
+              console.log(`Author: ${book.Author}`);
+              console.log(`ISBN: ${book.ISBN}`);
+              console.log(`Description: ${book.BookDesc}`);
+              console.log("-".repeat(40));
+          });
+      } else {
+          console.log(`No books found related to topic '${topicName}'.`);
+      }
+  } catch (error) {
+      console.error("Error searching for books:", error);
+  } finally {
+      await connection.end();
+  }
+}
+
+// Find all books related to a given subtopic
+async function searchBooksBySubtopic(subtopicName: string): Promise<void> {
+  const connection = await connectToDb();
+  if (!connection) {
+      console.error("Failed to connect to the database.");
+      return;
+  }
+
+  try {
+      // Find the subtopic ID
+      const [subtopicRows] = await connection.execute(
+          "SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ?",
+          [subtopicName]
+      );
+
+      if (Array.isArray(subtopicRows) && subtopicRows.length === 0) {
+          console.log(`No subtopic found with name '${subtopicName}'.`);
+          return;
+      }
+
+      const subtopicId = (subtopicRows as any[])[0].SubtopicID;
+
+      // Find all books linked to the subtopic
+      const [bookRows] = await connection.execute(
+          `
+          SELECT b.Title, b.Author, b.ISBN, b.BookDesc
+          FROM Books b
+          JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+          WHERE bs.SubtopicID = ?
+          `,
+          [subtopicId]
+      );
+
+      // Display results
+      if (Array.isArray(bookRows) && bookRows.length > 0) {
+          console.log(`Books related to subtopic '${subtopicName}':`);
+          bookRows.forEach((book: any) => {
+              console.log(`Title: ${book.Title}`);
+              console.log(`Author: ${book.Author}`);
+              console.log(`ISBN: ${book.ISBN}`);
+              console.log(`Description: ${book.BookDesc}`);
+              console.log("-".repeat(40));
+          });
+      } else {
+          console.log(`No books found related to subtopic '${subtopicName}'.`);
+      }
+  } catch (error) {
+      console.error("Error searching for books:", error);
+  } finally {
+      await connection.end();
+  }
+}
+
 export { searchBookByTitle, addBook, dropBook, editBook };

@@ -379,30 +379,6 @@ def edit_book(search_term):
                     print("No changes made to subtopics; existing subtopics are retained.")
                 else:
                     print("Invalid choice. No changes made to subtopics.")
-
-            # # Update subtopics (optional)
-            # update_subtopics = input("Would you like to update the subtopics associated with this book? (yes/no): ").lower()
-            # if update_subtopics == "yes":
-            #     cursor.execute("DELETE FROM Book_SubTopics WHERE ISBN = %s", (new_isbn,))
-            #     connection.commit()
-            #     print("Existing subtopics cleared. Please add new subtopics.")
-
-            #     # Add new subtopics
-            #     while True:
-            #         topic_name = input("Enter topic name (or 'done' to finish): ")
-            #         if topic_name.lower() == 'done':
-            #             break
-            #         subtopic_name = input("Enter subtopic name (optional, press Enter to skip): ") or topic_name
-
-            #         # Verify subtopic
-            #         subtopic_id = get_subtopic_id(subtopic_name, topic_name, connection)
-            #         if subtopic_id:
-            #             cursor.execute("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (%s, %s)", (new_isbn, subtopic_id))
-            #             connection.commit()
-            #             print(f"Linked '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}'.")
-            #         else:
-            #             print(f"Cannot link '{new_title}' to topic '{topic_name}' and subtopic '{subtopic_name}' as they are not found in the database.")
-
     except pymysql.MySQLError as e:
         print(f"Error updating book: {e}")
         connection.rollback()
@@ -524,6 +500,90 @@ def add_subtopic(topic_name, subtopic_name):
     finally:
         connection.close()
 
+# Find all books related to a given topic
+def search_books_by_topic(topic_name):
+    connection = connect_to_db()
+    if not connection:
+        print("Failed to connect to the database.")
+        return
+
+    try:
+        with connection.cursor() as cursor:
+            # Find the topic ID
+            cursor.execute("SELECT TopicID FROM Topics WHERE TopicName = %s", (topic_name,))
+            topic = cursor.fetchone()
+            if not topic:
+                print(f"No topic found with name '{topic_name}'.")
+                return
+
+            # Find all books linked to the topic through subtopics
+            cursor.execute("""
+                SELECT b.Title, b.Author, b.ISBN, b.BookDesc
+                FROM Books b
+                JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+                JOIN Subtopics s ON bs.SubtopicID = s.SubtopicID
+                WHERE s.TopicID = %s
+            """, (topic['TopicID'],))
+            books = cursor.fetchall()
+
+            # Display results
+            if books:
+                print(f"Books related to topic '{topic_name}':")
+                for book in books:
+                    print(f"Title: {book['Title']}")
+                    print(f"Author: {book['Author']}")
+                    print(f"ISBN: {book['ISBN']}")
+                    print(f"Description: {book['BookDesc']}")
+                    print("-" * 40)
+            else:
+                print(f"No books found related to topic '{topic_name}'.")
+
+    except pymysql.MySQLError as e:
+        print(f"Error searching for books: {e}")
+    finally:
+        connection.close()
+
+# Find all books related to a given subtopic
+def search_books_by_subtopic(subtopic_name):
+    connection = connect_to_db()
+    if not connection:
+        print("Failed to connect to the database.")
+        return
+
+    try:
+        with connection.cursor() as cursor:
+            # Find the subtopic ID
+            cursor.execute("SELECT SubtopicID FROM Subtopics WHERE SubtopicName = %s", (subtopic_name,))
+            subtopic = cursor.fetchone()
+            if not subtopic:
+                print(f"No subtopic found with name '{subtopic_name}'.")
+                return
+
+            # Find all books linked to the subtopic
+            cursor.execute("""
+                SELECT b.Title, b.Author, b.ISBN, b.BookDesc
+                FROM Books b
+                JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+                WHERE bs.SubtopicID = %s
+            """, (subtopic['SubtopicID'],))
+            books = cursor.fetchall()
+
+            # Display results
+            if books:
+                print(f"Books related to subtopic '{subtopic_name}':")
+                for book in books:
+                    print(f"Title: {book['Title']}")
+                    print(f"Author: {book['Author']}")
+                    print(f"ISBN: {book['ISBN']}")
+                    print(f"Description: {book['BookDesc']}")
+                    print("-" * 40)
+            else:
+                print(f"No books found related to subtopic '{subtopic_name}'.")
+
+    except pymysql.MySQLError as e:
+        print(f"Error searching for books: {e}")
+    finally:
+        connection.close()
 # def edit_book(original_isbn, new_title=None, new_author=None, new_isbn=None, new_description=None):
 #     connection = connect_to_db()
 #     try:
@@ -746,6 +806,14 @@ if __name__ == "__main__":
     elif action == "search_subtopic":
         search_term = input("Enter search term for subtopic: ")
         search_subtopics(search_term)
+
+    elif action == "test":
+        search_term = input("Enter search subtopic to find books: ")
+        search_books_by_subtopic(search_term)
+
+    elif action == "test2":
+        search_term = input("Enter search topic to find books: ")
+        search_books_by_topic(search_term)
 
     else:
         print("Invalid action. Please choose 'add', 'drop', or 'edit'.") 
