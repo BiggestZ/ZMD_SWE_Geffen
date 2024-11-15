@@ -6,7 +6,6 @@ CREATE TABLE Books (
     ISBN VARCHAR(13) PRIMARY KEY,
     Title VARCHAR(500),
     Author VARCHAR(255)
-    -- PublicationYear INT
     BookDesc LONGTEXT -- Not implemented yet
 );
 

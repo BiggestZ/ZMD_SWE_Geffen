@@ -24,7 +24,7 @@ except:
 
 # Read in the csv file using pandas
 with open(filepath) as file:
-    data = pd.read_csv(file, nrows=20) # Skip the first 2 rows and read 20 rows
+    data = pd.read_csv(file) # Skip the first 2 rows and read 20 rows
     # print(data)
 
 # Iterate throught the final column and see if rows in final column are empty
@@ -80,11 +80,18 @@ def split_topic(unformatted_phrase):
 def insert_books():
     cursor = connection.cursor() # Create a cursor object
     for index, row in data.iterrows():
-        isbn, title, author, final_tags = row['ISBN'], row['Title'], row['Author'], row['Final Tags'] # add ,row['Langauge']
+        isbn, title, author, description, uf_tags, final_tags, language = row['ISBN'], row['Title'], row['Author'], row['Description'], row['Unformatted Tags'],row['Formatted Tags'], row['Language'] # add ,row['Langauge']
         cursor.execute("INSERT INTO Books (ISBN, Title, Author) VALUES (%s, %s, %s)", (isbn, title, author))
         # fetch the topic ID
         #===========
         #Danny: 
+
+        # For book description, just insert into book table no problem
+
+        # For unformatted, first check against subtopics,
+        # if not in subtopics, reject tag
+        # if in subtopics, add into book_subtopics
+
 
         # Will be adding in here to check associated languages and inserting into book_language table
         '''
@@ -111,10 +118,10 @@ def insert_books():
             #tag_list = ['culture', 'similarities', 'differences']
             if (len(tag_list) == 1):
                 print('Length is 1')
-                #tag_list = ['Topic'] 
-                print(str(tag_list) + ' 1')
+                # tag_list = ['Topic'] 
+                # print(str(tag_list) + ' 1')
                 subtopicId = get_or_create_subtopic(tag_list[0].lower())
-                print(str(subtopicId) + " A")
+                # print(str(subtopicId) + " A")
                 #FIXME
                 cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopicId))
 
@@ -125,9 +132,9 @@ def insert_books():
                 # print(topicId)
                 for tag in tag_list[1:]:
                     #tag = 'subTopic'
-                     print(str(tag) + ' 2')
+                    # print(str(tag) + ' 2')
                      subtopicId = get_or_create_subtopic(tag.lower())
-                     print(str(subtopicId) + ' B')
+                    # print(str(subtopicId) + ' B')
 
                      #FIXME
                      cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopicId))
@@ -206,11 +213,6 @@ insert_books() # Insert the books into the database
 # For topics table solutions
 # 1. Do we need to select the topic that is present and then insert the ID into the table?
 # 2. Do we assign the topic as we insert the book into the database and use that ID.
-
-
-
-
-
 
 '''# This file will serve to put books from the csv into the database
 import pandas as pd

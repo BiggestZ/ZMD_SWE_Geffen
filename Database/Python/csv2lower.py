@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 # Path to the csv file
-fp = 'CSVs/language.csv'
+fp = 'CSVs/text/Final_Tags.csv'
 filepath = os.path.join(os.path.dirname(__file__),fp)
 print('Found Filepath')
 
