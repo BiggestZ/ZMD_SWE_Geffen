@@ -17,7 +17,7 @@ def format_csv(list):
         tempTitle = books[0]
         tempLanguage = books[3]
         if pd.isna(tempLanguage):
-            tempLanguage = "no language given"
+            tempLanguage = "Language not Found"
         tempTitleList.append(tempTitle)
         tempLanguageList.append(tempLanguage)
     tempList.append([tempTitleList, tempLanguageList])
@@ -30,10 +30,11 @@ def getLanguage(title):
     if title in tempTitle:
         #print("good")
         index = tempTitle.index(title) 
-        print("index: ", index)
+        # print("index: ", index)
         return title_Language[0][1][index]
     else:
-        print("Book was not found")
+        return "Language not Found"
+        
 
 
 
