@@ -1,5 +1,13 @@
 import connectToDb from './connectToDB';
-import mysql from 'mysql2/promise';
+import mysql, {RowDataPacket} from 'mysql2/promise';
+
+interface Book {
+    title: string;
+    author: string;
+    isbn: string;
+    description: string;
+    language: string;
+}
 
 // Create an interface to store the topic and subtopic IDs
 interface TopicSubtopicIds {
@@ -260,5 +268,7 @@ async function getSubtopicId(subtopicName: string, connection: mysql.Connection)
         return null;
     }
 }
+
+
 // Export all of the functions
 export { searchSubtopics, deleteSubtopic, checkTopicSubtopic, addSubtopic, editSubtopic, getSubtopicId };

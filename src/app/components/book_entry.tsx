@@ -306,6 +306,51 @@ async function searchBooksByTopic(topicName: string): Promise<void> {
   }
 }
 
+async function getSubtopicsForBook(bookTitle: string): Promise<string[]> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return [];
+    }
+
+    try {
+        const [bookResults] = await connection.execute(
+            "SELECT ISBN FROM Books WHERE Title = ?",
+            [bookTitle]
+        );
+
+        if (Array.isArray(bookResults) && bookResults.length === 0) {
+            console.log(`No book found with title '${bookTitle}'.`);
+            return [];
+        }
+
+        const book = (bookResults as any[])[0];
+        const ISBN = book.ISBN;
+
+        const [subtopicResults] = await connection.execute(
+            `
+            SELECT s.SubtopicName
+            FROM Subtopics s
+            JOIN Book_SubTopics bs ON s.SubtopicID = bs.SubtopicID
+            WHERE bs.ISBN = ?
+            `,
+            [ISBN]
+        );
+
+        if (Array.isArray(subtopicResults) && subtopicResults.length > 0) {
+            return (subtopicResults as any[]).map(row => row.SubtopicName);
+        } else {
+            return [];
+        }
+
+    } catch (error) {
+        console.error(`Database error: ${error}`);
+        return [];
+    } finally {
+        await connection.end();
+    }
+}
+
 // Find all books related to a given subtopic
 async function searchBooksBySubtopic(subtopicName: string): Promise<void> {
   const connection = await connectToDb();
@@ -357,6 +402,54 @@ async function searchBooksBySubtopic(subtopicName: string): Promise<void> {
   } finally {
       await connection.end();
   }
+}
+
+async function getTopicsForBook(bookTitle: string): Promise<string[]> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return [];
+    }
+
+    try {
+        // Get the ISBN for the given book title
+        const [bookResults] = await connection.execute(
+            "SELECT ISBN FROM Books WHERE Title = ?",
+            [bookTitle]
+        );
+
+        if (Array.isArray(bookResults) && bookResults.length === 0) {
+            console.log(`No book found with title '${bookTitle}'.`);
+            return [];
+        }
+
+        const book = (bookResults as any[])[0];
+        const ISBN = book.ISBN;
+
+        // Get topics linked to this ISBN through subtopics
+        const [topicResults] = await connection.execute(
+            `
+            SELECT DISTINCT t.TopicName
+            FROM Topics t
+            JOIN Subtopics s ON t.TopicID = s.TopicID
+            JOIN Book_SubTopics bs ON s.SubtopicID = bs.SubtopicID
+            WHERE bs.ISBN = ?
+            `,
+            [ISBN]
+        );
+
+        if (Array.isArray(topicResults) && topicResults.length > 0) {
+            return (topicResults as any[]).map(row => row.TopicName);
+        } else {
+            return [];
+        }
+
+    } catch (error) {
+        console.error(`Database error: ${error}`);
+        return [];
+    } finally {
+        await connection.end();
+    }
 }
 
 export { searchBookByTitle, addBook, dropBook, editBook };

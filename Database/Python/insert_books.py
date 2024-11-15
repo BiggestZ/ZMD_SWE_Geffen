@@ -75,20 +75,6 @@ def split_topic(unformatted_phrase):
     phrase = splitPhrases(unformatted_phrase)
     return phrase
 #=======================================
-# Danny - NEED: 
-# subtopic_in: 'culture' or 'similarities' or 'differences'
-# return subtopic id if one exists, else crete one and return subtopic id
-'''def get_subtopic_id(subtopic_in):
-    subtopic_id = "12345"
-    return subtopic_id'''
-#=======================================
-# Danny - NEED: 
-# topic_in: 'culture' or 'similarities' or 'differences'
-# return topic id if one exists, else crete one and return subtopic id
-'''def get_topic_id(topic_in):
-    topic_id = "54321"
-    return topic_id'''
-#=======================================
 # DANNY: 
 # inputs information from csv to database
 def insert_books():
