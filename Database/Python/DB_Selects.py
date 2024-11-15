@@ -759,6 +759,68 @@ def delete_subtopic(topic_name, subtopic_name):
     finally:
         connection.close()
 
+def get_subtopics_for_book(book_title):
+    connection = connect_to_db()
+    try:
+        with connection.cursor() as cursor:
+            # Get the ISBN for the given book title
+            cursor.execute("SELECT ISBN FROM Books WHERE Title = %s", (book_title,))
+            book = cursor.fetchone()
+            
+            if not book:
+                print(f"No book found with title '{book_title}'.")
+                return []
+
+            # Get subtopics linked to this ISBN
+            cursor.execute("""
+                SELECT s.SubtopicName
+                FROM Subtopics s
+                JOIN Book_SubTopics bs ON s.SubtopicID = bs.SubtopicID
+                WHERE bs.ISBN = %s
+            """, (book['ISBN'],))
+            
+            subtopics = cursor.fetchall()
+            
+            # Return a list of subtopic names
+            return [subtopic['SubtopicName'] for subtopic in subtopics] if subtopics else []
+
+    except pymysql.MySQLError as e:
+        print(f"Database error: {e}")
+        return []
+    finally:
+        connection.close()
+
+def get_topics_for_book(book_title):
+    connection = connect_to_db()
+    try:
+        with connection.cursor() as cursor:
+            # Get the ISBN for the given book title
+            cursor.execute("SELECT ISBN FROM Books WHERE Title = %s", (book_title,))
+            book = cursor.fetchone()
+            
+            if not book:
+                print(f"No book found with title '{book_title}'.")
+                return []
+
+            # Get topics linked to this ISBN through subtopics
+            cursor.execute("""
+                SELECT DISTINCT t.TopicName
+                FROM Topics t
+                JOIN Subtopics s ON t.TopicID = s.TopicID
+                JOIN Book_SubTopics bs ON s.SubtopicID = bs.SubtopicID
+                WHERE bs.ISBN = %s
+            """, (book['ISBN'],))
+            
+            topics = cursor.fetchall()
+            
+            # Return a list of topic names
+            return [topic['TopicName'] for topic in topics] if topics else []
+
+    except pymysql.MySQLError as e:
+        print(f"Database error: {e}")
+        return []
+    finally:
+        connection.close()
 
 # Command-line interface for testing
 if __name__ == "__main__":
