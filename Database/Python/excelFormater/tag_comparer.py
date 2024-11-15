@@ -113,12 +113,8 @@ def addLanguage_to_csv(filepath):
     originalList = csv_to_list(filepath)
     tempList = []
     for row in originalList:
-        # print("\n")
-        # print(row[1])
-        # print("\n")
         tempRow = row
         tempRow.append(getLanguage(row[1]))
-        # print(tempRow)
         tempList.append(tempRow)
 
     return tempList
@@ -169,6 +165,7 @@ def write_list_to_csv(data_list, file_path):
 
 
 #==================
+#added language to master2
 master_filepath = '/Users/dannykim/Documents/Pycharm Projects/ZMD_SWE_Geffen/Database/Python/master.csv'
 masterFile = addLanguage_to_csv(master_filepath)
 #print(masterFile)
