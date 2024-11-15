@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import ast
 from isbnlib import isbn_from_words, desc
+from excelFormater import getLanguage
 #======================================
 def splitPhrases(phrases):
     result = []
@@ -107,10 +108,26 @@ def final_to_csv(bookList,filepath):
     print("listToCSV done")
 
 
+#==================
+def addLanguage_to_csv(filepath):
+    originalList = csv_to_list(filepath)
+    tempList = []
+    for row in originalList:
+        # print("\n")
+        # print(row[1])
+        # print("\n")
+        tempRow = row
+        tempRow.append(getLanguage(row[1]))
+        # print(tempRow)
+        tempList.append(tempRow)
 
-
-
-
+    return tempList
+#==================
+def write_list_to_csv(data_list, file_path):
+    # Create a DataFrame from the list
+    df = pd.DataFrame(data_list, columns=['ISBN','Title','Author','Description','Unformatted Tags','Formatted Tags','Language'])
+    # Write the DataFrame to a CSV file
+    df.to_csv(file_path, index=False)
 
         
 #==================
@@ -152,6 +169,11 @@ def final_to_csv(bookList,filepath):
 
 
 #==================
+master_filepath = '/Users/dannykim/Documents/Pycharm Projects/ZMD_SWE_Geffen/Database/Python/master.csv'
+masterFile = addLanguage_to_csv(master_filepath)
+#print(masterFile)
+master2_filepath = 'Database/Python/excelFormater/master2.csv'
+write_list_to_csv(masterFile,master2_filepath )
 
 #==================
 
