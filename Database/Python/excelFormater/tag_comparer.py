@@ -165,8 +165,8 @@ print("Start:")
 print("\n")
 
 print("Start csv to list")
-file_path_bookListDanny = '/Users/dannykim/Documents/Pycharm Projects/ZMD_SWE_Geffen/Database/Python/bookListDanny.csv'
-file_path_test = '/Users/dannykim/Documents/Pycharm Projects/ZMD_SWE_Geffen/Database/Python/test.csv'
+file_path_bookListDanny = 'Database/Python/excelFormater/bookListDanny.csv'
+file_path_test = 'Database/Python/test.csv'
 bookRow_in_List = csv_to_list(file_path_bookListDanny)
 tag_bank = tag_to_list(file_path_test)
 subtag_bank = subtag_to_list(file_path_test)
