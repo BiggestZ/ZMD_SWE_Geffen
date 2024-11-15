@@ -24,14 +24,14 @@ def format_csv(list):
 
     return tempList
 
-def getLanguage(title,title_language):
-    tempTitle = title_language[0][0]
+def getLanguage(title):
+    tempTitle = title_Language[0][0]
     #print(tempTitle)
     if title in tempTitle:
         #print("good")
         index = tempTitle.index(title) 
         print("index: ", index)
-        return title_language[0][1][index]
+        return title_Language[0][1][index]
     else:
         print("Book was not found")
 
@@ -44,12 +44,12 @@ title_Language = format_csv(bookRow_in_List)
 
 
 
-print("1: ",getLanguage("7 ate 9: the untold story",title_Language))
-print("2: ",getLanguage("a friend like you",title_Language))
-print("3: ",getLanguage("A Hundred thousand welcomes",title_Language))
-print("4: ",getLanguage("I'm hungry Tengo Hambre",title_Language))
-print("5: ",getLanguage("Mawkiljemk Mi'kmawiktuk (Counting in Mi'kmaw)",title_Language))
-print("6: ",getLanguage("Cesaria Feels the Beat ",title_Language))
+print("1: ",getLanguage("7 ate 9: the untold story"))
+print("2: ",getLanguage("a friend like you"))
+print("3: ",getLanguage("A Hundred thousand welcomes"))
+print("4: ",getLanguage("I'm hungry Tengo Hambre"))
+print("5: ",getLanguage("Mawkiljemk Mi'kmawiktuk (Counting in Mi'kmaw)"))
+print("6: ",getLanguage("Cesaria Feels the Beat "))
 
 
 
