@@ -19,17 +19,17 @@ export default async function Home() {
     let bookArray = booksList.map((book : Book) => {
         // map is highlighted as an error here but it's working anyway?
         return (
-            <BookEntry key={book.ISBN} Title={book.Title} Author={book.Author} ISBN={book.ISBN} />
+            <BookEntry key={book.ISBN} title={book.Title} author={book.Author} isbn={book.ISBN} />
         )
     })
 
     return (
         <div className="flex space-x-10">
             <SearchBlock />
-            <div className = "flex w-52"></div>
+            <div className = "flex w-48"></div>
             <div>
                 <h1>search test</h1>
-                <div className="grid grid-cols-2 place-content-start p-5 gap-5">
+                <div className="w-full grid grid-cols-2 place-content-start p-5 gap-5">
                     { bookArray }
                 </div>  
             </div>         
