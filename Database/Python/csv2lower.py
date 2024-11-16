@@ -4,8 +4,9 @@ import os
 import pandas as pd
 
 # Path to the csv file
-fp = 'test.csv'
+fp = 'CSVs/text/Final_Tags.csv'
 filepath = os.path.join(os.path.dirname(__file__),fp)
+print('Found Filepath')
 
 # Connect to the csv
 with open(filepath) as file:
@@ -13,6 +14,10 @@ with open(filepath) as file:
 
 # Convert all text in the csv to lowercase
 data = data.apply(lambda x: x.astype(str).str.lower())
+
+# Alphabetize the data
+data = data.sort_values(by='Language')
+print(data)
 
 # write the changes to the same csv
 data.to_csv(filepath,index=False)

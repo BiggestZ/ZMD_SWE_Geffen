@@ -1,14 +1,14 @@
-import pymysql
+import pymysql, flask
 
 def connect_to_db():
     """Establishes a connection to the MySQL database using pymysql."""
     # REMEMBER TO REPLACE THE PASSWORD BEFORE COMMITTING
     try:
         connection = pymysql.connect(
-            host='localhost',
-            user='root',
+            host='sql.cianci.io',
+            user='',
             password='', # Will fill in when needed
-            database='geffen_db',
+            database='2024fall_comp367_geffen',
             cursorclass=pymysql.cursors.DictCursor  # Ensures results are returned as dictionaries
         )
         return connection
