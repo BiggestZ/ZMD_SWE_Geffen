@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import TagTable from "../components/tagTable";
+import { API_ROUTES } from '../pages/api/submitForm/route';
 
 export default function Home() {
   const [resetTrigger, setResetTrigger] = useState(false);
@@ -22,28 +23,41 @@ export default function Home() {
     return null; // Or a loading spinner could be used here instead
   }
 
+  //======
+  
+  //======
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Prevent default form submission behavior
 
     try {
       console.log('sending data', isbn);
       console.log('data:', isbn, title, author, selectedTags);
-      // Send the form data, including tags, to the backend
-      const response = await axios.post('/api/submitForm', {
+      
+    //  Send the form data, including tags, to the backend
+      const response = await axios.post(API_ROUTES.SUBMIT_FORM, {
         isbn,
         title,
         author,
         tags: selectedTags, // Include selected tags
       });
+    
+      
 
       if (response.status === 200) {
         console.log('Form submitted successfully:', response.data);
         resetForm(); // Optionally reset the form
       } else {
-        console.error('Error submitting form:', response.statusText);
+        console.error('Error submitting form 1:', response.statusText);
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error submitting form 2:', error);
+      if (axios.isAxiosError(error)) {
+        // This is an Axios error
+        console.error('Axios Error here:', error.message);
+      }
+    
+      
     }
   };
 
@@ -99,7 +113,7 @@ export default function Home() {
 
       <hr />
       <button type="button" onClick={resetForm}>Reset form</button>
-      <button type="submit">Submit form</button>
+      <button type="submit" onClick={(e) => handleSubmit(e)}>Submit form</button>
     </form>
   );
 }
