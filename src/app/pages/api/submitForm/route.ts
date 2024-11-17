@@ -5,10 +5,13 @@ export const API_ROUTES = {
     
   };
 
+import connectToDb from '@/app/components/connectToDB';
   import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
+    const connection = await connectToDb()
+    if(!connection) return;
     const body = await req.json();
     const { isbn, title, author, tags } = body;
 
@@ -18,6 +21,11 @@ export async function POST(req: Request) {
 
     console.log('Received data route.ts:', { isbn, title, author, tags });
     // Log the received data (database logic here)
+    // 
+    await connection.execute(
+      "INSERT INTO Books (Title, Author, ISBN, Description) VALUES (?, ?, ?, ?)",
+      [title, author, isbn]
+  );
 
     return NextResponse.json({ message: 'Form data saved successfully!' });
     
