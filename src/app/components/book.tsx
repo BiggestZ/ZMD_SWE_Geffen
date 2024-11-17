@@ -2,7 +2,7 @@ import { Book } from "@/types";
 import { TagsContainer } from "./tagsContainer";
 import { Plus } from "phosphor-react";
 //import { PyBridge } from "pybridge";
-import { connectionParameters } from "../api/books/route";
+import { connectionParameters } from "../books/route";
 import mysql from "mysql2/promise";
 
 const BookEntry : React.FC<Book> = ({ Title,Author,ISBN }) => {

@@ -34,29 +34,14 @@ export default function TagTable({ resetTrigger, onResetHandled, onTagsSelected 
       const updatedTags = prevSelectedTags.includes(tag)
         ? prevSelectedTags.filter((t) => t !== tag)
         : [...prevSelectedTags, tag];
-
-      onTagsSelected(updatedTags); // Notify parent about selected tags
       return updatedTags;
     });
   };
 
+  // Notify parent about selected tags after `selectedTags` state updates
   useEffect(() => {
-    // const fetchTopics = async () => {
-    //   try {
-    //     const response = await fetch('/api/getTopics');
-    //     if (response.ok) {
-    //       const data = await response.json();
-    //       setTopics(data);
-    //     } else {
-    //       console.error('Error fetching topics');
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching topics:', error);
-    //   }
-    // };
-
-    // fetchTopics();
-  }, []);
+    onTagsSelected(selectedTags);
+  }, [selectedTags, onTagsSelected]);
 
   // Reset logic when resetTrigger changes
   useEffect(() => {
@@ -107,4 +92,5 @@ export default function TagTable({ resetTrigger, onResetHandled, onTagsSelected 
     </div>
   );
 }
+
 
