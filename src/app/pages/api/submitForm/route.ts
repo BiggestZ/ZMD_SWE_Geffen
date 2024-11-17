@@ -36,6 +36,8 @@ import { addBook } from '../../../components/book_entry';
 
 export async function POST(req: Request) {
   try {
+    const connection = await connectToDb()
+    if(!connection) return;
     const body = await req.json();
     const { isbn, title, author, tags } = body;
     if (!isbn || !title || !author || !tags) {
