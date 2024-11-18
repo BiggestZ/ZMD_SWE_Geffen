@@ -1,7 +1,7 @@
 "use client"
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { House,MagnifyingGlass,Bookmark,FilePlus } from "phosphor-react";
+import { House,MagnifyingGlass,Bookmark,FilePlus, FileMinus } from "phosphor-react";
 
 const NavBarLinks: React.FC = () => {
     const router = useRouter();
@@ -21,6 +21,7 @@ const NavBarLinks: React.FC = () => {
           <button onClick={() => router.push('/search')} style={buttonStyle}><MagnifyingGlass size={30} />Explore</button>
           <button onClick={() => router.push('/bookmarks')} style={buttonStyle}><Bookmark size={30} />Saved</button>
           <button onClick={() => router.push('/addNew')} style={buttonStyle}><FilePlus size={30} />Add New</button>
+          <button onClick={() => router.push('/deleteBook')} style={buttonStyle}><FileMinus size={30} />Add New</button>
         </div>
       );
     };
