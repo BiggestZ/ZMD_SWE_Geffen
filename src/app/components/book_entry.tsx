@@ -204,7 +204,6 @@ async function editBook(searchTerm: string): Promise<void> {
   
       if (updateSubtopics === "yes") {
         const action = prompt("Choose an option:\n1) Delete all existing subtopics and add new ones\n2) Add new subtopics to existing ones\n3) Leave existing subtopics as is\nEnter 1, 2, or 3: ");
-  
         if (action === '1') {
           await connection.query("DELETE FROM Book_SubTopics WHERE ISBN = ?", [newIsbn]);
           console.log("Existing subtopics cleared. Please add new subtopics.");

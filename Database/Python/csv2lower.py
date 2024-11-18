@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 # Path to the csv file
-fp = 'CSVs/text/Final_Tags.csv'
+fp = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/master.csv'
 filepath = os.path.join(os.path.dirname(__file__),fp)
 print('Found Filepath')
 
@@ -16,8 +16,8 @@ with open(filepath) as file:
 data = data.apply(lambda x: x.astype(str).str.lower())
 
 # Alphabetize the data
-data = data.sort_values(by='Language')
-print(data)
+# data = data.sort_values(by='Language')
+# print(data)
 
 # write the changes to the same csv
 data.to_csv(filepath,index=False)

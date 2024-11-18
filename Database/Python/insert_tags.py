@@ -21,7 +21,7 @@ except:
 cursor = connection.cursor() 
 
 # Read the CSV file using pandas
-with open('Database/Python/CSVs/test.csv') as file:
+with open('Database/Python/CSVs/Final_Tags.csv') as file:
     data = pd.read_csv(file,na_values = [""])
     next(data.iterrows()) # Skip the first row
 # Insert the main topic if iåt's not already in the table

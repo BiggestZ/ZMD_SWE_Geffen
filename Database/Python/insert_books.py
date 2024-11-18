@@ -4,9 +4,9 @@ import pymysql, os
 from numpy import NAN
 
 # Path to the csv file
-fp = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/test_books.csv'
+fp = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/master.csv'
 #filepath = os.path.join(os.path.dirname(__file__), fp)
-filepath = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/test_books.csv'
+filepath = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/master.csv'
 
 # Connect to the database
 # REMINDER: REMOVE THE PASSWORD BEFORE COMMITTING
@@ -78,10 +78,96 @@ def split_topic(unformatted_phrase):
 # DANNY: 
 # inputs information from csv to database
 def insert_books():
+    counter = 0
     cursor = connection.cursor() # Create a cursor object
     for index, row in data.iterrows():
         isbn, title, author, description, uf_tags, final_tags, language = row['ISBN'], row['Title'], row['Author'], row['Description'], row['Unformatted Tags'],row['Formatted Tags'], row['Language'] # add ,row['Langauge']
-        cursor.execute("INSERT INTO Books (ISBN, Title, Author) VALUES (%s, %s, %s)", (isbn, title, author))
+        
+        # Check there are no nan values
+        if pd.isna(title):
+            print("Title is empty, try again")
+            return
+        if pd.isna(author):
+            print(f"Author for {title} is empty, try again")
+            return
+        if pd.isna(isbn):
+            print(f"ISBN for {title} is empty, try again")
+            return
+        if pd.isna(description):
+            description = "No description available"
+        if pd.isna(uf_tags):
+            print(f"Unformatted tags for {title} is empty, try again")
+            return
+        if pd.isna(final_tags) or final_tags == '[]' or final_tags == '':
+            print(f"Formatted tags for {title}.")
+            final_tags = "[empty tag]"
+            print(f'Edited Final Tag: {final_tags}')
+            print(f"Formatted tags for {title} is empty, try again.")
+            #return
+        if pd.isna(language):
+            language = "No language given"
+            print('Language was empty, set to "No language given"')
+            #return
+
+        # Check if the book already exists in the database
+        cursor.execute("SELECT ISBN FROM Books WHERE ISBN = %s", (isbn,))
+        result = cursor.fetchone()
+        if result:
+            print(f"Book with ISBN {isbn} already exists in the database")
+            continue
+        print(f"Final Tag: {final_tags}")
+         
+        # Push into the books table
+        cursor.execute("INSERT INTO Books (ISBN, Title, Author, Description) VALUES (%s, %s, %s, %s)", (isbn, title, author, description))
+        print(f"Inserted {title} into the Books table")
+        counter += 1
+        print(f"Counter: {counter}")
+
+        # For language, we need to check if the language is in the database, if not, we need to throw an error
+        language = language.split(',')
+        print(f"Language1: {language}")
+        for lang in language:
+            lang = lang.strip()
+            print(f"Language2: {lang}")
+            cursor.execute("SELECT LanguageID FROM Language WHERE LanguageName = %s", (lang,))
+            result = cursor.fetchone()
+            if result:
+                language_id = result[0] 
+            elif(lang == '' or lang == 'nan'): # If the language is empty, we skip
+                lang = 'no language given'
+                language_id = 80
+            else:
+            # Insert the language and get the new ID
+                cursor.execute("INSERT INTO Language (LanguageName) VALUES (%s)", (lang,))
+                language_id = cursor.lastrowid
+                print(f"Inserted {lang} into the Language table")
+            cursor.execute("INSERT INTO Book_Language (ISBN, LanguageID) VALUES (%s, %s)", (isbn, language_id))
+        
+        # For unformatted tags, we compare them to the subtopics. If they are not in the subtopics, we reject the tag
+        # If they are in the subtopics, we add them to the book_subtopics table
+        uf_tags = uf_tags.split(',')
+        print(f"Unformatted Tags: {uf_tags}")
+        for tag in uf_tags:
+            tag = tag.strip("'[]")
+            print(f"Tag: {tag}")
+            cursor.execute("SELECT SubtopicID FROM Subtopics WHERE SubtopicName = %s", (tag,))
+            result = cursor.fetchone()
+            if result:
+                subtopic_id = result[0]
+            else:
+                #print(f"Could not find subtopic for: {tag}, try again")
+                subtopic_id = 528
+                # Check if the ISBN-SubtopicID pair already exists
+                cursor.execute("SELECT 1 FROM Book_Subtopics WHERE ISBN = %s AND SubtopicID = %s", (isbn, subtopic_id))
+                exists = cursor.fetchone()
+                if exists:
+                    print('Skipping')
+                    #print(f"Book with ISBN {isbn} already has subtopic {subtopicId}")
+                    continue
+            cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopic_id))
+            
+
+
         # fetch the topic ID
         #===========
         #Danny: 
@@ -93,25 +179,7 @@ def insert_books():
         # if in subtopics, add into book_subtopics
 
 
-        # Will be adding in here to check associated languages and inserting into book_language table
-        '''
-        for language in row['Language']:
-            # Make sure to preprocess language (lowercase, no whitespace)
-            cursor.execute("SELECT LanguageID FROM Language WHERE LanguageName = %s", (language,))
-            result = cursor.fetchone()
-            if result: # If the language exists
-                language_id = result[0]
-            else: # If the language doesn't exist
-                # If we do not want to change the language name
-                print("Could not find language, try again")
-                return
-                cursor.execute("INSERT INTO Language (LanguageName) VALUES (%s)", (language,))
-                language_id = cursor.lastrowid
-                
-        '''
-
         # If we have just 1 thing, we just check the subtopic of it 
-
         final_tags = split_topic(final_tags)
         # final_tags= [['culture', 'similarities', 'differences'],[Cognition]] -> Cognition: Cognition
         for tag_list in final_tags:
@@ -121,6 +189,16 @@ def insert_books():
                 # tag_list = ['Topic'] 
                 # print(str(tag_list) + ' 1')
                 subtopicId = get_or_create_subtopic(tag_list[0].lower())
+                # Check if the subtopic already exists in Book_Subtopics. If it does, skip
+                            # Check if the ISBN-SubtopicID pair already exists
+                cursor.execute("SELECT 1 FROM Book_Subtopics WHERE ISBN = %s AND SubtopicID = %s", (isbn, subtopicId))
+                exists = cursor.fetchone()
+
+                if exists:
+                    print(f"Book with ISBN {isbn} already has subtopic {subtopicId}")
+                    continue
+
+
                 # print(str(subtopicId) + " A")
                 #FIXME
                 cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopicId))
@@ -133,11 +211,16 @@ def insert_books():
                 for tag in tag_list[1:]:
                     #tag = 'subTopic'
                     # print(str(tag) + ' 2')
-                     subtopicId = get_or_create_subtopic(tag.lower())
+                    subtopicId = get_or_create_subtopic(tag.lower())
+                    cursor.execute("SELECT 1 FROM Book_Subtopics WHERE ISBN = %s AND SubtopicID = %s", (isbn, subtopicId))
+                    exists = cursor.fetchone()
+                    if exists:
+                        print(f"Book with ISBN {isbn} already has subtopic {subtopicId}")
+                        continue
                     # print(str(subtopicId) + ' B')
 
                      #FIXME
-                     cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopicId))
+                    cursor.execute("INSERT INTO Book_Subtopics (ISBN, subtopicID) VALUES (%s, %s)", (isbn, subtopicId))
                 
     # cursor.execute("INSERT INTO Books (ISBN, Title, Author) VALUES (%s, %s, %s)", (isbn, title, author))            
 
@@ -169,14 +252,18 @@ def splitPhrases(phrases):
 def get_or_create_subtopic(subtopic_name):
     # Create a cursor
     cursor = connection.cursor()
+    subtopic_name = subtopic_name.strip("'[]")
     
     # Check if the subtopic exists and get its ID
     cursor.execute("SELECT SubtopicID FROM Subtopics WHERE SubtopicName = %s", (subtopic_name))
+    print(f'Subtopic Name: {subtopic_name}')
     subtopic_result = cursor.fetchone()  # Fetch the first result
+    print(f'Subtopic Result: {subtopic_result}')
     if subtopic_result:
         subtopic_id = subtopic_result[0]  # Get the subtopic ID
     else:
-        print("Could not find subtopic, try again")
+        print(f"Could not find subtopic: {subtopic_name}, try again")
+        subtopic_id = 528
     #     # Insert the subtopic and get the new ID
     #     cursor.execute("INSERT INTO Subtopics (SubtopicName, TopicID) VALUES (%s, %s)", (subtopic_name, topic_id))
     #     subtopic_id = cursor.lastrowid  # Get the last inserted ID
