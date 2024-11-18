@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import { API_ROUTES } from '../pages/api/deleteBook/route';
 
 const DeleteBookPage = () => {
   const [title, setTitle] = useState('');
@@ -9,6 +10,7 @@ const DeleteBookPage = () => {
 
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage('deleting book');
 
     if (!title.trim()) {
       setMessage('Please enter a valid book title.');
