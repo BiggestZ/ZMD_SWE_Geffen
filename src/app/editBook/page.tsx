@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import axios from 'axios';
-import { API_ROUTES } from '../../pages/api/editBook/route';
+import { API_ROUTES } from '../pages/api/editBook/route';
 
 
 const EditBooksPage = () => {
@@ -16,6 +16,7 @@ const EditBooksPage = () => {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('Searching for books...');
+    console.log('Getting book:', searchQuery);
     try {
       const response = await axios.get(API_ROUTES.EDIT_BOOK,{data: { searchQuery },});
 
