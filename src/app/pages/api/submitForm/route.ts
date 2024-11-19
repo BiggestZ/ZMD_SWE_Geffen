@@ -3,6 +3,7 @@ export const API_ROUTES = {
 
     SUBMIT_FORM: 'pages/api/submitForm/',
     
+    
   };
 
 import { NextResponse } from 'next/server';
