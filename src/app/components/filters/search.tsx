@@ -6,18 +6,16 @@ import { useState,  useEffect } from 'react';
 import { makeAxiosRequestConfig } from "../axiosrequest";
 
 // thoughts
-// figure out the function/api to call all subtopics and IDs at once
+// figure out the function/api to call all subtopics and IDs at once DONE
 // array.filter(tag)
 // won't need to submit form? maybe?
 
 const SearchBlock : React.FC = () => {
 
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    const [showAll, setShowAll] = useState(true)
 
-    
     let myFormData = new FormData();
-    //myFormData.append()
+    //myFormData.append(tags, selectedTags)
 
     return (
         <div className = "flex fixed left-0 h-full bg-slate-200 overscroll-contain w-48 grid grid-cols-1 justify-top">

@@ -334,6 +334,41 @@ async function getAllSubtopics(): Promise<Record<string, string[]>> {
     }
 }
 
+
+async function getAllBooks(): Promise<Record<string, string[]>> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return {};
+    }
+    try {
+        // Fetch all book ISBNs with their subtopics
+        const [results] = await connection.execute(
+            `
+            SELECT b.Title AS bookTitle, s.SubtopicName AS subtopicName
+            FROM Books b
+            JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+            JOIN Subtopics s ON bs.SubtopicID = s.SubtopicID
+            `
+        );
+        // Organize subtopics by book title
+        const booksBySubtopic: Record<string, string[]> = {}; // Initialize an empty object
+        (results as any[]).forEach(row => { 
+            const { bookTitle, subtopicName } = row; // Extract book title and subtopic name
+            if (!booksBySubtopic[subtopicName]) { // Initialize subtopic list for the book
+                booksBySubtopic[subtopicName] = []; 
+            }
+            booksBySubtopic[subtopicName].push(bookTitle); // Add subtopic to the list
+        });
+        return booksBySubtopic;
+    } catch (error) {
+        console.error(`Database error: ${error}`);
+        return {};
+    } finally {
+        await connection.end();
+    }
+}
+
 // Helper function to get subtopics for a specific book
 async function getSubtopicsForBook(bookTitle: string): Promise<string[]> {
     const allSubtopics = await getAllSubtopics();
@@ -484,4 +519,4 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
     }
 }
 
-export { searchBookByTitle, addBook, dropBook, editBook, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics };
+export { searchBookByTitle, addBook, dropBook, editBook, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllBooks };

@@ -2,18 +2,14 @@ import { Book } from "@/types";
 import axios, {AxiosRequestConfig, Method} from "axios";
 import { BookEntry } from "../components/book";
 import SearchBlock from "@/app/components/filters/search"
-import { getAllSubtopics,getSubtopicsForBook } from "../components/book_entry";
-import { config } from "dotenv";
-import { makeAxiosRequestConfig } from "../components/axiosrequest";
+import { getAllSubtopics,getAllBooks } from "../components/book_entry";
 
 export default async function Home() {
 
     let booksList : string = ''; 
     let subtopicsList : Record<string,string[]> = {}
+    let newBooksList : Record<string, string[]> = {}
     
-    //const configData = makeAxiosRequestConfig('PATCH', '/api/books', myFormData)
-    //const response = await axios(configData)
-
     await axios
         .get('http://localhost:3000/api/books', {responseType : "json"})
         //use the form response URL mods here???
@@ -22,12 +18,19 @@ export default async function Home() {
         })
         .catch((err) => console.log("couldn't read db"));
 
+    await getAllBooks()
+        .then(value => {
+            newBooksList = value;
+        })
+
     await getAllSubtopics()
         .then((value) => {
             subtopicsList = value;
         })
 
-    console.log("subtopics2", subtopicsList)
+    // take formData and feed it to newBooksList["subtopic"]
+    // compare newBooksList with booksList
+    // for each title in newBooksList, map out the full book from the booksList data
 
     let bookArray = booksList.map((book : Book) => {
         let tagsArray = subtopicsList[book.Title]
