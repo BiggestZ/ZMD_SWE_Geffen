@@ -335,7 +335,8 @@ async function getAllSubtopics(): Promise<Record<string, string[]>> {
 }
 
 // Helper function to get subtopics for a specific book
-async function getSubtopicsForBook(allSubtopics : Promise<Record<string, string[]>>, bookTitle: string): Promise<string[]> {
+async function getSubtopicsForBook(bookTitle: string): Promise<string[]> {
+    const allSubtopics = await getAllSubtopics();
     return allSubtopics[bookTitle] || []; // Return subtopics for the book or an empty array
 }
 

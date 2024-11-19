@@ -13,8 +13,8 @@ import { makeAxiosRequestConfig } from "../axiosrequest";
 const SearchBlock : React.FC = () => {
 
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [showAll, setShowAll] = useState(true)
 
-    let test : string = selectedTags[0];
     
     let myFormData = new FormData();
     //myFormData.append()

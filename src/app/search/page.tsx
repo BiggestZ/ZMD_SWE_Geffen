@@ -9,8 +9,7 @@ import { makeAxiosRequestConfig } from "../components/axiosrequest";
 export default async function Home() {
 
     let booksList : string = ''; 
-    
-    let subTopicsList = getAllSubtopics();
+    let subtopicsList : Record<string,string[]> = {}
     
     //const configData = makeAxiosRequestConfig('PATCH', '/api/books', myFormData)
     //const response = await axios(configData)
@@ -23,8 +22,15 @@ export default async function Home() {
         })
         .catch((err) => console.log("couldn't read db"));
 
+    await getAllSubtopics()
+        .then((value) => {
+            subtopicsList = value;
+        })
+
+    console.log("subtopics2", subtopicsList)
+
     let bookArray = booksList.map((book : Book) => {
-        let tagsArray = getSubtopicsForBook(subTopicsList,book.Title)
+        let tagsArray = subtopicsList[book.Title]
 
         // map is highlighted as an error here but it's working anyway?
         return (
