@@ -18,7 +18,7 @@ const DeleteBookPage = () => {
     }
 
     try {
-      const response = await axios.delete('/api/deleteBook', {
+      const response = await axios.post(API_ROUTES.DELETE_BOOK, {
         data: { title }, // Include the title in the request body
       });
 

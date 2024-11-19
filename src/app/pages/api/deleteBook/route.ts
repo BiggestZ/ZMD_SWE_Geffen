@@ -1,7 +1,7 @@
 
 export const API_ROUTES = {
 
-    SUBMIT_FORM: 'pages/api/deleteBook/',
+    DELETE_BOOK: 'pages/api/deleteBook/',
     
   };
 
@@ -9,13 +9,15 @@ import { NextResponse } from 'next/server';
 import connectToDB from "../../../components/connectToDB"
 import { dropBook } from '../../../components/book_entry';
 
-export async function handler(req: Request) {
+export async function POST(req: Request) {
     console.log('Received data route.ts in deleteBook:');
     try {
       const connection = await connectToDB()
       if(!connection) return;
       const body = await req.json();
-      const { title } = body;
+      const { data } = body;
+      const { title } = data;
+      console.log('title:', {title});
       if (!title) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
       }
