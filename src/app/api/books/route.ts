@@ -12,12 +12,12 @@ export async function GET (request : NextRequest) {
     try {
         const connection = await mysql.createConnection(connectionParameters)
 
-        let query = 'SELECT * FROM Books'
+            let query = 'SELECT * FROM Books'
 
-        const [books] = await connection.execute(query)
+            const [books] = await connection.execute(query)
 
-        return NextResponse.json(books)
-
+            return NextResponse.json(books)
+            
     } catch(err) {
         console.log('ERROR: API - ', (err as Error).message)
         

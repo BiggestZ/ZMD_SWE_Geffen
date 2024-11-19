@@ -1,13 +1,6 @@
 import connectToDb from "./connectToDB";
 import mysql from "mysql2/promise";
-
-// Book interface
-interface Book {
-    title: string;
-    author: string;
-    isbn: string;
-    bookDesc?: string;
-  }
+import { Book } from "@/types";
 
 // Function to search for books by title
 async function searchBookByTitle(title: string): Promise<void> {
@@ -306,11 +299,53 @@ async function searchBooksByTopic(topicName: string): Promise<void> {
   }
 }
 
-async function getSubtopicsForBook(bookTitle: string): Promise<string[]> {
+// Grabs all the subtopics in the database
+async function getAllSubtopics(): Promise<Record<string, string[]>> {
     const connection = await connectToDb();
     if (!connection) {
         console.error("Failed to connect to the database.");
-        return [];
+        return {};
+    }
+    try {
+        // Fetch all book ISBNs with their subtopics
+        const [results] = await connection.execute(
+            `
+            SELECT b.Title AS bookTitle, s.SubtopicName AS subtopicName
+            FROM Books b
+            JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+            JOIN Subtopics s ON bs.SubtopicID = s.SubtopicID
+            `
+        );
+        // Organize subtopics by book title
+        const subtopicsByBook: Record<string, string[]> = {}; // Initialize an empty object
+        (results as any[]).forEach(row => { 
+            const { bookTitle, subtopicName } = row; // Extract book title and subtopic name
+            if (!subtopicsByBook[bookTitle]) { // Initialize subtopic list for the book
+                subtopicsByBook[bookTitle] = []; 
+            }
+            subtopicsByBook[bookTitle].push(subtopicName); // Add subtopic to the list
+        });
+        return subtopicsByBook;
+    } catch (error) {
+        console.error(`Database error: ${error}`);
+        return {};
+    } finally {
+        await connection.end();
+    }
+}
+
+// Helper function to get subtopics for a specific book
+async function getSubtopicsForBook(allSubtopics : Promise<Record<string, string[]>>, bookTitle: string): Promise<string[]> {
+    return allSubtopics[bookTitle] || []; // Return subtopics for the book or an empty array
+}
+
+// This is the older function that caused too many query calls
+/*
+async function getSubtopicsForBook(bookTitle: string): Promise<string> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return "";
     }
 
     try {
@@ -321,7 +356,7 @@ async function getSubtopicsForBook(bookTitle: string): Promise<string[]> {
 
         if (Array.isArray(bookResults) && bookResults.length === 0) {
             console.log(`No book found with title '${bookTitle}'.`);
-            return [];
+            return "";
         }
 
         const book = (bookResults as any[])[0];
@@ -338,25 +373,25 @@ async function getSubtopicsForBook(bookTitle: string): Promise<string[]> {
         );
 
         if (Array.isArray(subtopicResults) && subtopicResults.length > 0) {
-            return (subtopicResults as any[]).map(row => row.SubtopicName);
+            return JSON.stringify(subtopicResults);
         } else {
-            return [];
+            return "";
         }
 
     } catch (error) {
         console.error(`Database error: ${error}`);
-        return [];
+        return "";
     } finally {
         await connection.end();
     }
-}
+}*/
 
 // Find all books related to a given subtopic
-async function searchBooksBySubtopic(subtopicName: string): Promise<void> {
+async function searchBooksBySubtopic(subtopicName: string): Promise<string> {
   const connection = await connectToDb();
   if (!connection) {
       console.error("Failed to connect to the database.");
-      return;
+      return "";
   }
 
   try {
@@ -368,7 +403,7 @@ async function searchBooksBySubtopic(subtopicName: string): Promise<void> {
 
       if (Array.isArray(subtopicRows) && subtopicRows.length === 0) {
           console.log(`No subtopic found with name '${subtopicName}'.`);
-          return;
+          return "";
       }
 
       const subtopicId = (subtopicRows as any[])[0].SubtopicID;
@@ -376,7 +411,7 @@ async function searchBooksBySubtopic(subtopicName: string): Promise<void> {
       // Find all books linked to the subtopic
       const [bookRows] = await connection.execute(
           `
-          SELECT b.Title, b.Author, b.ISBN, b.BookDesc
+          SELECT b.Title, b.Author, b.ISBN
           FROM Books b
           JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
           WHERE bs.SubtopicID = ?
@@ -384,21 +419,17 @@ async function searchBooksBySubtopic(subtopicName: string): Promise<void> {
           [subtopicId]
       );
 
-      // Display results
-      if (Array.isArray(bookRows) && bookRows.length > 0) {
-          console.log(`Books related to subtopic '${subtopicName}':`);
-          bookRows.forEach((book: any) => {
-              console.log(`Title: ${book.Title}`);
-              console.log(`Author: ${book.Author}`);
-              console.log(`ISBN: ${book.ISBN}`);
-              console.log(`Description: ${book.BookDesc}`);
-              console.log("-".repeat(40));
-          });
-      } else {
-          console.log(`No books found related to subtopic '${subtopicName}'.`);
+      if(Array.isArray(bookRows) && bookRows.length > 0) {
+         return JSON.stringify(bookRows);
       }
+      else  {
+        return "";
+      }
+
+      // Display results
   } catch (error) {
       console.error("Error searching for books:", error);
+      return "";
   } finally {
       await connection.end();
   }
@@ -452,4 +483,4 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
     }
 }
 
-export { searchBookByTitle, addBook, dropBook, editBook };
+export { searchBookByTitle, addBook, dropBook, editBook, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics };

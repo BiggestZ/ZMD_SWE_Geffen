@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
 
-const connectionParameters = {
+export const connectionParameters = {
     host: 'sql.cianci.io',       // Your MySQL host
     user: 'dkim5',  // Your MySQL username
     password: 'tKPokYL@*&t65Zw@', // Your MySQL password
@@ -14,7 +14,22 @@ export async function getTopics(request: NextRequest) {
 
     const query = "SELECT * from Topics"; // Change to your actual table name and field
 
+    
+    console.log("log",request.nextUrl.searchParams)
+
     const [topics] = await connection.execute(query);
+    /*
+    if (request.nextUrl.searchParams != null)
+    const [bookRows] = await connection.execute(
+          `
+          SELECT b.Title, b.Author, b.ISBN
+          FROM Books b
+          JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+          WHERE bs.SubtopicID = ?
+          `,
+          [subtopicId]
+      );
+    */
 
     return NextResponse.json(topics);
   } catch (err) {

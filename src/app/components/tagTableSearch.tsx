@@ -51,7 +51,7 @@ export default function TagTable() {
           const data = await response.json();  // Parse the JSON response
           setTopics(data);  // Store topics in the state
         } else {
-          console.error('Error fetching topics');
+            console.error('Error fetching topics');
         }
       } catch (error) {
         console.error('Error fetching topics:', error);

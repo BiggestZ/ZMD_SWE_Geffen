@@ -13,8 +13,8 @@ async function connectToDb(): Promise<mysql.Connection | null> { // Replace thes
     // Connection parameters
     const connectionParameters: ConnectionParams = {
         host: 'sql.cianci.io',      
-        user: '',
-        password: '',
+        user: 'acheng2',
+        password: 'cl6g*t5URndDuZxe',
         database: '2024fall_comp367_geffen',
     };
 
