@@ -6,7 +6,7 @@ interface Book {
     title: string;
     author: string;
     isbn: string;
-    bookDesc?: string;
+    bookDesc: string;
   }
 
 // Function to search for books by title
@@ -164,32 +164,25 @@ async function editBook(searchTerm: string): Promise<void> {
     try {
         const [bookResult] = await connection.execute("SELECT * FROM Books WHERE Title = ?", [searchTerm]);
         const book = (bookResult as any[])[0];
-
         if (!book) {
             console.log(`No book found with title '${searchTerm}'.`);
             return;
         }
-  
       console.log(`Editing book: ${book.title} by ${book.author}`);
-  
       // Prompt for updates on book details
       const newTitle = prompt("Enter new title (or leave blank to keep current): ") || book.title;
       const newAuthor = prompt("Enter new author (or leave blank to keep current): ") || book.author;
       const newIsbn = prompt("Enter new ISBN (or leave blank to keep current): ") || book.isbn;
       const newDescription = prompt("Enter new description (or leave blank to keep current): ") || book.bookDesc;
-  
       // Check if the ISBN is changing
       const isIsbnChanging = newIsbn !== book.isbn;
-  
       // Disable foreign key checks
       await connection.query("SET FOREIGN_KEY_CHECKS=0");
-  
       // Update the book in the database
       await connection.query(
         "UPDATE Books SET title = ?, author = ?, isbn = ?, bookDesc = ? WHERE isbn = ?",
         [newTitle, newAuthor, newIsbn, newDescription, book.isbn]
       );
-  
       if (isIsbnChanging) {
         await connection.query("UPDATE Book_SubTopics SET ISBN = ? WHERE ISBN = ?", [newIsbn, book.isbn]);
         await connection.query("UPDATE Book_Language SET ISBN = ? WHERE ISBN = ?", [newIsbn, book.isbn]);
