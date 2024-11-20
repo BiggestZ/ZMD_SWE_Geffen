@@ -1,21 +1,21 @@
 export const API_ROUTES = {
 
     EDIT_BOOK: 'pages/api/editBook/',
+    SAVE_BOOK: 'pages/api/saveBook/',
     
     
   };
 
 import { NextResponse } from 'next/server';
 import connectToDB from '../../../components/connectToDB';
-import { editBook } from '../../../components/book_entry';
+import { editBook, getBookByTitle } from '../../../components/book_entry';
 
 export async function GET(req: Request) {
   try {
-    // Get the query parameters
     const { searchParams } = new URL(req.url);
-    const query = searchParams.get('query');
+    const title = searchParams.get("title");
 
-    if (!query) {
+    if (!title) {
       return NextResponse.json(
         { message: 'Query parameter is missing' },
         { status: 400 }
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     }
 
     // Search for books in the database
-    const books = await editBook(query); // Assumes this function handles the search logic
+    const books = await getBookByTitle(title); 
 
     if (!books) {
       return NextResponse.json(

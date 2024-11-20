@@ -36,7 +36,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-,"src/backend/app.js"  ],
+,"src/backend/app.js", "src/app/pages/api/editBook"  ],
   "exclude": [
     "node_modules"
   ]

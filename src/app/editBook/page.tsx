@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_ROUTES } from '../pages/api/editBook/route';
+import { Book } from "@/types";
 
 
 const EditBooksPage = () => {
@@ -18,11 +19,21 @@ const EditBooksPage = () => {
     setMessage('Searching for books...');
     console.log('Getting book:', searchQuery);
     try {
-      const response = await axios.get(API_ROUTES.EDIT_BOOK,{data: { searchQuery },});
-
+      // const response = await axios.get(API_ROUTES.EDIT_BOOK,{data: { searchQuery },});
+      const response = await axios.get(API_ROUTES.EDIT_BOOK, {
+        params: { title:searchQuery },
+      });
+      
       if (response.data && response.data.books) {
+        console.log("book response.data:", response.data)
+        console.log("book response.data.books:", response.data.books)
+        // setSearchResults(response.data.books);
         setSearchResults(response.data.books);
-        setMessage('');
+        setMessage('good');
+
+        //error but still works?
+        // console.log("results.title: ", searchResults[0].Title)
+
       } else {
         setSearchResults([]);
         setMessage('No books found.');
@@ -48,7 +59,9 @@ const EditBooksPage = () => {
   const handleSave = async () => {
     setMessage('Saving changes...');
     try {
-      const response = await axios.put('/api/updateBook', { ...editDetails });
+
+      const response = await axios.put(API_ROUTES.SAVE_BOOK, { ...editDetails });
+
       if (response.status === 200) {
         setMessage('Book updated successfully!');
         setSelectedBook(null);
@@ -85,44 +98,61 @@ const EditBooksPage = () => {
           {message && <p style={{ marginTop: '10px', color: 'red' }}>{message}</p>}
           
           <ul style={{ marginTop: '20px', listStyle: 'none', padding: 0 }}>
-            {searchResults.map((book: any) => (
-              <li
-                key={book.id}
-                onClick={() => handleSelectBook(book)}
-                style={{
-                  padding: '10px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px',
-                  margin: '5px 0',
-                  cursor: 'pointer',
-                }}
-              >
-                {book.title} by {book.author}
-              </li>
-            ))}
-          </ul>
+  {searchResults.length > 0 ? (
+    searchResults.map((book: any) => (
+
+      <li
+        //key={book.isbn || book.title} // Fallback to title if id is missing
+        key={`${book.isbn}-${book.title}`}
+        //FIXME
+        onClick={() => handleSelectBook(book)}
+        style={{
+          padding: '10px',
+          border: '1px solid #ccc',
+          borderRadius: '5px',
+          margin: '5px 0',
+          cursor: 'pointer',
+        }}
+        
+      >
+        
+        {/* {searchResults[0]?.Title ? `${searchResults[0]?.Title} by ${book.author || 'Unknown'}` : 'Error: Unknown Title'} */}
+        {book.Title ? `${book.Title} by ${book.Author || 'Unknown'}` : 'Error: Unknown Title'}
+        {/* //FIXME */}
+
+      </li>
+      
+        
+
+    ))
+    
+  ) : (
+    <p style={{ marginTop: '10px' }}>No books found. Try a different search query.</p>
+  )}
+</ul>
+
         </>
       ) : (
         <div>
-          <h2>Edit Book</h2>
+          <h2>Editing Book: {searchResults[0].Title}</h2>
           <form style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
             <input
               type="text"
-              value={editDetails.title || ''}
+              value={[editDetails].title || searchResults[0].Title}
               onChange={(e) => handleEditChange('title', e.target.value)}
               placeholder="Title"
               style={{ padding: '10px', fontSize: '16px' }}
             />
             <input
               type="text"
-              value={editDetails.author || ''}
+              value={editDetails.author || searchResults[0].Author}
               onChange={(e) => handleEditChange('author', e.target.value)}
               placeholder="Author"
               style={{ padding: '10px', fontSize: '16px' }}
             />
             <input
               type="text"
-              value={editDetails.isbn || ''}
+              value={editDetails.isbn || searchResults[0].ISBN}
               onChange={(e) => handleEditChange('isbn', e.target.value)}
               placeholder="ISBN"
               style={{ padding: '10px', fontSize: '16px' }}

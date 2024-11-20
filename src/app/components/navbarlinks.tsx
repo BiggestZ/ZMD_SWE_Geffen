@@ -20,9 +20,9 @@ const NavBarLinks: React.FC = () => {
           <button onClick={() => router.push('/')} style={buttonStyle}><House size={30} />Home</button>  
           <button onClick={() => router.push('/search')} style={buttonStyle}><MagnifyingGlass size={30} />Explore</button>
           <button onClick={() => router.push('/bookmarks')} style={buttonStyle}><Bookmark size={30} />Saved</button>
-          <button onClick={() => router.push('/addNew')} style={buttonStyle}><FilePlus size={30} />Add New</button>
-          <button onClick={() => router.push('/deleteBook')} style={buttonStyle}><FileMinus size={30} />Add New</button>
-          <button onClick={() => router.push('/editBook')} style={buttonStyle}><Notebook size={30} />Add New</button>
+          <button onClick={() => router.push('/addNew')} style={buttonStyle}><FilePlus size={30} />Add New Book</button>
+          <button onClick={() => router.push('/deleteBook')} style={buttonStyle}><FileMinus size={30} />Delete Book</button>
+          <button onClick={() => router.push('/editBook')} style={buttonStyle}><Notebook size={30} />Edit Book</button>
         </div>
       );
     };
