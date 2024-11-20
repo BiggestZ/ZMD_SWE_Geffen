@@ -2,17 +2,19 @@ import { Book } from "@/types";
 import axios, {AxiosRequestConfig, Method} from "axios";
 import { BookEntry } from "../components/book";
 import SearchBlock from "@/app/components/filters/search"
-import { getAllSubtopics,getAllBooks } from "../components/book_entry";
+import { getAllSubtopics,getAllBooks, getAllTopics } from "../components/book_entry";
+import { match } from "assert";
 
 export default async function Home() {
 
+    // initializing
     let booksList : string = ''; 
     let subtopicsList : Record<string,string[]> = {}
     let newBooksList : Record<string, string[]> = {}
-    
+    let topicsList : Record<string, string[]> = {}
+
     await axios
         .get('http://localhost:3000/api/books', {responseType : "json"})
-        //use the form response URL mods here???
         .then(function (response) {
             booksList = response.data;
         })
@@ -28,18 +30,63 @@ export default async function Home() {
             subtopicsList = value;
         })
 
-    // take formData and feed it to newBooksList["subtopic"]
-    // compare newBooksList with booksList
-    // for each title in newBooksList, map out the full book from the booksList data
+    await getAllTopics()
+        .then((value) => {
+            topicsList = value;
+        })
 
-    let bookArray = booksList.map((book : Book) => {
-        let tagsArray = subtopicsList[book.Title]
+    let bookArray : Array<Book> = booksList.map((book : Book) => {
 
-        // map is highlighted as an error here but it's working anyway?
-        return (
-            <BookEntry key={book.ISBN} title={book.Title} author={book.Author} isbn={book.ISBN} bookDesc={book.Description} tagsList={tagsArray}/>
-        )
+        let newBook : Book = {
+            title: book.Title,
+            author: book.Author,
+            isbn: book.ISBN,
+            bookDesc: book.Description,
+            tagsList: [],
+            topicsList: []
+        }
+
+        return(newBook)
     })
+
+    // search filter attempt
+
+
+    // map out books to render
+    function matchBooks(booksList : Array<Book>, filter?: string) : Array<Book> {
+        
+        let finalList : Array<Book> = []
+
+        if (filter) {
+            let test = newBooksList[filter]
+
+            for (const name of test) {
+                for (const book of booksList) {
+                    if (book.title == name) {
+                        finalList.push(book)
+                    }
+                }
+            }
+
+            return finalList;
+        }
+        else {
+            return booksList;
+        }
+    }
+
+    let AAAAAH = matchBooks(bookArray,"language")
+
+    let renderBooks = AAAAAH.map(
+        (book) => {
+            let tagsArray = subtopicsList[book.title]
+            let topicsArray = topicsList[book.title]
+
+            return (
+                <BookEntry key={book.isbn} title={book.title} author={book.author} isbn={book.isbn} bookDesc={book.bookDesc} tagsList={tagsArray} topicsList={topicsArray}/>
+            )
+        }
+    )
 
     return (
         <div className="flex space-x-10">
@@ -47,7 +94,7 @@ export default async function Home() {
             <div className = "flex w-48" />
             <div className = "flex w-fit">
                 <div className="right-0 p-5 gap-5 space-y-2">
-                    { bookArray }
+                    { renderBooks }
                 </div>  
             </div>         
         </div>             

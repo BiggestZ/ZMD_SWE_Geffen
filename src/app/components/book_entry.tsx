@@ -471,6 +471,48 @@ async function searchBooksBySubtopic(subtopicName: string): Promise<string> {
   }
 }
 
+async function getAllTopics(): Promise<Record<string, string[]>> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return {};
+    }
+    try {
+        // Fetch all book ISBNs with their topics
+        const [results] = await connection.execute(
+            `
+            SELECT b.Title AS bookTitle, t.TopicName AS topicName
+            FROM Books b
+            JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+            JOIN Subtopics s ON bs.SubtopicID = s.SubtopicID
+            JOIN Topics t ON s.TopicID = t.TopicID
+            `
+        );
+        // Organize topics by book title
+        const topicsByBook: Record<string, string[]> = {}; // Initialize an empty object
+        (results as any[]).forEach(row => { 
+            const { bookTitle, topicName } = row; // Extract book title and topic name
+            if (!topicsByBook[bookTitle]) { // Initialize topic list for the book
+                topicsByBook[bookTitle] = []; 
+            }
+            topicsByBook[bookTitle].push(topicName); // Add topic to the list
+        });
+        return topicsByBook;
+    } catch (error) {
+        console.error(`Database error: ${error}`);
+        return {};
+    } finally {
+        await connection.end();
+    }
+}
+
+// Helper function to get topics for a specific book
+async function getTopicsForBook(bookTitle: string): Promise<string[]> {
+    const allTopics = await getAllTopics(); 
+    return allTopics[bookTitle] || []; // Return topics for the book or an empty array
+}
+
+/*
 async function getTopicsForBook(bookTitle: string): Promise<string[]> {
     const connection = await connectToDb();
     if (!connection) {
@@ -517,6 +559,6 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
     } finally {
         await connection.end();
     }
-}
+}*/
 
-export { searchBookByTitle, addBook, dropBook, editBook, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllBooks };
+export { searchBookByTitle, addBook, dropBook, editBook, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllBooks, getAllTopics };

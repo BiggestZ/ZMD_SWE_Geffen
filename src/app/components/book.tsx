@@ -1,13 +1,18 @@
 import { Book, Subtopic } from "@/types";
-import { Tag } from "./tag";
+import { Tag, TopicTag } from "./tag";
 import { getSubtopicsForBook } from "./book_entry";
 import { Plus } from "phosphor-react";
 
-const BookEntry : React.FC<Book> = async ({ title,author,isbn,bookDesc,tagsList}) => {
+const BookEntry : React.FC<Book> = async ({ title,author,isbn,bookDesc,tagsList,topicsList}) => {
 
     let tagsArray = tagsList.map((tag) => {
         return(
         <Tag key={tag} SubtopicName={tag} />
+    )})
+    
+    let topicsArray = tagsList.map((tag) => {
+        return(
+        <TopicTag key={tag} TopicName={tag} />
     )})
     
     return(
@@ -19,6 +24,9 @@ const BookEntry : React.FC<Book> = async ({ title,author,isbn,bookDesc,tagsList}
                 </div> 
                 <div className="capitalize">{ author }</div>
                 <div className="text-sm p-2">{ bookDesc }</div>
+                <div className="flex flex-wrap flex-row place-content-start p-1 gap-2">
+                    {topicsArray}
+                </div>
                 <div className="flex flex-wrap flex-row place-content-start p-1 gap-2">
                     {tagsArray}
                 </div>

@@ -4,10 +4,15 @@ interface Book {
     isbn: string;
     bookDesc?: string;
     tagsList: string[];
+    topicsList: string[];
   }
 
 type Subtopic = {
     SubtopicName: string;
+}
+
+type Topic = {
+    TopicName : string;
 }
 
 type SubtopicsList =  {
@@ -17,4 +22,4 @@ type SubtopicsList =  {
 // every subtopic will be back-linked to the big topics
 // subtopics will be assigned to ISBNs as book IDs
 
-export type { Book,Subtopic };
+export type { Book,Subtopic,Topic };
