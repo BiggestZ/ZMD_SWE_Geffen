@@ -1,36 +1,35 @@
-import { Book } from "@/types";
-import { TagsContainer } from "./tagsContainer";
+import { Book, Subtopic } from "@/types";
+import { Tag, TopicTag } from "./tag";
+import { getSubtopicsForBook } from "./book_entry";
 import { Plus } from "phosphor-react";
-//import { PyBridge } from "pybridge";
-import { connectionParameters } from "../books/route";
-import mysql from "mysql2/promise";
 
-const BookEntry : React.FC<Book> = ({ Title,Author,ISBN }) => {
+const BookEntry : React.FC<Book> = async ({ title,author,isbn,bookDesc,tagsList,topicsList}) => {
 
-    //const bridge = new PyBridge({python: 'python3', cwd: __dirname});
-   /// const connection = await mysql.createConnection(connectionParameters)
+    let tagsArray = tagsList.map((tag) => {
+        return(
+        <Tag key={tag} SubtopicName={tag} />
+    )})
     
-   /*
-    interface call {
-        subtopics: string[];
-    }*/
-
-    //const api = bridge.controller<call>('book_check.py');
-    ///const tags = await api.find_subtopics_for_book(connection, { Title });
-
-    ///bridge.close();
-
+    let topicsArray = tagsList.map((tag) => {
+        return(
+        <TopicTag key={tag} TopicName={tag} />
+    )})
+    
     return(
         <div className="flex">
             <div className="w-full p-2 h-fit bg-slate-200 rounded-md border-solid border border-slate-500">
                 <div className="flex space-x-4 text-base">
-                    <div className="font-bold capitalize">{ Title }</div>
-                    <div className="capitalize">{ Author }</div>
-                    <div className="grow text-right"><b>ISBN: </b>{ ISBN }</div>
-                    
+                    <div className="font-bold capitalize">{ title }</div>
+                    <div className="grow text-right"><b>ISBN: </b>{ isbn }</div>
+                </div> 
+                <div className="capitalize">{ author }</div>
+                <div className="text-sm p-2">{ bookDesc }</div>
+                <div className="flex flex-wrap flex-row place-content-start p-1 gap-2">
+                    {topicsArray}
                 </div>
-                <div className="text-sm p-2">description</div>
-                <TagsContainer />
+                <div className="flex flex-wrap flex-row place-content-start p-1 gap-2">
+                    {tagsArray}
+                </div>
             </div>
 
         </div>
@@ -38,5 +37,11 @@ const BookEntry : React.FC<Book> = ({ Title,Author,ISBN }) => {
 };
 
 export { BookEntry };
+
+
+
+// get a list of all topics/subtopics, order by subtopics
+// loop through every tag and match them to what each book has
+// add topics to also be displayed
 
 //<div className="grow text-right"><button onClick={() => } className="rounded-md"><Plus size={20} /></button></div>            

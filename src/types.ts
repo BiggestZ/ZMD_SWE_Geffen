@@ -1,17 +1,18 @@
 interface Book {
-    Title: string;
-    Author: string;
-    ISBN: string;
-}; 
+    title: string;
+    author: string;
+    isbn: string;
+    bookDesc?: string;
+    tagsList: string[];
+    topicsList: string[];
+  }
 
 type Subtopic = {
     SubtopicName: string;
-    SubtopicID: number;
-    TopicID: number;
 }
 
-type BookList = {
-    books: Book | Book[]
+type Topic = {
+    TopicName : string;
 }
 
 type SubtopicsList =  {
@@ -21,10 +22,4 @@ type SubtopicsList =  {
 // every subtopic will be back-linked to the big topics
 // subtopics will be assigned to ISBNs as book IDs
 
-type BookAPI = {
-    find: () => Promise<Book[]>;
-    count: () => Promise<number>;
-    // not really sure what this does actually
-};
-
-export type { Book,Subtopic,BookAPI,BookList };
+export type { Book,Subtopic,Topic };
