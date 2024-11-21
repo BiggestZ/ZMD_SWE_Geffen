@@ -5,10 +5,11 @@ def connect_to_db():
     # REMEMBER TO REPLACE THE PASSWORD BEFORE COMMITTING
     try:
         connection = pymysql.connect(
-            host='localhost',
-            user='root',
-            password='',
-            database='geffen_db',
+            host= 'sql.cianci.io',      
+            user= 'dkim5',
+            password= 'tKPokYL@*&t65Zw@',
+            database= '2024fall_comp367_geffen',
+            
             cursorclass=pymysql.cursors.DictCursor  # Ensures results are returned as dictionaries
         )
         return connection
@@ -152,7 +153,7 @@ def get_subtopic_id(subtopic_name, topic_name, connection):
 # Function to validate author's name
 def is_valid_author_name(author):
     # Regular expression to allow only letters and spaces
-    return bool(re.match("^[A-Za-z]+$", author))
+    return bool(re.match("^[A-Za-z\s]+$", author))
 
 # Function to add a book with multiple topics and subtopics
 def add_book(title, author, isbn, description):
@@ -169,7 +170,7 @@ def add_book(title, author, isbn, description):
                 return
 
             # Insert the book
-            sql = "INSERT INTO Books (Title, Author, ISBN, BookDesc) VALUES (%s, %s, %s, %s)"
+            sql = "INSERT INTO Books (Title, Author, ISBN, Description) VALUES (%s, %s, %s, %s)"
             cursor.execute(sql, (title, author, isbn, description))
             connection.commit()
             print(f"Book '{title}' added successfully.")
