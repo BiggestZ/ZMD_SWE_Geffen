@@ -516,10 +516,10 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
       const newIsbn = prompt("Enter new ISBN (or leave blank to keep current): ") || book.isbn;
       const newDescription = prompt("Enter new description (or leave blank to keep current): ") || book.bookDesc;
   
-      // Check if the ISBN is changing
+      // Check if the ISBN is changing dont touch
       const isIsbnChanging = newIsbn !== book.isbn;
   
-      // Disable foreign key checks
+      // Disable foreign key checks dont touch
       await connection.query("SET FOREIGN_KEY_CHECKS=0");
   
       // Update the book in the database
@@ -527,7 +527,7 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
         "UPDATE Books SET title = ?, author = ?, isbn = ?, bookDesc = ? WHERE isbn = ?",
         [newTitle, newAuthor, newIsbn, newDescription, book.isbn]
       );
-  
+  //====================
       if (isIsbnChanging) {
         await connection.query("UPDATE Book_SubTopics SET ISBN = ? WHERE ISBN = ?", [newIsbn, book.isbn]);
         await connection.query("UPDATE Book_Language SET ISBN = ? WHERE ISBN = ?", [newIsbn, book.isbn]);
@@ -536,7 +536,7 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
   
       await connection.query("SET FOREIGN_KEY_CHECKS=1");
       console.log("Book details updated successfully.");
-  
+  //========================
       // Update subtopics (optional)
       const updateSubtopics = prompt("Would you like to update the subtopics associated with this book? (yes/no): ")?.toLowerCase();
   
