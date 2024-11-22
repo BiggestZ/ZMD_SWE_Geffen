@@ -5,10 +5,10 @@ def connect_to_db():
     # REMEMBER TO REPLACE THE PASSWORD BEFORE COMMITTING
     try:
         connection = pymysql.connect(
-            host='localhost',
-            user='root',
+            host='sql.cianci.io',
+            user='zchoudhry',
             password='',
-            database='geffen_db',
+            database='2024fall_comp367_geffen',
             cursorclass=pymysql.cursors.DictCursor  # Ensures results are returned as dictionaries
         )
         return connection
@@ -152,7 +152,7 @@ def get_subtopic_id(subtopic_name, topic_name, connection):
 # Function to validate author's name
 def is_valid_author_name(author):
     # Regular expression to allow only letters and spaces
-    return bool(re.match("^[A-Za-z]+$", author))
+    return bool(re.match("^[A-Za-z\s]+$", author))
 
 # Function to add a book with multiple topics and subtopics
 def add_book(title, author, isbn, description):
@@ -169,7 +169,7 @@ def add_book(title, author, isbn, description):
                 return
 
             # Insert the book
-            sql = "INSERT INTO Books (Title, Author, ISBN, BookDesc) VALUES (%s, %s, %s, %s)"
+            sql = "INSERT INTO Books (Title, Author, ISBN, Description) VALUES (%s, %s, %s, %s)"
             cursor.execute(sql, (title, author, isbn, description))
             connection.commit()
             print(f"Book '{title}' added successfully.")
@@ -732,6 +732,7 @@ def edit_subtopic(topic_name, old_subtopic_name, new_subtopic_name):
 #         connection.close()
 
 # # Delete a specific subtopic under a given topic
+# Delete a specific subtopic under a given topic
 def delete_subtopic(topic_name, subtopic_name):
     connection = connect_to_db()
     try:
@@ -750,14 +751,22 @@ def delete_subtopic(topic_name, subtopic_name):
                 print(f"No subtopic found with the name '{subtopic_name}' under topic '{topic_name}'.")
                 return
 
-            # Delete the subtopic
-            cursor.execute("DELETE FROM Subtopics WHERE SubtopicID = %s", (subtopic['SubtopicID'],))
+            subtopic_id = subtopic['SubtopicID']
+
+            # Delete associations of the subtopic with books
+            cursor.execute("DELETE FROM Book_SubTopics WHERE SubtopicID = %s", (subtopic_id,))
+            print(f"Removed associations of subtopic '{subtopic_name}' with all books.")
+
+            # Delete the subtopic itself
+            cursor.execute("DELETE FROM Subtopics WHERE SubtopicID = %s", (subtopic_id,))
             connection.commit()
             print(f"Subtopic '{subtopic_name}' under topic '{topic_name}' deleted successfully.")
+
     except pymysql.MySQLError as e:
         print(f"Error deleting subtopic: {e}")
     finally:
         connection.close()
+
 
 def get_subtopics_for_book(book_title):
     connection = connect_to_db()

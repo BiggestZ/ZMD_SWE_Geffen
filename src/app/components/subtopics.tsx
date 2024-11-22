@@ -207,45 +207,62 @@ async function prompt(question: string): Promise<string> {
 
 // Function to delete a subtopic
 async function deleteSubtopic(topicName: string, subtopicName: string): Promise<void> {
-    const connection = await connectToDb();
-    if(!connection) return;
+    const connection = await connectToDb(); // Establish database connection
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return;
+    }
+
     try {
         // Verify the topic exists
-        const [topicResult] = await connection.execute(
+        const [topicResults] = await connection.execute(
             "SELECT TopicID FROM Topics WHERE TopicName = ?",
             [topicName]
         );
 
-        const topic = (topicResult as any[])[0];
-        if (!topic) {
+        if ((topicResults as any[]).length === 0) {
             console.log(`No topic found with the name '${topicName}'.`);
             return;
         }
 
+        const topicId = (topicResults as any[])[0].TopicID;
+
         // Check if the subtopic exists
-        const [subtopicResult] = await connection.execute(
+        const [subtopicResults] = await connection.execute(
             "SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ? AND TopicID = ?",
-            [subtopicName, topic.TopicID]
+            [subtopicName, topicId]
         );
 
-        const subtopic = (subtopicResult as any[])[0];
-        if (!subtopic) {
+        if ((subtopicResults as any[]).length === 0) {
             console.log(`No subtopic found with the name '${subtopicName}' under topic '${topicName}'.`);
             return;
         }
 
-        // Delete the subtopic
+        const subtopicId = (subtopicResults as any[])[0].SubtopicID;
+
+        // Remove associations of the subtopic with books
+        await connection.execute(
+            "DELETE FROM Book_SubTopics WHERE SubtopicID = ?",
+            [subtopicId]
+        );
+        console.log(`Removed associations of subtopic '${subtopicName}' with all books.`);
+
+        // Delete the subtopic itself
         await connection.execute(
             "DELETE FROM Subtopics WHERE SubtopicID = ?",
-            [subtopic.SubtopicID]
+            [subtopicId]
         );
         console.log(`Subtopic '${subtopicName}' under topic '${topicName}' deleted successfully.`);
+
     } catch (error) {
         console.error(`Error deleting subtopic: ${(error as Error).message}`);
     } finally {
-        connection.end();
+        await connection.end(); // Close the database connection
     }
 }
+
+export default deleteSubtopic;
+
 
 // Currently have them check for topic, then subtopic. Could look to skip this.
 async function getSubtopicId(subtopicName: string, connection: mysql.Connection): Promise<number | null> {

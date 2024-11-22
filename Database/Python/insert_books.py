@@ -4,9 +4,9 @@ import pymysql, os
 from numpy import NAN
 
 # Path to the csv file
-fp = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/master.csv'
-#filepath = os.path.join(os.path.dirname(__file__), fp)
-filepath = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/master.csv'
+fp = 'Database/Python/CSVs/master.csv'
+filepath = os.path.join(os.path.dirname(__file__), fp)
+# filepath = '/Users/Zahir/Desktop/ZMD_SWE_Geffen/Database/Python/CSVs/master.csv'
 
 # Connect to the database
 # REMINDER: REMOVE THE PASSWORD BEFORE COMMITTING

@@ -92,7 +92,7 @@ async function addBook(title: string, author: string, isbn: string, description:
 
         // Insert the book
         await connection.execute(
-            "INSERT INTO Books (Title, Author, ISBN, BookDesc) VALUES (?, ?, ?, ?)",
+            "INSERT INTO Books (Title, Author, ISBN, Description) VALUES (?, ?, ?, ?)",
             [title, author, isbn, description]
         );
         await connection.commit();
