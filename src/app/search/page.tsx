@@ -1,102 +1,92 @@
+'use client';
+
 import { Book } from "@/types";
-import axios, {AxiosRequestConfig, Method} from "axios";
+import axios from "axios";
 import { BookEntry } from "../components/book";
-import SearchBlock from "@/app/components/filters/search"
-import { getAllSubtopics,getAllBooks, getAllTopics } from "../components/book_entry";
-import { match } from "assert";
+import TagTable from "../components/tagTableSearch";
+import { useState, useEffect } from 'react';
 
-export default async function Home() {
+const SearchPage = () => {
 
-    // initializing
-    let booksList : string = ''; 
-    let subtopicsList : Record<string,string[]> = {}
-    let newBooksList : Record<string, string[]> = {}
-    let topicsList : Record<string, string[]> = {}
+    //const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [tagsList, setTagsList] = useState([]);
+    const [message, setMessage] = useState('');
+    const [resetTrigger, setResetTrigger] = useState(false);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [isMounted, setIsMounted] = useState(false);
+    const [selectedBook, setSelectedBook] = useState(null);
 
-    await axios
-        .get('http://localhost:3000/api/books', {responseType : "json"})
-        .then(function (response) {
-            booksList = response.data;
-        })
-        .catch((err) => console.log("couldn't read db"));
+    const handleResetHandled = () => {
+        setResetTrigger(false);
+    };
 
-    await getAllBooks()
-        .then(value => {
-            newBooksList = value;
-        })
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
-    await getAllSubtopics()
-        .then((value) => {
-            subtopicsList = value;
-        })
-
-    await getAllTopics()
-        .then((value) => {
-            topicsList = value;
-        })
-
-    let bookArray : Array<Book> = booksList.map((book : Book) => {
-
-        let newBook : Book = {
-            title: book.Title,
-            author: book.Author,
-            isbn: book.ISBN,
-            bookDesc: book.Description,
-            tagsList: [],
-            topicsList: []
-        }
-
-        return(newBook)
-    })
-
-    // search filter attempt
-
-
-    // map out books to render
-    function matchBooks(booksList : Array<Book>, filter?: string) : Array<Book> {
-        
-        let finalList : Array<Book> = []
-
-        if (filter) {
-            let test = newBooksList[filter]
-
-            for (const name of test) {
-                for (const book of booksList) {
-                    if (book.title == name) {
-                        finalList.push(book)
-                    }
-                }
-            }
-
-            return finalList;
-        }
-        else {
-            return booksList;
-        }
+    if (!isMounted) {
+        return null;
     }
 
-    let AAAAAH = matchBooks(bookArray,"language")
+    // Search books
+    const handleSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+        // const response = await axios.get(API_ROUTES.EDIT_BOOK,{data: { searchQuery },});
+        const response = await axios.get('http://localhost:3000/api/books', {
+            params: { subtopic:selectedTags[0] },
+        });
+        
+        if (response.data && response.data.filtered) {
+            console.log("book response.data:", response.data)
+            console.log("book response.data.books:", response.data.filtered)
+            setSearchResults(response.data.filtered);
+            //setTagsList(response.data.subtopicsList);
 
-    let renderBooks = AAAAAH.map(
-        (book) => {
-            let tagsArray = subtopicsList[book.title]
-            let topicsArray = topicsList[book.title]
-
-            return (
-                <BookEntry key={book.isbn} title={book.title} author={book.author} isbn={book.isbn} bookDesc={book.bookDesc} tagsList={tagsArray} topicsList={topicsArray}/>
-            )
+        } else {
+            setSearchResults([]);
         }
-    )
+        } catch (error) {
+        console.error('Error searching books:', error);
+        }
+    };
+
+    let filteredBooks = searchResults.map((book : any) => {
+        let tagsArray : string[] = []
+        let topicsArray : string[] = []
+        return (
+            <BookEntry key={book.ISBN} title={book.Title} author={book.Author} isbn={book.ISBN} bookDesc={book.Description} tagsList={tagsArray} topicsList={topicsArray}/>
+        )})
 
     return (
         <div className="flex space-x-10">
-            <SearchBlock />
+            <div className = "flex fixed left-0 h-full bg-slate-200 overscroll-contain w-48 grid grid-cols-1 justify-top">
+                <form onSubmit={handleSearch}>        
+                    <h2 className="grow-0">Search</h2>
+                    <TagTable 
+                        resetTrigger={resetTrigger}
+                        onResetHandled={handleResetHandled}
+                        onTagsSelected={setSelectedTags}
+                    />
+                    <button type="submit" style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}>Search</button>
+                </form>
+                
+            </div>
             <div className = "flex w-48" />
             <div className = "flex w-fit">
                 <div className="right-0 p-5 gap-5 space-y-2">
-                    { renderBooks }
+                {searchResults/*.map((book : Book) => {
+                    let tagsArray : string[] = []
+                    let topicsArray : string[] = []
+                    return (
+                        <BookEntry key={book.ISBN} title={book.Title} author={book.Author} isbn={book.ISBN} bookDesc={book.Description} tagsList={tagsArray} topicsList={topicsArray}/>
+                    }
+                })}*/}
                 </div>  
-            </div>         
+            </div>      
         </div>             
     );
 };
+
+export default SearchPage;

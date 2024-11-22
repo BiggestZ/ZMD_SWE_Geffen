@@ -1,9 +1,9 @@
 "use client"
 
 import TagTable from "../tagTableSearch";
-import axios from "axios";
-import { useState,  useEffect } from 'react';
-import { makeAxiosRequestConfig } from "../axiosrequest";
+import { useState,  useEffect, useMemo } from 'react';
+import { useAppDispatch,useAppSelector } from "./hooks";
+import { setSearch } from "./store";
 
 // thoughts
 // figure out the function/api to call all subtopics and IDs at once DONE
@@ -14,15 +14,18 @@ import { makeAxiosRequestConfig } from "../axiosrequest";
 // won't need to submit form? maybe?
 
 const SearchBlock : React.FC = () => {
+
+    const dispatch = useAppDispatch();
+    const search = useAppSelector((state) => state.filterSearch.SubtopicName)
+
     const [selectedTags,setSelectedTags] = useState<string[]>([]);
     const [resetTrigger, setResetTrigger] = useState(false);
-
-    let myFormData = new FormData();
 
     const handleResetHandled = () => {
         setResetTrigger(false);
     };
 
+    /*
     async function searchSubmit (e: React.FormEvent) {
         e.preventDefault();
 
@@ -30,21 +33,20 @@ const SearchBlock : React.FC = () => {
 
         /*selectedTags.map((tag) => {
             myFormData.append(tag, tag)
-        })*/
+        })
     
         console.log("formdata", myFormData)
-    }
+    }*/
 
     return (
         <div className = "flex fixed left-0 h-full bg-slate-200 overscroll-contain w-48 grid grid-cols-1 justify-top">
-            <form onSubmit={searchSubmit}>        
+            <form>        
                 <h2 className="grow-0">Search</h2>
                 <TagTable 
                     resetTrigger={resetTrigger}
                     onResetHandled={handleResetHandled}
-                    onTagsSelected={setSelectedTags}
+                    onTagsSelected={(e) => dispatch(setSearch(e[0]))}
                 />
-                <button type="submit">Submit</button>
             </form>
         </div>
     );

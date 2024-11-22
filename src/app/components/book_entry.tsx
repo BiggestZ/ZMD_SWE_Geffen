@@ -334,7 +334,6 @@ async function getAllSubtopics(): Promise<Record<string, string[]>> {
     }
 }
 
-
 async function getAllBooks(): Promise<Record<string, string[]>> {
     const connection = await connectToDb();
     if (!connection) {
@@ -364,6 +363,42 @@ async function getAllBooks(): Promise<Record<string, string[]>> {
     } catch (error) {
         console.error(`Database error: ${error}`);
         return {};
+    } finally {
+        await connection.end();
+    }
+}
+
+async function getBooksList(): Promise<Book[]> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return [];
+    }
+    try {
+        const [results] = await connection.execute(
+            `SELECT Title, Author, ISBN, Description 
+            FROM Books`
+        );
+
+        const booksList : Array<Book> = [];
+
+        (results as any[]).forEach(row => {
+            const { Title, Author, ISBN, Description } = row;
+
+            let newBook : Book = {
+                title: Title,
+                author: Author,
+                isbn: ISBN,
+                bookDesc: Description,
+                tagsList: [],
+                topicsList: []
+            }
+            booksList.push(newBook);
+            })
+            return booksList;
+    } catch (error) {
+        console.error(`Database error: ${error}`);
+        return [];
     } finally {
         await connection.end();
     }
@@ -561,4 +596,4 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
     }
 }*/
 
-export { searchBookByTitle, addBook, dropBook, editBook, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllBooks, getAllTopics };
+export { searchBookByTitle, addBook, dropBook, editBook, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllBooks, getAllTopics,getBooksList };
