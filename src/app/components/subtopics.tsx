@@ -194,58 +194,58 @@ async function editSubtopic(topicName: string, oldSubtopicName: string, newSubto
 }
 
 // Helper function for prompting user input in Node.js
-async function prompt(question: string): Promise<string> {
-    const readline = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
-    return new Promise((resolve) => readline.question(question, (answer: string) => {
-        readline.close();
-        resolve(answer);
-    }));
-}
+// async function prompt(question: string): Promise<string> {
+//     const readline = require('readline').createInterface({
+//         input: process.stdin,
+//         output: process.stdout,
+//     });
+//     return new Promise((resolve) => readline.question(question, (answer: string) => {
+//         readline.close();
+//         resolve(answer);
+//     }));
+// }
 
 // Function to delete a subtopic
-async function deleteSubtopic(topicName: string, subtopicName: string): Promise<void> {
-    const connection = await connectToDb();
-    if(!connection) return;
-    try {
-        // Verify the topic exists
-        const [topicResult] = await connection.execute(
-            "SELECT TopicID FROM Topics WHERE TopicName = ?",
-            [topicName]
-        );
+// async function deleteSubtopic(topicName: string, subtopicName: string): Promise<void> {
+//     const connection = await connectToDb();
+//     if(!connection) return;
+//     try {
+//         // Verify the topic exists
+//         const [topicResult] = await connection.execute(
+//             "SELECT TopicID FROM Topics WHERE TopicName = ?",
+//             [topicName]
+//         );
 
-        const topic = (topicResult as any[])[0];
-        if (!topic) {
-            console.log(`No topic found with the name '${topicName}'.`);
-            return;
-        }
+//         const topic = (topicResult as any[])[0];
+//         if (!topic) {
+//             console.log(`No topic found with the name '${topicName}'.`);
+//             return;
+//         }
 
-        // Check if the subtopic exists
-        const [subtopicResult] = await connection.execute(
-            "SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ? AND TopicID = ?",
-            [subtopicName, topic.TopicID]
-        );
+//         // Check if the subtopic exists
+//         const [subtopicResult] = await connection.execute(
+//             "SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ? AND TopicID = ?",
+//             [subtopicName, topic.TopicID]
+//         );
 
-        const subtopic = (subtopicResult as any[])[0];
-        if (!subtopic) {
-            console.log(`No subtopic found with the name '${subtopicName}' under topic '${topicName}'.`);
-            return;
-        }
+//         const subtopic = (subtopicResult as any[])[0];
+//         if (!subtopic) {
+//             console.log(`No subtopic found with the name '${subtopicName}' under topic '${topicName}'.`);
+//             return;
+//         }
 
-        // Delete the subtopic
-        await connection.execute(
-            "DELETE FROM Subtopics WHERE SubtopicID = ?",
-            [subtopic.SubtopicID]
-        );
-        console.log(`Subtopic '${subtopicName}' under topic '${topicName}' deleted successfully.`);
-    } catch (error) {
-        console.error(`Error deleting subtopic: ${(error as Error).message}`);
-    } finally {
-        connection.end();
-    }
-}
+//         // Delete the subtopic
+//         await connection.execute(
+//             "DELETE FROM Subtopics WHERE SubtopicID = ?",
+//             [subtopic.SubtopicID]
+//         );
+//         console.log(`Subtopic '${subtopicName}' under topic '${topicName}' deleted successfully.`);
+//     } catch (error) {
+//         console.error(`Error deleting subtopic: ${(error as Error).message}`);
+//     } finally {
+//         connection.end();
+//     }
+// }
 
 // Currently have them check for topic, then subtopic. Could look to skip this.
 async function getSubtopicId(subtopicName: string, connection: mysql.Connection): Promise<number | null> {
@@ -268,7 +268,56 @@ async function getSubtopicId(subtopicName: string, connection: mysql.Connection)
         return null;
     }
 }
+//DANNY==============================================================================DANNY
+async function deleteSubtopic(topicName: string, subtopicName: string): Promise<number | null> {
+    //0 = connection
+    //1 = topic not found
+    //2 = subtopic not found
+    //3 = subtopic deleted
+    const connection = await connectToDb();
+    if(!connection) return 0;
 
+    try {
+        // Verify the topic exists
+        const [topicResult] = await connection.execute(
+            "SELECT TopicID FROM Topics WHERE TopicName = ?",
+            [topicName]
+        );
+
+        const topic = (topicResult as any[])[0];
+        if (!topic) {
+            console.log(`No topic found with the name '${topicName}'.`);
+            return null;
+        }
+
+        // Check if the subtopic exists
+        const [subtopicResult] = await connection.execute(
+            "SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ? AND TopicID = ?",
+            [subtopicName, topic.TopicID]
+        );
+
+        const subtopic = (subtopicResult as any[])[0];
+        if (!subtopic) {
+            console.log(`No subtopic found with the name '${subtopicName}' under topic '${topicName}'.`);
+            return null;
+        }
+
+        // Delete the subtopic
+        await connection.execute(
+            "DELETE FROM Subtopics WHERE SubtopicID = ?",
+            [subtopic.SubtopicID]
+        );
+        console.log(`Subtopic '${subtopicName}' under topic '${topicName}' deleted successfully.`);
+        return 1;
+
+    } catch (error) {
+        console.error(`Error deleting subtopic: ${(error as Error).message}`);
+        return null;
+    } finally {
+        connection.end();
+    }
+}
+//DANNY==============================================================================DANNY
 
 // Export all of the functions
 export { searchSubtopics, deleteSubtopic, checkTopicSubtopic, addSubtopic, editSubtopic, getSubtopicId };
