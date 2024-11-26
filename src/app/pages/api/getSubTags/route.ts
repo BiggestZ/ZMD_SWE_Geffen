@@ -1,16 +1,11 @@
-export const API_ROUTES = {
 
-    GET_TAGS: 'pages/api/getTags/',
-    GET_SUBTAGS: 'pages/api/getSubTags/',
-
-
-  };
 
   import connectToDB from "../../../components/connectToDB"
   import { NextResponse } from 'next/server';
   import { getAllTopics } from '../../../components/book_entry';
 
   export async function GET(req: Request) {
+    console.log('subtopics in getSubTags API');
     try {
       // Connect to the database
       const connection = await connectToDB();
@@ -20,24 +15,26 @@ export const API_ROUTES = {
           { status: 500 }
         );
       }
+      
   
       // request for all topics in the database
       //const topics = await getAllTopics(); 
       //FIXME
-      const topics = ["tag1","tag2","tag3"];
-      console.log('topics:', topics);
+      const subTags = ["subtag1","subtag2","subtag3"];
+      console.log('subtopics:', subTags);
   
-      if (!topics) {
+      if (!subTags) {
         return NextResponse.json(
-          { message: 'No topics found' },
+          { message: 'No subTags found' },
           { status: 404 }
         );
       }
   
       // Return the found books
-      return NextResponse.json({ message: 'topics retrieved successfully', topics });
+      return NextResponse.json({ message: 'subtopics retrieved successfully', subtopics: subTags });
+
     } catch (error) {
-      console.error('Error in getAllTopics API:', error);
+      console.error('Error in subTags API:', error);
       return NextResponse.json(
         { message: 'Internal Server Error' },
         { status: 500 }

@@ -37,9 +37,19 @@ const TopicSelector = () => {
 
     const fetchSubtopics = async () => {
       setLoadingSubtopics(true);
+      console.log('selectedTopic:', selectedTopic);
       try {
-        const response = await fetch(`https://api.example.com/subtopics?topic=${selectedTopic}`); // Replace with your API
-        const data = await response.json();
+        const response = await axios.get(API_ROUTES.GET_SUBTAGS
+          , 
+          {
+          params: { topic: selectedTopic }
+        }
+      );
+        console.log('BOOOOOO');
+
+        const data = response.data;
+        console.log('Fetched subtopics data:', data);
+
         setSubtopics(data.subtopics); // Assuming the API returns { subtopics: [] }
       } catch (error) {
         console.error('Error fetching subtopics:', error);
