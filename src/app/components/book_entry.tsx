@@ -471,7 +471,36 @@ async function searchBooksBySubtopic(subtopicName: string): Promise<string> {
   }
 }
 
+<<<<<<< Updated upstream
 /* async function getAllTopics(): Promise<Record<string, string[]>> {
+=======
+// This is the new one for Danny to use
+async function getAllTopics(): Promise<string[]> {
+    const connection = await connectToDb(); // Establish a connection to the database
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return [];
+    }
+
+    try {
+        // Execute the query to fetch all topics
+        const [results]: [any[], any] = await connection.execute(
+            "SELECT TopicName FROM Topics"
+        );
+
+        // Extract topic names into an array
+        const topics: string[] = results.map((row: { TopicName: string }) => row.TopicName);
+        return topics;
+    } catch (error) {
+        console.error(`Database error: ${(error as Error).message}`);
+        return [];
+    } finally {
+        await connection.end(); // Close the connection
+    }
+}
+
+async function getAllTopicsOld(): Promise<Record<string, string[]>> {
+>>>>>>> Stashed changes
     const connection = await connectToDb();
     if (!connection) {
         console.error("Failed to connect to the database.");
@@ -508,7 +537,7 @@ async function searchBooksBySubtopic(subtopicName: string): Promise<string> {
 
 // Helper function to get topics for a specific book
 async function getTopicsForBook(bookTitle: string): Promise<string[]> {
-    const allTopics = await getAllTopics(); 
+    const allTopics = await getAllTopicsOld(); 
     return allTopics[bookTitle] || []; // Return topics for the book or an empty array
 } */
 
