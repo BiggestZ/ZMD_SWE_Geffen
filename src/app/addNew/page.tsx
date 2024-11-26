@@ -9,6 +9,7 @@ export default function Home() {
   const [isbn, setIsbn] = useState('');
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const [isMounted, setIsMounted] = useState(false); // This will ensure the component only renders client-side
@@ -32,7 +33,7 @@ export default function Home() {
 
     try {
       console.log('sending data', isbn);
-      console.log('data:', isbn, title, author, selectedTags);
+      console.log('data:', isbn, title, author, selectedTags,description);
       
     //  Send the form data, including tags, to the backend
       const response = await axios.post(API_ROUTES.SUBMIT_FORM, {
@@ -40,6 +41,7 @@ export default function Home() {
         title,
         author,
         tags: selectedTags, // Include selected tags
+        description,
       });
     
       
@@ -66,6 +68,7 @@ export default function Home() {
     setIsbn('');
     setTitle('');
     setAuthor('');
+    setDescription('');
     setSelectedTags([]); // Clear selected tags
   };
 
@@ -103,6 +106,20 @@ export default function Home() {
           onChange={(e) => setAuthor(e.target.value)}
         />
       </label>
+      <hr />
+      <label>
+       Description:
+         <textarea
+         name="description"
+         value={description}
+         onChange={(e) => setDescription(e.target.value)}
+         rows={5} // Adjust the number of rows as needed
+          cols={50} // Adjust the number of columns as needed
+      />
+        </label>
+      
+
+      <hr />
       <hr />
 
       <TagTable
