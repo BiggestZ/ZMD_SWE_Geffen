@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_ROUTES } from '../pages/api/getTags/route';
 
 const TopicSelector = () => {
   const [topics, setTopics] = useState<string[]>([]);
@@ -16,8 +17,9 @@ const TopicSelector = () => {
       setLoadingTopics(true);
       try {
         //axios.get(API_ROUTES.EDIT_BOOK
-        const response = await axios.fetch(); // Replace with your API
-        const data = await response.json();
+        const response = await axios.get(API_ROUTES.GET_TAGS); // Replace with your API
+        // const data = await response.json();
+        const data = response.data;
         setTopics(data.topics); // Assuming the API returns { topics: [] }
       } catch (error) {
         console.error('Error fetching topics:', error);

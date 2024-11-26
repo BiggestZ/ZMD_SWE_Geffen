@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_ROUTES } from '../pages/api/editBook/route';
-import { Book } from "@/types";
+//import { Book } from "@/types";
+import TagEditor from "../components/tagEditor";
 
 
 const EditBooksPage = () => {
@@ -12,6 +13,10 @@ const EditBooksPage = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [editDetails, setEditDetails] = useState({});
   const [message, setMessage] = useState('');
+
+ 
+  const [updatedTags, setUpdatedTags] = useState<string[]>([]); // Initialize updatedTags as an empty array
+
 
   // Search books
   const handleSearch = async (e: React.FormEvent) => {
@@ -50,6 +55,28 @@ const EditBooksPage = () => {
     setEditDetails(book); // Pre-fill with the book's current details
   };
 
+
+  const handleTagsUpdate = async (newTags: string[]) => {
+    console.log("newTags:", newTags)
+    // console.log("updatedTags:", updatedTags)
+    setUpdatedTags(newTags); // Update the tags in the state
+    try {
+      const response = await axios.put(API_ROUTES.UPDATE_TAGS, { tags: newTags });
+  
+      if (response.status === 200) {
+        console.log("Tags updated successfully");
+      } else {
+        console.error("Failed to update tags");
+      }
+    } catch (error) {
+      console.error("Error updating tags:", error);
+    }
+  };
+   
+    
+  
+
+
   // Handle edits
   const handleEditChange = (field: string, value: string) => {
     setEditDetails((prev) => ({ ...prev, [field]: value }));
@@ -64,19 +91,24 @@ const EditBooksPage = () => {
 
       if (response.status === 200) {
         setMessage('Book updated successfully!');
+        
         setSelectedBook(null);
         setSearchQuery('');
         setSearchResults([]);
       } else {
         setMessage('Failed to update the book.');
       }
-    } catch (error) {
+      //=======================================================
+      
+    }
+    catch (error) {
       console.error('Error updating book:', error);
       setMessage('An error occurred while updating the book.');
     }
   };
 
   return (
+    
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
       <h1>Edit Books</h1>
       
@@ -134,29 +166,44 @@ const EditBooksPage = () => {
         </>
       ) : (
         <div>
-          <h2>Editing Book: {searchResults[0].Title}</h2>
+          <h2>Editing Book: {selectedBook.Title}</h2>
           <form style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
             <input
               type="text"
-              value={[editDetails].title || searchResults[0].Title}
+              value={[editDetails].title || selectedBook.Title}
               onChange={(e) => handleEditChange('title', e.target.value)}
               placeholder="Title"
               style={{ padding: '10px', fontSize: '16px' }}
             />
             <input
               type="text"
-              value={editDetails.author || searchResults[0].Author}
+              value={editDetails.author || selectedBook.Author}
               onChange={(e) => handleEditChange('author', e.target.value)}
               placeholder="Author"
               style={{ padding: '10px', fontSize: '16px' }}
             />
             <input
               type="text"
-              value={editDetails.isbn || searchResults[0].ISBN}
+              value={editDetails.isbn || selectedBook.ISBN}
               onChange={(e) => handleEditChange('isbn', e.target.value)}
               placeholder="ISBN"
               style={{ padding: '10px', fontSize: '16px' }}
             />
+
+            
+            <TagEditor
+            initialTags={["tag1", "tag2", "tag3","tag4"]} // Pass the current tags as the initialTags prop
+            onTagsUpdate={handleTagsUpdate} // Callback to update the tags
+            />
+
+            <input
+              type="text"
+              value={editDetails.description || selectedBook.Description}
+              onChange={(e) => handleEditChange('isbn', e.target.value)}
+              placeholder="description"
+              style={{ padding: '10px', fontSize: '16px' }}
+            />
+
           
             <button
               type="button"

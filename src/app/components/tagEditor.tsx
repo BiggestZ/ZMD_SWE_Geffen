@@ -1,4 +1,3 @@
-'use client'
 import React, { useState } from 'react';
 
 interface TagEditorProps {
@@ -6,16 +5,14 @@ interface TagEditorProps {
   onTagsUpdate: (updatedTags: string[]) => void; // Callback to pass the updated tags
 }
 
-const TagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
-    //onTagsUpdate(["tag1", "tag2", "tag3"]);
-  const [tags, setTags] = useState<string[]>(["tag1", "tag2", "tag3","tag4"]); // Manage current tags
+const tagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
+  const [tags, setTags] = useState<string[]>(initialTags); // Use initialTags passed in as a prop
   const [newTag, setNewTag] = useState<string>(''); // Manage the input for adding new tags
 
   // Handle adding a new tag
-  const handleAddTag = () => {
-    if (newTag.trim() && !tags.includes(newTag)) 
-        {
-            
+  const handleAddTag = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newTag.trim() && !tags.includes(newTag)) {
       setTags([...tags, newTag.trim()]);
       setNewTag(''); // Clear the input field
     }
@@ -23,12 +20,13 @@ const TagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
 
   // Handle deleting a tag
   const handleDeleteTag = (tagToDelete: string) => {
-    setTags(tags.filter(tag => tag !== tagToDelete));
+    setTags((prevTags) => prevTags.filter(tag => tag !== tagToDelete));
   };
+  
 
   // Handle finishing the edits
-  const handleDone = () => {
-    //console.log("tags", tags);
+  const handleDone = (e: React.FormEvent) => {
+    e.preventDefault();
     onTagsUpdate(tags); // Pass the updated tags to the parent component
   };
 
@@ -41,7 +39,6 @@ const TagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
             key={index}
             style={{
               display: 'inline-flex',
-              
               alignItems: 'center',
               padding: '5px 10px',
               border: '1px solid #ccc',
@@ -83,17 +80,17 @@ const TagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
         >
           Add
         </button>
+        <button
+          onClick={handleDone}
+          style={{ padding: '10px 20px', backgroundColor: 'green', color: 'white', border: 'none', cursor: 'pointer' }}
+        >
+          done
+        </button>
       </div>
 
-      <button
-        onClick={handleDone}
-        style={{ padding: '10px 20px', backgroundColor: 'blue', color: 'white', border: 'none', cursor: 'pointer' }}
-      >
-        Done
-      </button>
+      
     </div>
   );
 };
 
-export default TagEditor;
-
+export default tagEditor;
