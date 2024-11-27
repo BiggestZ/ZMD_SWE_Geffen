@@ -66,7 +66,7 @@ const EditBooksPage = () => {
         if (Array.isArray(data.books)) {
           setInitialTags(data.books); // Assuming the API returns { tags: [] }
           //handleTagChange(data.books);
-          handleTagsUpdate(data.books);
+          //handleTagsUpdate(data.books);
         } else {
           console.error('Unexpected response format:', data);
         }
@@ -99,7 +99,7 @@ const EditBooksPage = () => {
 
   const handleTagsUpdate = async (newTags: string[]) => {
     console.log("newTags:", newTags)
-   
+    setUpdatedTags(newTags); // Update the updatedTags state
   };
    
     
@@ -115,8 +115,10 @@ const EditBooksPage = () => {
   const handleSave = async () => {
     setMessage('Saving changes...');
     try {
-
+      editDetails.tags = updatedTags; // Add the updated tags to the editDetails object
+      console.log("editDetails:", editDetails)
       const response = await axios.put(API_ROUTES.SAVE_BOOK, { ...editDetails });
+
 
       if (response.status === 200) {
         setMessage('Book updated successfully!');
@@ -254,13 +256,7 @@ const EditBooksPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="button"
-              onClick={() => handleTagsUpdate(["test133"])}
-              style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}
-            >
-              test button
-            </button>
+            
 
           </form>
           {message && <p style={{ marginTop: '10px', color: message.includes('success') ? 'green' : 'red' }}>{message}</p>}
