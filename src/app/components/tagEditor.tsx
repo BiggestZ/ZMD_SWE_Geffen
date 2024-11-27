@@ -54,6 +54,7 @@ const tagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
           >
             {tag}
             <button
+             type="button"
               onClick={() => handleDeleteTag(tag)}
               style={{
                 marginLeft: '10px',
