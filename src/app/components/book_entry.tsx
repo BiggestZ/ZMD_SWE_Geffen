@@ -471,9 +471,6 @@ async function searchBooksBySubtopic(subtopicName: string): Promise<string> {
   }
 }
 
-<<<<<<< Updated upstream
-/* async function getAllTopics(): Promise<Record<string, string[]>> {
-=======
 // This is the new one for Danny to use
 async function getAllTopics(): Promise<string[]> {
     const connection = await connectToDb(); // Establish a connection to the database
@@ -490,6 +487,7 @@ async function getAllTopics(): Promise<string[]> {
 
         // Extract topic names into an array
         const topics: string[] = results.map((row: { TopicName: string }) => row.TopicName);
+        //console.log("Topics:", topics);
         return topics;
     } catch (error) {
         console.error(`Database error: ${(error as Error).message}`);
@@ -500,7 +498,6 @@ async function getAllTopics(): Promise<string[]> {
 }
 
 async function getAllTopicsOld(): Promise<Record<string, string[]>> {
->>>>>>> Stashed changes
     const connection = await connectToDb();
     if (!connection) {
         console.error("Failed to connect to the database.");
@@ -539,44 +536,44 @@ async function getAllTopicsOld(): Promise<Record<string, string[]>> {
 async function getTopicsForBook(bookTitle: string): Promise<string[]> {
     const allTopics = await getAllTopicsOld(); 
     return allTopics[bookTitle] || []; // Return topics for the book or an empty array
-} */
+} 
 
 
-    async function getAllTopics(): Promise<Record<string, string[]>> {
-        const connection = await connectToDb();
-        if (!connection) {
-            console.error("Failed to connect to the database.");
-            return {};
-        }
-        try {
-            // Fetch all book ISBNs with their topics via subtopics
-            const [results] = await connection.execute(
-                `
-                SELECT DISTINCT b.Title AS bookTitle, t.TopicName AS topicName
-                FROM Books b
-                JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
-                JOIN Subtopics s ON bs.SubtopicID = s.SubtopicID
-                JOIN Topics t ON s.TopicID = t.TopicID
-                `
-            );
+    // async function getAllTopics(): Promise<Record<string, string[]>> {
+    //     const connection = await connectToDb();
+    //     if (!connection) {
+    //         console.error("Failed to connect to the database.");
+    //         return {};
+    //     }
+    //     try {
+    //         // Fetch all book ISBNs with their topics via subtopics
+    //         const [results] = await connection.execute(
+    //             `
+    //             SELECT DISTINCT b.Title AS bookTitle, t.TopicName AS topicName
+    //             FROM Books b
+    //             JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+    //             JOIN Subtopics s ON bs.SubtopicID = s.SubtopicID
+    //             JOIN Topics t ON s.TopicID = t.TopicID
+    //             `
+    //         );
     
-            // Organize topics by book title
-            const topicsByBook: Record<string, string[]> = {}; // Initialize an empty object
-            (results as any[]).forEach(row => { 
-                const { bookTitle, topicName } = row; // Extract book title and topic name
-                if (!topicsByBook[bookTitle]) { // Initialize topic list for the book
-                    topicsByBook[bookTitle] = []; 
-                }
-                topicsByBook[bookTitle].push(topicName); // Add topic to the list
-            });
-            return topicsByBook;
-        } catch (error) {
-            console.error(`Database error: ${error}`);
-            return {};
-        } finally {
-            await connection.end();
-        }
-    }
+    //         // Organize topics by book title
+    //         const topicsByBook: Record<string, string[]> = {}; // Initialize an empty object
+    //         (results as any[]).forEach(row => { 
+    //             const { bookTitle, topicName } = row; // Extract book title and topic name
+    //             if (!topicsByBook[bookTitle]) { // Initialize topic list for the book
+    //                 topicsByBook[bookTitle] = []; 
+    //             }
+    //             topicsByBook[bookTitle].push(topicName); // Add topic to the list
+    //         });
+    //         return topicsByBook;
+    //     } catch (error) {
+    //         console.error(`Database error: ${error}`);
+    //         return {};
+    //     } finally {
+    //         await connection.end();
+    //     }
+    // }
 
 /*
 async function getTopicsForBook(bookTitle: string): Promise<string[]> {
