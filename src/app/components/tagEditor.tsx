@@ -22,6 +22,12 @@ const tagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
   const handleDeleteTag = (tagToDelete: string) => {
     setTags((prevTags) => prevTags.filter(tag => tag !== tagToDelete));
   };
+
+  const handleTagChange = (newTags: string[]) => {
+    
+    setTags(newTags);
+    onTagsUpdate(newTags);
+  };
   
 
   // Handle finishing the edits
@@ -86,6 +92,8 @@ const tagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
         >
           done
         </button>
+        
+
       </div>
 
       

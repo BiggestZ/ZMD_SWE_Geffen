@@ -20,7 +20,12 @@ const TopicSelector = () => {
         const response = await axios.get(API_ROUTES.GET_TAGS); // Replace with your API
         // const data = await response.json();
         const data = response.data;
-        setTopics(data.topics); // Assuming the API returns { topics: [] }
+        console.log('Fetched topics data:', data.topics);
+        if (Array.isArray(data.topics)) {
+          setTopics(data.topics); // Assuming the API returns { topics: [] }
+        } else {
+          console.error('Unexpected response format:', data);
+        }
       } catch (error) {
         console.error('Error fetching topics:', error);
       } finally {
