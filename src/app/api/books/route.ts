@@ -6,7 +6,7 @@ import { Book } from '@/types';
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const subtopic = searchParams.get("subtopic");
+    let subtopic = searchParams.get("subtopic");
 
     if(!subtopic) {
         return NextResponse.json(
@@ -14,6 +14,7 @@ export async function GET(req: Request) {
             { status: 400 }
           );
     }
+
     let formatSubtopic = subtopic.toLowerCase()
 
     // Connect to the database
@@ -25,19 +26,37 @@ export async function GET(req: Request) {
       );
     }
 
+    let allBooks = await getBooksList();
     const booksList = await getAllBooks();
     const subtopicsList = await getAllSubtopics();
 
-    const filtestered = booksList['art']    
-    const test2  = booksList['language']
+    function matchBooks(booksArray : Array<Book>, filter?: string) : Array<Book> {
+        
+      let finalList : Array<Book> = []
 
-    let filtered = booksList[formatSubtopic]
-    console.log("lang", filtered)
-    console.log('art', filtestered)
-    console.log('test', test2)
+      if (filter) {
+          let test = booksList[filter]
+          for (const name of test) {
+              for (const book of booksArray) {
+                  if (book.title == name) {
+                      book.tagsList = subtopicsList[book.title]
+                      finalList.push(book)
+                  }
+              }
+          }
+          return finalList;
+      }
+      else {
+          return booksArray;
+      }
+  }
+  
+  let filtered = matchBooks(allBooks,formatSubtopic)
+
+  //let filtered = booksList[formatSubtopic]
 
     // Return the found books
-    return NextResponse.json({ message: 'Books retrieved successfully', filtered,subtopicsList});
+    return NextResponse.json({ filtered });
   } catch (error) {
     console.error('Error in searchBooks API:', error);
     return NextResponse.json(

@@ -1,6 +1,5 @@
 'use client';
 
-import { Book } from "@/types";
 import axios from "axios";
 import { BookEntry } from "../components/book";
 import TagTable from "../components/tagTableSearch";
@@ -8,56 +7,29 @@ import { useState, useEffect } from 'react';
 
 const SearchPage = () => {
 
-    //const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [tagsList, setTagsList] = useState([]);
-    const [message, setMessage] = useState('');
     const [resetTrigger, setResetTrigger] = useState(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    const [isMounted, setIsMounted] = useState(false);
-    const [selectedBook, setSelectedBook] = useState(null);
 
     const handleResetHandled = () => {
         setResetTrigger(false);
     };
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    if (!isMounted) {
-        return null;
-    }
-
     // Search books
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-        // const response = await axios.get(API_ROUTES.EDIT_BOOK,{data: { searchQuery },});
-        const response = await axios.get('http://localhost:3000/api/books', {
-            params: { subtopic:selectedTags[0] },
-        });
-        
-        if (response.data && response.data.filtered) {
-            console.log("book response.data:", response.data)
-            console.log("book response.data.books:", response.data.filtered)
-            setSearchResults(response.data.filtered);
-            //setTagsList(response.data.subtopicsList);
+        const response = await axios.get('http://localhost:3000/api/books', {params: { subtopic:selectedTags[0] }});
 
-        } else {
-            setSearchResults([]);
-        }
+        console.log("book response.data:", response.data)
+        console.log("book response.data.books:", response.data.filtered)
+    
+        setSearchResults(response.data.filtered);
+
         } catch (error) {
         console.error('Error searching books:', error);
         }
     };
-
-    let filteredBooks = searchResults.map((book : any) => {
-        let tagsArray : string[] = []
-        let topicsArray : string[] = []
-        return (
-            <BookEntry key={book.ISBN} title={book.Title} author={book.Author} isbn={book.ISBN} bookDesc={book.Description} tagsList={tagsArray} topicsList={topicsArray}/>
-        )})
 
     return (
         <div className="flex space-x-10">
@@ -71,22 +43,60 @@ const SearchPage = () => {
                     />
                     <button type="submit" style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}>Search</button>
                 </form>
-                
             </div>
             <div className = "flex w-48" />
             <div className = "flex w-fit">
                 <div className="right-0 p-5 gap-5 space-y-2">
-                {searchResults/*.map((book : Book) => {
-                    let tagsArray : string[] = []
-                    let topicsArray : string[] = []
-                    return (
-                        <BookEntry key={book.ISBN} title={book.Title} author={book.Author} isbn={book.ISBN} bookDesc={book.Description} tagsList={tagsArray} topicsList={topicsArray}/>
-                    }
-                })}*/}
+                {searchResults.map((book : any) => {
+                    //(book.tagList).map((tag) => {})
+                    // TODO : fix formatting for tags :(
+                    return(
+                        <li key={book.isbn}>
+                            <div style={{
+                                padding: '10px',
+                                border: '1px solid #aaa',
+                                borderRadius: '5px',
+                                background: '#ddd',
+                                margin: '5px 0'}}>
+
+                                <div style={{ fontWeight: 'bold', }}>{book.title}</div>
+                                <div style={{ fontWeight: 'bold', direction: 'rtl', textAlign: 'justify'}}>ISBN: {book.isbn}</div>
+                                <div style={{ padding: '2px' }}>{ book.author }</div>
+                                <div style={{ fontSize: 'small', padding: '5px' }}>{book.bookDesc}</div>
+                                
+                            </div>
+                        </li>
+                    )
+                })}
                 </div>  
             </div>      
         </div>             
     );
 };
+
+/*<BookEntry key={book.isbn} 
+    title={book.title} 
+    author={book.author} 
+    isbn={book.isbn} 
+    bookDesc = {book.bookDesc} 
+    tagsList={book.tagsList} 
+    topicsList={[]} />
+    
+    <div className="w-full p-2 h-fit bg-slate-200 rounded-md border-solid border border-slate-500">
+                <div className="flex space-x-4 text-base">
+                    <div className="font-bold capitalize">{ title }</div>
+                    <div className="grow text-right"><b>ISBN: </b>{ isbn }</div>
+                </div> 
+                <div className="capitalize">{ author }</div>
+                <div className="text-sm p-2">{ bookDesc }</div>
+                <div className="flex flex-wrap flex-row place-content-start p-1 gap-2">
+                    {topicsArray}
+                </div>
+                <div className="flex flex-wrap flex-row place-content-start p-1 gap-2">
+                    {tagsArray}
+                </div>
+            </div>
+    
+    */
 
 export default SearchPage;

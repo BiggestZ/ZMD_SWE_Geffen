@@ -152,8 +152,8 @@ async function connectToDb() {
     // Connection parameters
     const connectionParameters = {
         host: 'sql.cianci.io',
-        user: 'dkim5',
-        password: 'tKPokYL@*&t65Zw@',
+        user: 'acheng2',
+        password: 'cl6g*t5URndDuZxe',
         database: '2024fall_comp367_geffen'
     };
     try {
@@ -179,7 +179,7 @@ __turbopack_esm__({
     "getAllBooks": (()=>getAllBooks),
     "getAllSubtopics": (()=>getAllSubtopics),
     "getAllTopics": (()=>getAllTopics),
-    "getBookByTitle": (()=>getBookByTitle),
+    "getBooksList": (()=>getBooksList),
     "getSubtopicsForBook": (()=>getSubtopicsForBook),
     "searchBookByTitle": (()=>searchBookByTitle),
     "searchBooksBySubtopic": (()=>searchBooksBySubtopic),
@@ -525,6 +525,36 @@ async function getAllBooks() {
         await connection.end();
     }
 }
+async function getBooksList() {
+    const connection = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$connectToDB$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return [];
+    }
+    try {
+        const [results] = await connection.execute(`SELECT Title, Author, ISBN, Description 
+            FROM Books`);
+        const booksList = [];
+        results.forEach((row)=>{
+            const { Title, Author, ISBN, Description } = row;
+            let newBook = {
+                title: Title,
+                author: Author,
+                isbn: ISBN,
+                bookDesc: Description,
+                tagsList: [],
+                topicsList: []
+            };
+            booksList.push(newBook);
+        });
+        return booksList;
+    } catch (error) {
+        console.error(`Database error: ${error}`);
+        return [];
+    } finally{
+        await connection.end();
+    }
+}
 // Helper function to get subtopics for a specific book
 async function getSubtopicsForBook(bookTitle) {
     const allSubtopics = await getAllSubtopics();
@@ -651,195 +681,79 @@ async function getTopicsForBook(bookTitle) {
     const allTopics = await getAllTopics();
     return allTopics[bookTitle] || []; // Return topics for the book or an empty array
 }
-/*
-async function getTopicsForBook(bookTitle: string): Promise<string[]> {
-    const connection = await connectToDb();
-    if (!connection) {
-        console.error("Failed to connect to the database.");
-        return [];
-    }
-
-    try {
-        // Get the ISBN for the given book title
-        const [bookResults] = await connection.execute(
-            "SELECT ISBN FROM Books WHERE Title = ?",
-            [bookTitle]
-        );
-
-        if (Array.isArray(bookResults) && bookResults.length === 0) {
-            console.log(`No book found with title '${bookTitle}'.`);
-            return [];
-        }
-
-        const book = (bookResults as any[])[0];
-        const ISBN = book.ISBN;
-
-        // Get topics linked to this ISBN through subtopics
-        const [topicResults] = await connection.execute(
-            `
-            SELECT DISTINCT t.TopicName
-            FROM Topics t
-            JOIN Subtopics s ON t.TopicID = s.TopicID
-            JOIN Book_SubTopics bs ON s.SubtopicID = bs.SubtopicID
-            WHERE bs.ISBN = ?
-            `,
-            [ISBN]
-        );
-
-        if (Array.isArray(topicResults) && topicResults.length > 0) {
-            return (topicResults as any[]).map(row => row.TopicName);
-        } else {
-            return [];
-        }
-
-    } catch (error) {
-        console.error(`Database error: ${error}`);
-        return [];
-    } finally {
-        await connection.end();
-    }
-}*/ // DANNY ============================================================================ DANNY
-// Function to search for books by title
-async function getBookByTitle(title) {
-    const connection = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$connectToDB$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])();
-    if (!connection) {
-        console.error("Connection Error in book_entry");
-        return [];
-    }
-    try {
-        const [result] = await connection.execute("SELECT * FROM Books WHERE Title LIKE ?", [
-            `%${title}%`
-        ]);
-        const books = result;
-        if (books.length > 0) {
-            console.log("Search Results:");
-            for (const book of books){
-                console.log(`Title: ${book.Title}`);
-                console.log(`Author: ${book.Author}`);
-                console.log(`ISBN: ${book.ISBN}`);
-                console.log(`Description: ${book.BookDesc}`);
-                console.log("-".repeat(40));
-            }
-            return books;
-        } else {
-            console.log("No books found with that title.");
-            return [];
-        }
-    } catch (error) {
-        console.error(`Error searching for book: ${error.message}`);
-        return [];
-    } finally{
-        await connection.end();
-    }
-}
 ;
-// fuction for inputing edited books into database
-async function inputEditedBook(searchTerm) {
-    const connection = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$connectToDB$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])();
-    if (!connection) return;
+}}),
+"[project]/src/app/api/books/route.ts [app-route] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, x: __turbopack_external_require__, y: __turbopack_external_import__, z: require } = __turbopack_context__;
+{
+__turbopack_esm__({
+    "GET": (()=>GET)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/server.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$connectToDB$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/src/app/components/connectToDB.tsx [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$book_entry$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/src/app/components/book_entry.tsx [app-route] (ecmascript)");
+;
+;
+;
+async function GET(req) {
     try {
-        const [bookResult] = await connection.execute("SELECT * FROM Books WHERE Title = ?", [
-            searchTerm
-        ]);
-        const book = bookResult[0];
-        if (!book) {
-            console.log(`No book found with title '${searchTerm}'.`);
-            return;
+        const { searchParams } = new URL(req.url);
+        let subtopic = searchParams.get("subtopic");
+        if (!subtopic) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                message: 'Query parameter is missing'
+            }, {
+                status: 400
+            });
         }
-        console.log(`Editing book: ${book.title} by ${book.author}`);
-        // Prompt for updates on book details
-        const newTitle = prompt("Enter new title (or leave blank to keep current): ") || book.title;
-        const newAuthor = prompt("Enter new author (or leave blank to keep current): ") || book.author;
-        const newIsbn = prompt("Enter new ISBN (or leave blank to keep current): ") || book.isbn;
-        const newDescription = prompt("Enter new description (or leave blank to keep current): ") || book.bookDesc;
-        // Check if the ISBN is changing dont touch
-        const isIsbnChanging = newIsbn !== book.isbn;
-        // Disable foreign key checks dont touch
-        await connection.query("SET FOREIGN_KEY_CHECKS=0");
-        // Update the book in the database
-        await connection.query("UPDATE Books SET title = ?, author = ?, isbn = ?, bookDesc = ? WHERE isbn = ?", [
-            newTitle,
-            newAuthor,
-            newIsbn,
-            newDescription,
-            book.isbn
-        ]);
-        //====================
-        if (isIsbnChanging) {
-            await connection.query("UPDATE Book_SubTopics SET ISBN = ? WHERE ISBN = ?", [
-                newIsbn,
-                book.isbn
-            ]);
-            await connection.query("UPDATE Book_Language SET ISBN = ? WHERE ISBN = ?", [
-                newIsbn,
-                book.isbn
-            ]);
-            console.log(`ISBN updated from '${book.isbn}' to '${newIsbn}' across all related tables.`);
+        let formatSubtopic = subtopic.toLowerCase();
+        // Connect to the database
+        const connection = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$connectToDB$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])();
+        if (!connection) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                message: 'books database connection failed'
+            }, {
+                status: 500
+            });
         }
-        await connection.query("SET FOREIGN_KEY_CHECKS=1");
-        console.log("Book details updated successfully.");
-        //========================
-        // Update subtopics (optional)
-        const updateSubtopics = prompt("Would you like to update the subtopics associated with this book? (yes/no): ")?.toLowerCase();
-        if (updateSubtopics === "yes") {
-            const action = prompt("Choose an option:\n1) Delete all existing subtopics and add new ones\n2) Add new subtopics to existing ones\n3) Leave existing subtopics as is\nEnter 1, 2, or 3: ");
-            if (action === '1') {
-                await connection.query("DELETE FROM Book_SubTopics WHERE ISBN = ?", [
-                    newIsbn
-                ]);
-                console.log("Existing subtopics cleared. Please add new subtopics.");
-                while(true){
-                    const topicName = prompt("Enter topic name (or 'done' to finish): ");
-                    if (!topicName || topicName.toLowerCase() === 'done') break;
-                    const subtopicName = prompt("Enter subtopic name (optional, press Enter to skip): ") || topicName;
-                    const subtopicId = await getSubtopicId(subtopicName, topicName, connection);
-                    if (subtopicId) {
-                        await connection.query("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (?, ?)", [
-                            newIsbn,
-                            subtopicId
-                        ]);
-                        console.log(`Linked '${newTitle}' to topic '${topicName}' and subtopic '${subtopicName}'.`);
-                    } else {
-                        console.log(`Cannot link '${newTitle}' to topic '${topicName}' and subtopic '${subtopicName}' as they are not found in the database.`);
+        let allBooks = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$book_entry$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getBooksList"])();
+        const booksList = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$book_entry$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getAllBooks"])();
+        const subtopicsList = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$book_entry$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getAllSubtopics"])();
+        function matchBooks(booksArray, filter) {
+            let finalList = [];
+            if (filter) {
+                let test = booksList[filter];
+                for (const name of test){
+                    for (const book of booksArray){
+                        if (book.title == name) {
+                            book.tagsList = subtopicsList[book.title];
+                            finalList.push(book);
+                        }
                     }
                 }
-            } else if (action === '2') {
-                console.log("Adding additional subtopics without deleting existing ones.");
-                while(true){
-                    const topicName = prompt("Enter topic name (or 'done' to finish): ");
-                    if (!topicName || topicName.toLowerCase() === 'done') break;
-                    const subtopicName = prompt("Enter subtopic name (optional, press Enter to skip): ") || topicName;
-                    const subtopicId = await getSubtopicId(subtopicName, topicName, connection);
-                    if (subtopicId) {
-                        await connection.query("INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (?, ?)", [
-                            newIsbn,
-                            subtopicId
-                        ]);
-                        console.log(`Linked '${newTitle}' to topic '${topicName}' and subtopic '${subtopicName}'.`);
-                    } else {
-                        console.log(`Cannot link '${newTitle}' to topic '${topicName}' and subtopic '${subtopicName}' as they are not found in the database.`);
-                    }
-                }
-            } else if (action === '3') {
-                console.log("No changes made to subtopics; existing subtopics are retained.");
+                return finalList;
             } else {
-                console.log("Invalid choice. No changes made to subtopics.");
+                return booksArray;
             }
         }
+        let filtered = matchBooks(allBooks, formatSubtopic);
+        //let filtered = booksList[formatSubtopic]
+        // Return the found books
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            filtered
+        });
     } catch (error) {
-        console.error(`Error updating book: ${error}`);
-    } finally{
-        connection.end();
+        console.error('Error in searchBooks API:', error);
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            message: 'Internal Server Error'
+        }, {
+            status: 500
+        });
     }
 }
 }}),
-"[project]/src/app/api/books/route.ts [app-route] (ecmascript)": (function(__turbopack_context__) {
-
-var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, x: __turbopack_external_require__, y: __turbopack_external_import__, m: module, e: exports, t: require } = __turbopack_context__;
-{
-const e = new Error("Could not parse module '[project]/src/app/api/books/route.ts'");
-e.code = 'MODULE_UNPARSEABLE';
-throw e;}}),
 "[project]/ (server-utils)": ((__turbopack_context__) => {
 
 var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, t: require } = __turbopack_context__;

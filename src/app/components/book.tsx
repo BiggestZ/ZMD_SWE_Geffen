@@ -3,14 +3,14 @@ import { Tag, TopicTag } from "./tag";
 import { getSubtopicsForBook } from "./book_entry";
 import { Plus } from "phosphor-react";
 
-const BookEntry : React.FC<Book> = async ({ title,author,isbn,bookDesc,tagsList,topicsList}) => {
+const BookEntry : React.FC<Book> = ({ title,author,isbn,bookDesc,tagsList,topicsList}) => {
 
     let tagsArray = tagsList.map((tag) => {
         return(
         <Tag key={tag} SubtopicName={tag} />
     )})
     
-    let topicsArray = tagsList.map((tag) => {
+    let topicsArray = topicsList.map((tag) => {
         return(
         <TopicTag key={tag} TopicName={tag} />
     )})

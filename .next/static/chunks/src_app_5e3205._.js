@@ -1,169 +1,5 @@
-(globalThis.TURBOPACK = globalThis.TURBOPACK || []).push(["static/chunks/src_app_ba69df._.js", {
+(globalThis.TURBOPACK = globalThis.TURBOPACK || []).push(["static/chunks/src_app_5e3205._.js", {
 
-"[project]/src/app/components/tag.tsx [app-client] (ecmascript)": ((__turbopack_context__) => {
-"use strict";
-
-var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, k: __turbopack_refresh__, m: module, z: require } = __turbopack_context__;
-{
-__turbopack_esm__({
-    "Tag": (()=>Tag),
-    "TopicTag": (()=>TopicTag)
-});
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
-;
-const Tag = ({ SubtopicName })=>{
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "w-fit h-fit p-1 bg-slate-500 rounded-md text-white",
-        children: SubtopicName
-    }, void 0, false, {
-        fileName: "[project]/src/app/components/tag.tsx",
-        lineNumber: 5,
-        columnNumber: 9
-    }, this);
-};
-_c = Tag;
-const TopicTag = ({ TopicName })=>{
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {}, void 0, false, {
-        fileName: "[project]/src/app/components/tag.tsx",
-        lineNumber: 11,
-        columnNumber: 9
-    }, this);
-};
-_c1 = TopicTag;
-;
-var _c, _c1;
-__turbopack_refresh__.register(_c, "Tag");
-__turbopack_refresh__.register(_c1, "TopicTag");
-if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
-    __turbopack_refresh__.registerExports(module, globalThis.$RefreshHelpers$);
-}
-}}),
-"[project]/src/app/components/book.tsx [app-client] (ecmascript)": ((__turbopack_context__) => {
-"use strict";
-
-var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, k: __turbopack_refresh__, m: module, z: require } = __turbopack_context__;
-{
-__turbopack_esm__({
-    "BookEntry": (()=>BookEntry)
-});
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$tag$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/src/app/components/tag.tsx [app-client] (ecmascript)");
-;
-;
-const BookEntry = ({ title, author, isbn, bookDesc, tagsList, topicsList })=>{
-    let tagsArray = tagsList.map((tag)=>{
-        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$tag$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Tag"], {
-            SubtopicName: tag
-        }, tag, false, {
-            fileName: "[project]/src/app/components/book.tsx",
-            lineNumber: 10,
-            columnNumber: 9
-        }, this);
-    });
-    let topicsArray = topicsList.map((tag)=>{
-        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$app$2f$components$2f$tag$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TopicTag"], {
-            TopicName: tag
-        }, tag, false, {
-            fileName: "[project]/src/app/components/book.tsx",
-            lineNumber: 15,
-            columnNumber: 9
-        }, this);
-    });
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "flex",
-        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "w-full p-2 h-fit bg-slate-200 rounded-md border-solid border border-slate-500",
-            children: [
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "flex space-x-4 text-base",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "font-bold capitalize",
-                            children: title
-                        }, void 0, false, {
-                            fileName: "[project]/src/app/components/book.tsx",
-                            lineNumber: 22,
-                            columnNumber: 21
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "grow text-right",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
-                                    children: "ISBN: "
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/components/book.tsx",
-                                    lineNumber: 23,
-                                    columnNumber: 54
-                                }, this),
-                                isbn
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/app/components/book.tsx",
-                            lineNumber: 23,
-                            columnNumber: 21
-                        }, this)
-                    ]
-                }, void 0, true, {
-                    fileName: "[project]/src/app/components/book.tsx",
-                    lineNumber: 21,
-                    columnNumber: 17
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "capitalize",
-                    children: author
-                }, void 0, false, {
-                    fileName: "[project]/src/app/components/book.tsx",
-                    lineNumber: 25,
-                    columnNumber: 17
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "text-sm p-2",
-                    children: bookDesc
-                }, void 0, false, {
-                    fileName: "[project]/src/app/components/book.tsx",
-                    lineNumber: 26,
-                    columnNumber: 17
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "flex flex-wrap flex-row place-content-start p-1 gap-2",
-                    children: topicsArray
-                }, void 0, false, {
-                    fileName: "[project]/src/app/components/book.tsx",
-                    lineNumber: 27,
-                    columnNumber: 17
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "flex flex-wrap flex-row place-content-start p-1 gap-2",
-                    children: tagsArray
-                }, void 0, false, {
-                    fileName: "[project]/src/app/components/book.tsx",
-                    lineNumber: 30,
-                    columnNumber: 17
-                }, this)
-            ]
-        }, void 0, true, {
-            fileName: "[project]/src/app/components/book.tsx",
-            lineNumber: 20,
-            columnNumber: 13
-        }, this)
-    }, void 0, false, {
-        fileName: "[project]/src/app/components/book.tsx",
-        lineNumber: 19,
-        columnNumber: 9
-    }, this);
-};
-_c = BookEntry;
-;
-var _c;
-__turbopack_refresh__.register(_c, "BookEntry");
-if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
-    __turbopack_refresh__.registerExports(module, globalThis.$RefreshHelpers$);
-}
- // get a list of all topics/subtopics, order by subtopics
- // loop through every tag and match them to what each book has
- // add topics to also be displayed
- //<div className="grow text-right"><button onClick={() => } className="rounded-md"><Plus size={20} /></button></div>            
-}}),
 "[project]/src/app/components/tagTableSearch.tsx [app-client] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
 
@@ -460,22 +296,73 @@ const SearchPage = ()=>{
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "right-0 p-5 gap-5 space-y-2",
                     children: searchResults.map((book)=>{
+                        //(book.tagList).map((tag) => {})
+                        // TODO : fix formatting for tags :(
                         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                            style: {
-                                padding: '10px',
-                                border: '1px solid #ccc',
-                                borderRadius: '5px',
-                                margin: '5px 0',
-                                cursor: 'pointer'
-                            },
-                            children: [
-                                book.Title,
-                                " by ",
-                                book.Author
-                            ]
-                        }, book.isbn, true, {
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    padding: '10px',
+                                    border: '1px solid #aaa',
+                                    borderRadius: '5px',
+                                    background: '#ddd',
+                                    margin: '5px 0'
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            fontWeight: 'bold'
+                                        },
+                                        children: book.title
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/search/page.tsx",
+                                        lineNumber: 62,
+                                        columnNumber: 33
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            fontWeight: 'bold',
+                                            direction: 'rtl',
+                                            textAlign: 'justify'
+                                        },
+                                        children: [
+                                            "ISBN: ",
+                                            book.isbn
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/search/page.tsx",
+                                        lineNumber: 63,
+                                        columnNumber: 33
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            padding: '2px'
+                                        },
+                                        children: book.author
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/search/page.tsx",
+                                        lineNumber: 64,
+                                        columnNumber: 33
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        style: {
+                                            fontSize: 'small',
+                                            padding: '5px'
+                                        },
+                                        children: book.bookDesc
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/search/page.tsx",
+                                        lineNumber: 65,
+                                        columnNumber: 33
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/app/search/page.tsx",
+                                lineNumber: 55,
+                                columnNumber: 29
+                            }, this)
+                        }, book.isbn, false, {
                             fileName: "[project]/src/app/search/page.tsx",
-                            lineNumber: 52,
+                            lineNumber: 54,
                             columnNumber: 25
                         }, this);
                     })
@@ -512,4 +399,4 @@ var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_
 }}),
 }]);
 
-//# sourceMappingURL=src_app_ba69df._.js.map
+//# sourceMappingURL=src_app_5e3205._.js.map
