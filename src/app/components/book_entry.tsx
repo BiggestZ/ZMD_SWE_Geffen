@@ -77,69 +77,69 @@ interface SubtopicInput {
     topicName: string;
     subtopicName?: string;
 }
+//FIXME
+// async function addBook2(
+//     title: string,
+//     author: string,
+//     isbn: string,
+//     description: string,
+//     subtopics: SubtopicInput[]
+// ): Promise<void> {
+//     const connection = await connectToDb();
+//     if (!connection) return;
 
-async function addBook2(
-    title: string,
-    author: string,
-    isbn: string,
-    description: string,
-    subtopics: SubtopicInput[]
-): Promise<void> {
-    const connection = await connectToDb();
-    if (!connection) return;
+//     try {
+//         // Validate ISBN length
+//         if (isbn.length !== 13 || !/^\d+$/.test(isbn)) {
+//             console.log("Error: ISBN must be exactly 13 characters long and contain only numbers.");
+//             return;
+//         }
 
-    try {
-        // Validate ISBN length
-        if (isbn.length !== 13 || !/^\d+$/.test(isbn)) {
-            console.log("Error: ISBN must be exactly 13 characters long and contain only numbers.");
-            return;
-        }
+//         // Validate author's name
+//         if (!isValidAuthorName(author)) {
+//             console.log("Error: Author name can only contain letters and spaces.");
+//             return;
+//         }
 
-        // Validate author's name
-        if (!isValidAuthorName(author)) {
-            console.log("Error: Author name can only contain letters and spaces.");
-            return;
-        }
+//         // Insert the book
+//         await connection.execute(
+//             "INSERT INTO Books (Title, Author, ISBN, Description) VALUES (?, ?, ?, ?)",
+//             [title, author, isbn, description]
+//         );
+//         await connection.commit();
+//         console.log(`Book '${title}' added successfully.`);
 
-        // Insert the book
-        await connection.execute(
-            "INSERT INTO Books (Title, Author, ISBN, Description) VALUES (?, ?, ?, ?)",
-            [title, author, isbn, description]
-        );
-        await connection.commit();
-        console.log(`Book '${title}' added successfully.`);
-
-        // Handle topics and subtopics
-        for (const {  subtopicName } of subtopics) {
+//         // Handle topics and subtopics
+//         for (const {  subtopicName } of subtopics) {
             
 
-            // Use provided subtopicName or fallback to topicName
-            const finalSubtopicName = subtopicName ;
+//             // Use provided subtopicName or fallback to topicName
+//             const finalSubtopicName = subtopicName ;
 
-            // Check if the topic and subtopic exist in the database
-            const subtopicId = await getSubtopicId(finalSubtopicName, connection);
+//             // Check if the topic and subtopic exist in the database
+//             const subtopicId = await getSubtopicId(finalSubtopicName ,connection);
 
-            // Only link the book if the subtopic exists
-            if (subtopicId) {
-                await connection.execute(
-                    "INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (?, ?)",
-                    [isbn, subtopicId]
-                );
-                console.log(`Linked '${title}' to subtopic '${finalSubtopicName}'.`);
-            } else {
-                console.log(`Cannot link '${title}' to subtopic '${finalSubtopicName}' as they are not found in the database.`);
-            }
-        }
+//             // Only link the book if the subtopic exists
+//             if (subtopicId) {
+//                 await connection.execute(
+//                     "INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (?, ?)",
+//                     [isbn, subtopicId]
+//                 );
+//                 console.log(`Linked '${title}' to subtopic '${finalSubtopicName}'.`);
+//             } else {
+//                 console.log(`Cannot link '${title}' to subtopic '${finalSubtopicName}' as they are not found in the database.`);
+//             }
+//         }
 
-        // Commit the transaction
-        await connection.commit();
-    } catch (error) {
-        console.error(`Error adding book: ${(error as Error).message}`);
-        await connection.rollback(); // Rollback in case of an error
-    } finally {
-        await connection.end();
-    }
-}
+//         // Commit the transaction
+//         await connection.commit();
+//     } catch (error) {
+//         console.error(`Error adding book: ${(error as Error).message}`);
+//         await connection.rollback(); // Rollback in case of an error
+//     } finally {
+//         await connection.end();
+//     }
+// }
 
 
 
@@ -800,4 +800,4 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
     }
 }
 
-export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllBooks, getAllTopics };
+export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics };
