@@ -15,7 +15,7 @@ export default function TagTable({ resetTrigger, onResetHandled, onTagsSelected 
 
   const subTag_View = (selectedValue: "1" | "2" | "3") => {
     const tagOptions = {
-      "1": ["Art", "Language", "Music"],
+      "1": ["art", "Language", "Music"],
       "2": ["Community", "Events", "Networking"],
       "3": ["Parenting", "Education", "Health"],
     };

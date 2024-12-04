@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import TagTable from "../components/tagTable";
 import { API_ROUTES } from '../pages/api/submitForm/route';
+import TopicSelector from '../components/TopicSelector';
 
 export default function Home() {
   const [resetTrigger, setResetTrigger] = useState(false);
@@ -25,7 +26,10 @@ export default function Home() {
   }
 
   //======
-  
+  const handleTopicSelectorSubmit = (savedTags: [string, string[]][]) => {
+    console.log('Received saved tags:', savedTags);
+    setSelectedTags(savedTags)
+  };
   //======
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -122,10 +126,13 @@ export default function Home() {
       <hr />
       <hr />
 
-      <TagTable
+      {/* <TagTable
         resetTrigger={resetTrigger}
         onResetHandled={handleResetHandled}
         onTagsSelected={setSelectedTags} // Pass callback to receive selected tags
+      /> */}
+      <TopicSelector 
+      onSubmit={handleTopicSelectorSubmit}
       />
 
       <hr />
