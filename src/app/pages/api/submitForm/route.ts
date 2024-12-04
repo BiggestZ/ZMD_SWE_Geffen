@@ -7,7 +7,7 @@ export const API_ROUTES = {
   };
 
 import { NextResponse } from 'next/server';
-import { addBook } from '../../../components/book_entry';
+import { addBook2 } from '../../../components/book_entry';
 import connectToDB from "../../../components/connectToDB"
 
 
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     console.log('Received data route.ts:', { isbn, title, author, tags });
     // Log the received data (database logic here)
     //addBook(title: string, author: string, isbn: string, description: string)
-    addBook(title, author, isbn, "test description")
+    addBook2(title, author, isbn, "test description", tags)
       
     return NextResponse.json({ message: 'Form data saved successfully!' });
     
