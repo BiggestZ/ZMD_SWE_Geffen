@@ -664,5 +664,6 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
 //         await connection.end();
 //     }
 // }
+*/
 
-export { searchBookByTitle, addBook2, dropBook, editBook };
+export { searchBookByTitle, addBook2, dropBook, editBook ,getAllTopics, getTopicsForBook, searchBooksByTopic, searchBooksBySubtopic, getSubtopicsForBook, getAllSubtopics, getSubtopicId };
