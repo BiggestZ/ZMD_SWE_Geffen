@@ -32,8 +32,11 @@ const EditBooksPage = () => {
       if (response.data && response.data.books) {
         console.log("book response.data:", response.data)
         console.log("book response.data.books:", response.data.books)
-        // setSearchResults(response.data.books);
+
+    
+        //setSearchResults(titles);
         setSearchResults(response.data.books);
+       
         setMessage('good');
 
         //error but still works?
@@ -135,7 +138,7 @@ const EditBooksPage = () => {
 
       <li
         //key={book.isbn || book.title} // Fallback to title if id is missing
-        key={`${book.isbn}-${book.title}`}
+        key={`${book.ISBN}-${book.Title}`}
         //FIXME
         onClick={() => handleSelectBook(book)}
         style={{
