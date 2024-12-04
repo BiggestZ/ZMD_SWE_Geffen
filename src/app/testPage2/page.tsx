@@ -10,6 +10,7 @@ const TopicSelector = () => {
   const [selectedSubtopics, setSelectedSubtopics] = useState<string[]>([]);
   const [loadingTopics, setLoadingTopics] = useState<boolean>(false);
   const [loadingSubtopics, setLoadingSubtopics] = useState<boolean>(false);
+  const [savedTags, setSavedTags] = useState<[string, string[]][]>([]);
 
   // Fetch the list of topics when the component mounts
   useEffect(() => {
@@ -20,7 +21,12 @@ const TopicSelector = () => {
         const response = await axios.get(API_ROUTES.GET_TAGS); // Replace with your API
         // const data = await response.json();
         const data = response.data;
-        setTopics(data.topics); // Assuming the API returns { topics: [] }
+        console.log('Fetched topics data:', data.topics);
+        if (Array.isArray(data.topics)) {
+          setTopics(data.topics); // Assuming the API returns { topics: [] }
+        } else {
+          console.error('Unexpected response format:', data);
+        }
       } catch (error) {
         console.error('Error fetching topics:', error);
       } finally {
@@ -61,10 +67,18 @@ const TopicSelector = () => {
     fetchSubtopics();
   }, [selectedTopic]);
 
-  // Handle form submission
-  const handleSubmit = () => {
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
     console.log('Selected Topic:', selectedTopic);
     console.log('Selected Subtopics:', selectedSubtopics);
+
+    setSavedTags((prevSavedTags) => [...prevSavedTags, [selectedTopic, selectedSubtopics]]);
+    console.log('Saved Tags:', savedTags); 
+  }
+
+  // Handle form submission
+  const handleSubmit = () => {
+    console.log('Saved Tags:', savedTags); 
 
     // Submit the data to an API or handle locally
     fetch('https://api.example.com/saveSelection', {
@@ -148,6 +162,20 @@ const TopicSelector = () => {
           )}
         </div>
       )}
+
+          <button
+          onClick={handleSave}
+          style={{
+            marginTop: '20px',
+            padding: '10px 20px',
+            backgroundColor: 'blue',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          save
+        </button>
 
       {/* Submit Button */}
       {selectedTopic && selectedSubtopics.length > 0 && (

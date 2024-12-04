@@ -9,6 +9,7 @@ export const API_ROUTES = {
   import connectToDB from "../../../components/connectToDB"
   import { NextResponse } from 'next/server';
   import { getAllTopics } from '../../../components/book_entry';
+  import  handleTagChange from "../../../components/tagEditor";
 
   export async function GET(req: Request) {
     try {
@@ -20,22 +21,30 @@ export const API_ROUTES = {
           { status: 500 }
         );
       }
-  
-      // request for all topics in the database
-      //const topics = await getAllTopics(); 
-      //FIXME
-      const topics = ["tag1","tag2","tag3"];
-      console.log('topics:', topics);
-  
-      if (!topics) {
+
+      // Request for all topics in the database
+      try {
+        const topics = await getAllTopics(); // Await the promise
+        console.log('topics route.ts:', topics);
+      
+        if (!topics || topics.length === 0) {
+          return NextResponse.json(
+            { message: 'No topics found' },
+            { status: 404 }
+          );
+        }
+      
         return NextResponse.json(
-          { message: 'No topics found' },
-          { status: 404 }
+          { topics },
+          { status: 200 }
+        );
+      } catch (error) {
+        console.error('Error fetching topics:', error);
+        return NextResponse.json(
+          { message: 'Error fetching topics' },
+          { status: 500 }
         );
       }
-  
-      // Return the found books
-      return NextResponse.json({ message: 'topics retrieved successfully', topics });
     } catch (error) {
       console.error('Error in getAllTopics API:', error);
       return NextResponse.json(
@@ -44,4 +53,3 @@ export const API_ROUTES = {
       );
     }
   }
-  

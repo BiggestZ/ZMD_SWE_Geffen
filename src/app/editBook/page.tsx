@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_ROUTES } from '../pages/api/editBook/route';
 //import { Book } from "@/types";
-import TagEditor from "../components/tagEditor";
+import TagEditor  from "../components/tagEditor";
+import  handleTagChange from "../components/tagEditor";
 
 
 const EditBooksPage = () => {
@@ -13,6 +14,8 @@ const EditBooksPage = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [editDetails, setEditDetails] = useState({});
   const [message, setMessage] = useState('');
+  const [initialTags, setInitialTags] = useState<string[]>([]);
+  const [loadingTags, setLoadingTags] = useState<boolean>(false);
 
  
   const [updatedTags, setUpdatedTags] = useState<string[]>([]); // Initialize updatedTags as an empty array
@@ -51,29 +54,55 @@ const EditBooksPage = () => {
       setMessage('An error occurred while searching for books.');
     }
   };
+  //=======================================================
+  useEffect(() => {
+    const fetchTags = async () => {
+      setLoadingTags(true);
+      //console.log("selectedBook:", selectedBook.Title)
+      try {
+        const response = await axios.get(API_ROUTES.GET_TAG_FROM_BOOK, {
+          params: { title: selectedBook.Title }
+        });
+        const data = response.data;
+        console.log("HERE TAGS HEHEHE pls work:", data)
+        console.log("pls work i wanna go to sleep:", data.books)
+        if (Array.isArray(data.books)) {
+          setInitialTags(data.books); // Assuming the API returns { tags: [] }
+          //handleTagChange(data.books);
+          //handleTagsUpdate(data.books);
+        } else {
+          console.error('Unexpected response format:', data);
+        }
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+      } finally {
+        setLoadingTags(false);
+      }
+    };
 
+    if (selectedBook) {
+      fetchTags();
+      
+      
+    }
+  }, [selectedBook]);
+
+  
+
+
+  //================================================================================================
   // Select a book to edit
   const handleSelectBook = (book: any) => {
     setSelectedBook(book);
     setEditDetails(book); // Pre-fill with the book's current details
+    
+    
   };
 
 
   const handleTagsUpdate = async (newTags: string[]) => {
     console.log("newTags:", newTags)
-    // console.log("updatedTags:", updatedTags)
-    setUpdatedTags(newTags); // Update the tags in the state
-    try {
-      const response = await axios.put(API_ROUTES.UPDATE_TAGS, { tags: newTags });
-  
-      if (response.status === 200) {
-        console.log("Tags updated successfully");
-      } else {
-        console.error("Failed to update tags");
-      }
-    } catch (error) {
-      console.error("Error updating tags:", error);
-    }
+    setUpdatedTags(newTags); // Update the updatedTags state
   };
    
     
@@ -89,8 +118,10 @@ const EditBooksPage = () => {
   const handleSave = async () => {
     setMessage('Saving changes...');
     try {
-
+      editDetails.tags = updatedTags; // Add the updated tags to the editDetails object
+      console.log("editDetails:", editDetails)
       const response = await axios.put(API_ROUTES.SAVE_BOOK, { ...editDetails });
+
 
       if (response.status === 200) {
         setMessage('Book updated successfully!');
@@ -194,10 +225,16 @@ const EditBooksPage = () => {
             />
 
             
-            <TagEditor
-            initialTags={["tag1", "tag2", "tag3","tag4"]} // Pass the current tags as the initialTags prop
-            onTagsUpdate={handleTagsUpdate} // Callback to update the tags
-            />
+              <div>
+                  {loadingTags ? (
+                    <p>Loading tags...</p>
+                  ) : (
+                    <TagEditor
+                      initialTags={initialTags} // Pass the current tags as the initialTags prop
+                      onTagsUpdate={handleTagsUpdate} // Callback to update the tags
+                    />
+                  )}
+                </div>
 
             <input
               type="text"
@@ -222,6 +259,8 @@ const EditBooksPage = () => {
             >
               Cancel
             </button>
+            
+
           </form>
           {message && <p style={{ marginTop: '10px', color: message.includes('success') ? 'green' : 'red' }}>{message}</p>}
         </div>

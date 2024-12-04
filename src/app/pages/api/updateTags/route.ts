@@ -9,20 +9,36 @@ export async function PUT(req: Request) {
     const connection = await connectToDB()
     if(!connection) return;
 
-    const body = await req.json();
-    //tags: newTags
-    const { tags } = body;
-    console.log('Received tags:', tags);
 
+    //getSubtopicsForBook
+    try {
+      const subtopics = await getsubtopicsForBook(); // Await the promise
+      console.log('subtopics route.ts:', subtopics);
     
+      if (!subtopics || subtopics.length === 0) {
+        return NextResponse.json(
+          { message: 'No topics found' },
+          { status: 404 }
+        );
+      }
     
-    console.log('Received data route.ts:', { tags });
-    // Log the received data (database logic here)
-
-      
-    return NextResponse.json({ message: 'Form data saved successfully!' });
-    
+      return NextResponse.json(
+        { subtopics },
+        { status: 200 }
+      );
+    }
+    catch (error) {
+      console.error('Error fetching topics:', error);
+      return NextResponse.json(
+        { message: 'Error fetching topics' },
+        { status: 500 }
+      );
+    }
   } catch (error) {
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    console.error('Error in getAllTopics API:', error);
+    return NextResponse.json(
+      { message: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
