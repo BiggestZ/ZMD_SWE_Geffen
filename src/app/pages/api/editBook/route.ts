@@ -10,7 +10,7 @@ export const API_ROUTES = {
 
 import { NextResponse } from 'next/server';
 import connectToDB from '../../../components/connectToDB';
-import { editBook, getBookByTitle } from '../../../components/book_entry';
+import { editBook, getBookByTitle,getSubtopicsForBook } from '../../../components/book_entry';
 
 export async function GET(req: Request) {
   try {
@@ -35,6 +35,7 @@ export async function GET(req: Request) {
 
     // Search for books in the database
     const books = await getBookByTitle(title); 
+    
 
     if (!books) {
       return NextResponse.json(

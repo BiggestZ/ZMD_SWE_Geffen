@@ -115,31 +115,39 @@ const EditBooksPage = () => {
   };
 
   // Submit edits
-  const handleSave = async () => {
-    setMessage('Saving changes...');
-    try {
-      editDetails.tags = updatedTags; // Add the updated tags to the editDetails object
-      console.log("editDetails:", editDetails)
-      const response = await axios.put(API_ROUTES.SAVE_BOOK, { ...editDetails });
+  // const handleSave = async () => {
+  //   setMessage('Saving changes...');
+  //   try {
+  //     editDetails.tags = updatedTags; // Add the updated tags to the editDetails object
+  //     console.log("editDetails:", editDetails)
+  //     const response = await axios.put(API_ROUTES.SAVE_BOOK, { ...editDetails });
 
 
-      if (response.status === 200) {
-        setMessage('Book updated successfully!');
+  //     if (response.status === 200) {
+  //       setMessage('Book updated successfully!');
         
-        setSelectedBook(null);
-        setSearchQuery('');
-        setSearchResults([]);
-      } else {
-        setMessage('Failed to update the book.');
-      }
-      //=======================================================
+  //       setSelectedBook(null);
+  //       setSearchQuery('');
+  //       setSearchResults([]);
+  //     } else {
+  //       setMessage('Failed to update the book.');
+  //     }
+  //     //=======================================================
       
-    }
-    catch (error) {
-      console.error('Error updating book:', error);
-      setMessage('An error occurred while updating the book.');
-    }
+  //   }
+  //   catch (error) {
+  //     console.error('Error updating book:', error);
+  //     setMessage('An error occurred while updating the book.');
+  //   }
+  // };
+  const handleSave = async () => {
+    
+    console.log('Form Data:', FormData);
+    console.log('editDetails:', editDetails); // Ensure editDetails is defined in your component
+    console.log('updatedTags:', updatedTags); // Ensure updatedTags is defined in your component
   };
+  
+  //================================================================================================
 
   return (
     
@@ -201,7 +209,7 @@ const EditBooksPage = () => {
       ) : (
         <div>
           <h2>Editing Book: {selectedBook.Title}</h2>
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
+          <form  style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
             <input
               type="text"
               value={[editDetails].title || selectedBook.Title}
