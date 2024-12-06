@@ -77,69 +77,85 @@ interface SubtopicInput {
     topicName: string;
     subtopicName?: string;
 }
-//FIXME
-// async function addBook2(
-//     title: string,
-//     author: string,
-//     isbn: string,
-//     description: string,
-//     subtopics: SubtopicInput[]
-// ): Promise<void> {
-//     const connection = await connectToDb();
-//     if (!connection) return;
+//Fixed: Check me
+async function addBook2(
+    title: string,
+    author: string,
+    isbn: string,
+    description: string,
+    language: string,
+    subtopics: string[]
+): Promise<void> {
+    const connection = await connectToDb();
+    if (!connection) return;
 
-//     try {
-//         // Validate ISBN length
-//         if (isbn.length !== 13 || !/^\d+$/.test(isbn)) {
-//             console.log("Error: ISBN must be exactly 13 characters long and contain only numbers.");
-//             return;
-//         }
+    try {
+        // Validate ISBN length
+        if (isbn.length !== 13 || !/^\d+$/.test(isbn)) {
+            console.log("Error: ISBN must be exactly 13 characters long and contain only numbers.");
+            return;
+        }
 
-//         // Validate author's name
-//         if (!isValidAuthorName(author)) {
-//             console.log("Error: Author name can only contain letters and spaces.");
-//             return;
-//         }
+        // Validate author's name
+        if (!isValidAuthorName(author)) {
+            console.log("Error: Author name can only contain letters and spaces.");
+            return;
+        }
 
-//         // Insert the book
-//         await connection.execute(
-//             "INSERT INTO Books (Title, Author, ISBN, Description) VALUES (?, ?, ?, ?)",
-//             [title, author, isbn, description]
-//         );
-//         await connection.commit();
-//         console.log(`Book '${title}' added successfully.`);
+        // Insert the book
+        await connection.execute(
+            "INSERT INTO Books (Title, Author, ISBN, Description) VALUES (?, ?, ?, ?)",
+            [title, author, isbn, description]
+        );
 
-//         // Handle topics and subtopics
-//         for (const {  subtopicName } of subtopics) {
-            
+        // Check if the language exists in the database
+        const [languageResult]: any[] = await connection.execute(
+            "SELECT LanguageID FROM Language WHERE LanguageName = ?",
+            [language.toLowerCase()]
+        );
 
-//             // Use provided subtopicName or fallback to topicName
-//             const finalSubtopicName = subtopicName ;
+        // If exists, link the book to the language
+        if (languageResult.length > 0) {
+            const languageId = languageResult[0].LanguageID;
+            await connection.execute(
+                "INSERT INTO Book_Language (ISBN, LanguageID) VALUES (?, ?)",
+                [isbn, languageId]
+            );
+        } else {
+            // If does not exist, log a message
+            console.log(`Language '${language}' not found in the database. Skipping.`);
+        }
 
-//             // Check if the topic and subtopic exist in the database
-//             const subtopicId = await getSubtopicId(finalSubtopicName ,connection);
+        console.log(`Book '${title}' added successfully.`);
 
-//             // Only link the book if the subtopic exists
-//             if (subtopicId) {
-//                 await connection.execute(
-//                     "INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (?, ?)",
-//                     [isbn, subtopicId]
-//                 );
-//                 console.log(`Linked '${title}' to subtopic '${finalSubtopicName}'.`);
-//             } else {
-//                 console.log(`Cannot link '${title}' to subtopic '${finalSubtopicName}' as they are not found in the database.`);
-//             }
-//         }
+        // Process subtopics
+        for (const subtopic of subtopics) {
+            const [subtopicResult]: any[] = await connection.execute(
+                "SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ?",
+                [subtopic]
+            );
 
-//         // Commit the transaction
-//         await connection.commit();
-//     } catch (error) {
-//         console.error(`Error adding book: ${(error as Error).message}`);
-//         await connection.rollback(); // Rollback in case of an error
-//     } finally {
-//         await connection.end();
-//     }
-// }
+            if (subtopicResult.length > 0) {
+                const subtopicId = subtopicResult[0].SubtopicID;
+                await connection.execute(
+                    "INSERT INTO Book_SubTopics (ISBN, SubtopicID) VALUES (?, ?)",
+                    [isbn, subtopicId]
+                );
+                console.log(`Linked '${title}' to subtopic '${subtopic}'.`);
+            } else {
+                console.log(`Subtopic '${subtopic}' not found. Skipping.`);
+            }
+        }
+
+        await connection.commit();
+        console.log("All valid subtopics processed successfully.");
+    } catch (error) {
+        console.error(`Error adding book with subtopics: ${(error as Error).message}`);
+    } finally {
+        await connection.end();
+    }
+}
+
 
 
 
@@ -661,6 +677,44 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
 //     }
 // }
 */
+
+
+// Function to get all subtopics for a given topic
+export async function getSubtopicsForTopic(topicName: string): Promise<string[]> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return [];
+    }
+
+    try {
+        // Query to fetch all subtopics for the given topic
+        const [results] = await connection.execute(
+            `
+            SELECT s.SubtopicName
+            FROM Subtopics s
+            JOIN Topics t ON s.TopicID = t.TopicID
+            WHERE t.TopicName = ?
+            `,
+            [topicName]
+        );
+
+        if (Array.isArray(results) && results.length > 0) {
+            // Map results to extract subtopic names
+            const subtopics = (results as any[]).map(row => row.SubtopicName);
+            console.log(`Subtopics for topic '${topicName}':`, subtopics);
+            return subtopics;
+        } else {
+            console.log(`No subtopics found for topic '${topicName}'.`);
+            return [];
+        }
+    } catch (error) {
+        console.error(`Database error: ${(error as Error).message}`);
+        return [];
+    } finally {
+        await connection.end();
+    }
+}
 
 
 //export { searchBookByTitle, addBook2, dropBook, editBook ,getAllTopics, getTopicsForBook, searchBooksByTopic, searchBooksBySubtopic, getSubtopicsForBook, getAllSubtopics, getSubtopicId };
