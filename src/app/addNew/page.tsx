@@ -84,12 +84,18 @@ export default function Home() {
     <form onSubmit={handleSubmit}>
       <h1>Add New Test</h1>
       <label>
-        ISBN:
-        <input
-          type="number"
-          id="isbn"
-          value={isbn}
-          onChange={(e) => setIsbn(e.target.value)}
+       ISBN:
+       <input
+        type="text"
+        id="isbn"
+        value={isbn}
+        pattern="\d{13}"
+        onChange={(e) => {
+        const value = e.target.value;
+        if (/^\d{0,13}$/.test(value)) {
+        setIsbn(value);
+        }
+        }}
         />
       </label>
       <label>
@@ -111,16 +117,26 @@ export default function Home() {
         />
       </label>
       <hr />
-      <label>
-       Description:
-         <textarea
-         name="description"
-         value={description}
-         onChange={(e) => setDescription(e.target.value)}
-         rows={5} // Adjust the number of rows as needed
-          cols={50} // Adjust the number of columns as needed
-      />
-        </label>
+      <label style={{ display: 'block', marginBottom: '10px' }}>
+  Description:
+  <textarea
+    name="description"
+    value={description}
+    onChange={(e) => setDescription(e.target.value)}
+    rows={5} // Adjust the number of rows as needed
+    cols={50} // Adjust the number of columns as needed
+    style={{
+      width: '100%',
+      padding: '10px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+      fontSize: '16px',
+      fontFamily: 'Arial, sans-serif',
+      boxSizing: 'border-box',
+      marginTop: '5px'
+    }}
+  />
+</label>
       
 
       <hr />

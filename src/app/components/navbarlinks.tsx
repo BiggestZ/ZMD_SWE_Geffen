@@ -8,6 +8,7 @@ const NavBarLinks: React.FC = () => {
 
     const buttonStyle = {
         display: 'flex',
+        alignItems: 'center',
         background: 'none',
         border: 'none',
         cursor: 'pointer',
@@ -16,7 +17,7 @@ const NavBarLinks: React.FC = () => {
     };
 
     return (
-        <div className='flex w-full h-fit gap-12'> {/* Adjust gap as needed */}
+        <div className='flex w-full h-fit gap-12 flex-row'> {/* Adjust gap as needed */}
           <button onClick={() => router.push('/')} style={buttonStyle}><House size={30} />Home</button>  
           <button onClick={() => router.push('/search')} style={buttonStyle}><MagnifyingGlass size={30} />Explore</button>
           <button onClick={() => router.push('/bookmarks')} style={buttonStyle}><Bookmark size={30} />Saved</button>
@@ -31,3 +32,4 @@ const NavBarLinks: React.FC = () => {
     };
     
     export default NavBarLinks;
+
