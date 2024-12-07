@@ -1,10 +1,10 @@
 
 
   import connectToDB from "../../../components/connectToDB"
-  import { NextResponse } from 'next/server';
-  import { getAllTopics } from '../../../components/book_entry';
+  import { NextRequest, NextResponse } from 'next/server';
+  import { getSubtopicsForTopic } from '../../../components/book_entry';
 
-  export async function GET(req: Request) {
+  export async function GET(req: NextRequest, res: NextResponse) {
     console.log('subtopics in getSubTags API');
     try {
       // Connect to the database
@@ -15,12 +15,16 @@
           { status: 500 }
         );
       }
+      const { searchParams } = new URL(req.url);
+      const topic = searchParams.get("topic");
+      console.log('title in getSubtag route.ts:', topic);
       
   
       // request for all topics in the database
       //const topics = await getAllTopics(); 
       //FIXME
-      const subTags = ["subtag1","subtag2","subtag3"];
+       const subTags = ["subtag1","subtag2","subtag3"];
+     // const subTags = getSubtopicsForTopic(topic);
       console.log('subtopics:', subTags);
   
       if (!subTags) {
