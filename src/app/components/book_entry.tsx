@@ -1099,5 +1099,54 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
       connection.end();
     }
 }
+interface Language {
+    LanguageName: string;
+}
+
+export async function getLanguagesForBookByTitle(bookTitle: string): Promise<string[]> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return [];
+    }
+
+    try {
+        // Fetch the ISBN for the given book title
+        const [bookResult] = await connection.execute(
+            "SELECT ISBN FROM Books WHERE Title = ?",
+            [bookTitle]
+        );
+
+        const book = (bookResult as any[])[0]; // Cast the result to any[]
+
+        if (!book) {
+            console.log(`No book found with title '${bookTitle}'.`);
+            return [];
+        }
+
+        const isbn: string = book.ISBN;
+
+        // Fetch associated languages
+        const [languageResults] = await connection.execute(
+            `
+            SELECT l.LanguageName
+            FROM Book_Language bl
+            JOIN Language l ON bl.LanguageID = l.LanguageID
+            WHERE bl.ISBN = ?
+            `,
+            [isbn]
+        );
+
+        const languages = languageResults as Language[];
+
+        // Return language names as a list
+        return languages.map((language) => language.LanguageName);
+    } catch (error) {
+        console.error(`Database error: ${(error as Error).message}`);
+        return [];
+    } finally {
+        await connection.end();
+    }
+}
 
 export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics, getBooksList, getSubtopicsByTopic };
