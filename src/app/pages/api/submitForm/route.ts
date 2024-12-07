@@ -16,14 +16,14 @@ export async function POST(req: Request) {
     const connection = await connectToDB()
     if(!connection) return;
     const body = await req.json();
-    const { isbn, title, author, tags } = body;
+    const { isbn, title, author, tags, description, language } = body;
     if (!isbn || !title || !author || !tags) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
     console.log('Received data route.ts:', { isbn, title, author, tags });
     // Log the received data (database logic here)
     //addBook(title: string, author: string, isbn: string, description: string)
-    addBook2(title, author, isbn, "test description", tags)
+    addBook2(title, author, isbn, description, language, tags)
       
     return NextResponse.json({ message: 'Form data saved successfully!' });
     

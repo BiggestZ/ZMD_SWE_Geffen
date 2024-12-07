@@ -81,7 +81,7 @@ interface TopicSelectorProps {
   }
 
   const handleSubmit = (e: React.FormEvent) => {
-    
+    e.preventDefault();
     console.log('Saved Tags:', savedTags); 
     onSubmit(savedTags);
     

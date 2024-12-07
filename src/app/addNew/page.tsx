@@ -12,6 +12,7 @@ export default function Home() {
   const [author, setAuthor] = useState('');
   const [description, setDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [language, setLanguage] = useState('');
 
   const [isMounted, setIsMounted] = useState(false); // This will ensure the component only renders client-side
 
@@ -37,7 +38,7 @@ export default function Home() {
 
     try {
       console.log('sending data', isbn);
-      console.log('data:', isbn, title, author, selectedTags,description);
+      console.log('data:', isbn, title, author, selectedTags,description, language);
       
     //  Send the form data, including tags, to the backend
       const response = await axios.post(API_ROUTES.SUBMIT_FORM, {
@@ -46,6 +47,7 @@ export default function Home() {
         author,
         tags: selectedTags, // Include selected tags
         description,
+        language,
       });
     
       
@@ -114,6 +116,15 @@ export default function Home() {
           name="name"
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
+        />
+      </label>
+      <label>
+        language:
+        <input
+          type="text"
+          name="name"
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
         />
       </label>
       <hr />

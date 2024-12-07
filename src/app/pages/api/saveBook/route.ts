@@ -1,30 +1,58 @@
 import { NextResponse } from 'next/server';
 
 import connectToDB from "../../../components/connectToDB"
-import {addBook2} from "../../../components/book_entry";
+import {addBook2,dropBook} from "../../../components/book_entry";
+type PayloadWithInitialTags = {
+  editDetails: any;
+  initialTags: string[];
+  initialTitle: string;
+};
 
+type PayloadWithUpdatedTags = {
+  editDetails: any;
+  updatedTags: string[];
+  initialTitle: string;
+};
 
-export async function PUT(req: Request) {
+type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
+
+export async function POST(req: Request) {
     console.log('Received data route.ts in saveBook:')
   try {
     const connection = await connectToDB()
     if(!connection) return;
 
     const body = await req.json();
-    const { ISBN, Title, Author, tags, description } = body;
+    const { editDetails } = body as Payload;
+    const { ISBN, Title, Author, Description, description, Language } = editDetails;
+    let initialTags: string[] | undefined;
+    let updatedTags: string[] | undefined;
+    let initialTitle: string;
 
-    if (!Title || !Author || !ISBN) {
-        return NextResponse.json(
-            { message: 'parameter(s) is/are missing' },
-            { status: 400 }
-          );
-      }
-    
-    console.log('Received data route.ts:', { ISBN, Title, Author, tags , description });
-    // Log the received data (database logic here)
-    //addBook(title: string, author: string, isbn: string, description: string)
-    //addBook(title, author, isbn, "test description")
-    addBook2(Title, Author, ISBN, description, tags)
+    if ('initialTags' in body) {
+        initialTags = body.initialTags;
+    } else if ('updatedTags' in body) {
+        updatedTags = body.updatedTags;
+    }
+    initialTitle = body.initialTitle;
+
+    console.log('Received initialTitle route.ts in saveBook:', { initialTitle });
+
+    console.log('Received editDetails route.ts in saveBook:', { editDetails });
+    console.log('Received editDetails.data route.ts in saveBook:', { ISBN, Title, Author, Description, description, Language });
+
+  if (updatedTags && updatedTags.length > 0) {
+    console.log('Received updatedTags route.ts in saveBook::', { updatedTags });
+    dropBook(initialTitle);
+    addBook2(Title, Author, ISBN, Description, Language, updatedTags);
+  } else {
+    console.log('Received initialTags route.ts in saveBook::', { initialTags });
+    if (initialTags) {
+      dropBook(initialTitle);
+      addBook2(Title, Author, ISBN, Description, Language, initialTags);
+    }
+  }
+  
       
     return NextResponse.json({ message: 'Form data saved successfully!' });
     

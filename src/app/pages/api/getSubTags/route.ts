@@ -23,7 +23,7 @@
       // request for all topics in the database
       //const topics = await getAllTopics(); 
       //FIXME
-       const subTags = ["subtag1","subtag2","subtag3"];
+       const subTags = ["subtag1","subtag2","subtag3", "multiple meanings", "fear", "self-identity"];
      // const subTags = getSubtopicsForTopic(topic);
       console.log('subtopics:', subTags);
   

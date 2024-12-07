@@ -5,7 +5,7 @@ import axios from 'axios';
 import { API_ROUTES } from '../pages/api/editBook/route';
 //import { Book } from "@/types";
 import TagEditor  from "../components/tagEditor";
-import  handleTagChange from "../components/tagEditor";
+//import  handleTagChange from "../components/tagEditor";
 
 
 const EditBooksPage = () => {
@@ -16,6 +16,8 @@ const EditBooksPage = () => {
   const [message, setMessage] = useState('');
   const [initialTags, setInitialTags] = useState<string[]>([]);
   const [loadingTags, setLoadingTags] = useState<boolean>(false);
+  const [initialTitle, setInitialTitle] = useState('');
+  
 
  
   const [updatedTags, setUpdatedTags] = useState<string[]>([]); // Initialize updatedTags as an empty array
@@ -94,6 +96,7 @@ const EditBooksPage = () => {
   // Select a book to edit
   const handleSelectBook = (book: any) => {
     setSelectedBook(book);
+    setInitialTitle(book.Title);
     setEditDetails(book); // Pre-fill with the book's current details
     
     
@@ -140,11 +143,57 @@ const EditBooksPage = () => {
   //     setMessage('An error occurred while updating the book.');
   //   }
   // };
+  //================================================================================================
+  type PayloadWithInitialTags = {
+    editDetails: any;
+    initialTags: string[];
+    initialTitle: string;
+};
+
+type PayloadWithUpdatedTags = {
+    editDetails: any;
+    updatedTags: string[];
+    initialTitle: string;
+};
+
+type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
+  //================================================================================================
   const handleSave = async () => {
     
     console.log('Form Data:', FormData);
-    console.log('editDetails:', editDetails); // Ensure editDetails is defined in your component
-    console.log('updatedTags:', updatedTags); // Ensure updatedTags is defined in your component
+    console.log('editDetails in editBook:', editDetails); // Ensure editDetails is defined in your component
+    console.log('updatedTags in editBook::', updatedTags); // Ensure updatedTags is defined in your component
+    console.log('initialTags in editBook::', initialTags); // Ensure selectedBook is defined in your component
+
+   
+    
+    let payload: Payload;
+
+  // Conditionally add updatedTags if it is not empty
+  if (updatedTags && updatedTags.length > 0) {
+      payload = {
+      editDetails,
+      updatedTags,
+      initialTitle,
+  };
+  }
+  else {
+    payload = {
+        editDetails,
+        initialTags,
+        initialTitle,
+    };
+}
+
+  try {
+      const response = await axios.post(API_ROUTES.SAVE_BOOK, payload);
+      console.log('Response:', response.data);
+  } catch (error) {
+      console.error('Error saving book:', error);
+  }
+
+
+
   };
   
   //================================================================================================
@@ -210,27 +259,53 @@ const EditBooksPage = () => {
         <div>
           <h2>Editing Book: {selectedBook.Title}</h2>
           <form  style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
-            <input
-              type="text"
-              value={[editDetails].title || selectedBook.Title}
-              onChange={(e) => handleEditChange('title', e.target.value)}
-              placeholder="Title"
-              style={{ padding: '10px', fontSize: '16px' }}
-            />
-            <input
-              type="text"
-              value={editDetails.author || selectedBook.Author}
-              onChange={(e) => handleEditChange('author', e.target.value)}
-              placeholder="Author"
-              style={{ padding: '10px', fontSize: '16px' }}
-            />
-            <input
-              type="text"
-              value={editDetails.isbn || selectedBook.ISBN}
-              onChange={(e) => handleEditChange('isbn', e.target.value)}
-              placeholder="ISBN"
-              style={{ padding: '10px', fontSize: '16px' }}
-            />
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <label htmlFor="title" style={{ marginRight: '10px', fontSize: '16px' }}>Title:</label>
+                <input
+                    id="title"
+                    type="text"
+                    value={editDetails.title || selectedBook.Title}
+                    onChange={(e) => handleEditChange('title', e.target.value)}
+                    placeholder="Title"
+                    style={{ padding: '10px', fontSize: '16px', width: '300px' }}
+                />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <label htmlFor="author" style={{ marginRight: '10px', fontSize: '16px' }}>Author:</label>
+                <input
+                    id="author"
+                    type="text"
+                    value={editDetails.author || selectedBook.Author}
+                    onChange={(e) => handleEditChange('author', e.target.value)}
+                    placeholder="Author"
+                    style={{ padding: '10px', fontSize: '16px', width: '300px' }}
+                />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <label htmlFor="isbn" style={{ marginRight: '10px', fontSize: '16px' }}>ISBN:</label>
+                <input
+                    id="isbn"
+                    type="text"
+                    value={editDetails.isbn || selectedBook.ISBN}
+                    onChange={(e) => handleEditChange('isbn', e.target.value)}
+                    placeholder="ISBN"
+                    pattern="\d{13}" // Regex pattern to allow only 13 digits
+                    maxLength={13} // Limit input to 13 characters
+                    style={{ padding: '10px', fontSize: '16px', width: '300px' }}
+                />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <label htmlFor="language" style={{ marginRight: '10px', fontSize: '16px' }}>Language:</label>
+                <input
+                    id="language"
+                    type="text"
+                    value={editDetails.language || selectedBook.Language}
+                    onChange={(e) => handleEditChange('Language', e.target.value)}
+                    placeholder="Language"
+                    
+                    style={{ padding: '10px', fontSize: '16px', width: '300px' }}
+                />
+            </div>
 
             
               <div>
@@ -244,13 +319,23 @@ const EditBooksPage = () => {
                   )}
                 </div>
 
-            <input
+            {/* <input
               type="text"
               value={editDetails.description || selectedBook.Description}
-              onChange={(e) => handleEditChange('isbn', e.target.value)}
+              onChange={(e) => handleEditChange('description', e.target.value)}
               placeholder="description"
               style={{ padding: '10px', fontSize: '16px' }}
+            /> */}
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            <label htmlFor="description" style={{ marginRight: '10px', fontSize: '16px' }}>Description:</label>
+            <textarea
+                id="description"
+                value={editDetails.description || selectedBook.Description}
+                onChange={(e) => handleEditChange('description', e.target.value)}
+                placeholder="description"
+                style={{ padding: '10px', fontSize: '16px', width: '300px', height: '100px', resize: 'vertical' }} // Adjust width and height
             />
+        </div>
 
           
             <button
