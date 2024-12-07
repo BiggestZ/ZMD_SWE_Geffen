@@ -419,7 +419,6 @@ async function getAllSubtopics(): Promise<Record<string, string[]>> {
     }
 }
 
-<<<<<<< HEAD
 async function getAllBooks(): Promise<Record<string, string[]>> {
     const connection = await connectToDb();
     if (!connection) {
@@ -490,8 +489,6 @@ async function getBooksList(): Promise<Book[]> {
     }
 }
 
-=======
->>>>>>> 30027030351f9f6d03369f3b52e2760394039a4c
 // Helper function to get subtopics for a specific book
 async function getSubtopicsForBook(bookTitle: string): Promise<string[]> {
     const allSubtopics = await getAllSubtopics(); 
@@ -927,8 +924,4 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
     }
 }
 
-<<<<<<< HEAD
-export { searchBookByTitle, addBook, dropBook, editBook, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllBooks, getAllTopics,getBooksList };
-=======
 export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics };
->>>>>>> 30027030351f9f6d03369f3b52e2760394039a4c
