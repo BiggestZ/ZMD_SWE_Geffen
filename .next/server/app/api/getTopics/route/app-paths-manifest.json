@@ -1,0 +1,3 @@
+{
+  "/api/getTopics/route": "app/api/getTopics/route.js"
+}

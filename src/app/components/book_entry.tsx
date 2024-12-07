@@ -419,6 +419,79 @@ async function getAllSubtopics(): Promise<Record<string, string[]>> {
     }
 }
 
+<<<<<<< HEAD
+async function getAllBooks(): Promise<Record<string, string[]>> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return {};
+    }
+    try {
+        // Fetch all book ISBNs with their subtopics
+        const [results] = await connection.execute(
+            `
+            SELECT b.Title AS bookTitle, s.SubtopicName AS subtopicName
+            FROM Books b
+            JOIN Book_SubTopics bs ON b.ISBN = bs.ISBN
+            JOIN Subtopics s ON bs.SubtopicID = s.SubtopicID
+            `
+        );
+        // Organize subtopics by book title
+        const booksBySubtopic: Record<string, string[]> = {}; // Initialize an empty object
+        (results as any[]).forEach(row => { 
+            const { bookTitle, subtopicName } = row; // Extract book title and subtopic name
+            if (!booksBySubtopic[subtopicName]) { // Initialize subtopic list for the book
+                booksBySubtopic[subtopicName] = []; 
+            }
+            booksBySubtopic[subtopicName].push(bookTitle); // Add subtopic to the list
+        });
+        return booksBySubtopic;
+    } catch (error) {
+        console.error(`Database error: ${error}`);
+        return {};
+    } finally {
+        await connection.end();
+    }
+}
+
+async function getBooksList(): Promise<Book[]> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return [];
+    }
+    try {
+        const [results] = await connection.execute(
+            `SELECT Title, Author, ISBN, Description 
+            FROM Books`
+        );
+
+        const booksList : Array<Book> = [];
+
+        (results as any[]).forEach(row => {
+            const { Title, Author, ISBN, Description } = row;
+
+            let newBook : Book = {
+                title: Title,
+                author: Author,
+                isbn: ISBN,
+                bookDesc: Description,
+                tagsList: [],
+                topicsList: []
+            }
+            booksList.push(newBook);
+            })
+            return booksList;
+    } catch (error) {
+        console.error(`Database error: ${error}`);
+        return [];
+    } finally {
+        await connection.end();
+    }
+}
+
+=======
+>>>>>>> 30027030351f9f6d03369f3b52e2760394039a4c
 // Helper function to get subtopics for a specific book
 async function getSubtopicsForBook(bookTitle: string): Promise<string[]> {
     const allSubtopics = await getAllSubtopics(); 
@@ -854,4 +927,8 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
     }
 }
 
+<<<<<<< HEAD
+export { searchBookByTitle, addBook, dropBook, editBook, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllBooks, getAllTopics,getBooksList };
+=======
 export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics };
+>>>>>>> 30027030351f9f6d03369f3b52e2760394039a4c

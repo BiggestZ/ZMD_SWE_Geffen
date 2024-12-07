@@ -11,15 +11,11 @@ type Subtopic = {
     SubtopicName: string;
 }
 
-type Topic = {
-    TopicName : string;
-}
-
-type SubtopicsList =  {
-    children: JSX.Element | JSX.Element[]
+type BooksList = {
+    books: Book[]
 }
 
 // every subtopic will be back-linked to the big topics
 // subtopics will be assigned to ISBNs as book IDs
 
-export type { Book,Subtopic,Topic };
+export type { Book,Subtopic,BooksList };
