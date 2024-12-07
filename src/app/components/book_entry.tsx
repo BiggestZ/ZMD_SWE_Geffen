@@ -1100,4 +1100,4 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
     }
 }
 
-export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics,getSubtopicsByTopic };
+export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics, getBooksList, getSubtopicsByTopic };
