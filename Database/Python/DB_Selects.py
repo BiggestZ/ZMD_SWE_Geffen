@@ -845,6 +845,64 @@ def get_all_topics():
     print(topics)
     return topics
 
+def get_subtopics_by_topic(topic_name):
+    """
+    Retrieve all subtopics related to a given topic name.
+    """
+    connection = connect_to_db()  # Replace with your actual connection function
+    if not connection:
+        print("Failed to connect to the database.")
+        return []
+
+    try:
+        with connection.cursor() as cursor:
+            # Get the TopicID for the given topic name
+            cursor.execute("SELECT TopicID FROM Topics WHERE TopicName = %s", (topic_name,))
+            topic = cursor.fetchone()
+
+            if not topic:
+                print(f"No topic found with name '{topic_name}'.")
+                return []
+
+            topic_id = topic['TopicID']
+
+            # Get all subtopics linked to this TopicID
+            cursor.execute("SELECT SubtopicName FROM Subtopics WHERE TopicID = %s", (topic_id,))
+            subtopics = cursor.fetchall()
+
+            # Return a list of subtopic names
+            return [subtopic['SubtopicName'] for subtopic in subtopics]
+
+    except pymysql.MySQLError as e:
+        print(f"Database error: {e}")
+        return []
+    finally:
+        connection.close()
+
+def add_language(language_name):
+    """Adds a language to the database."""
+    connection = connect_to_db()
+    if not connection:
+        print("Failed to connect to the database.")
+        return
+
+    try:
+        with connection.cursor() as cursor:
+            # Check if the language already exists
+            cursor.execute("SELECT LanguageID FROM Language WHERE LanguageName = %s", (language_name,))
+            result = cursor.fetchone()
+
+            if result:
+                print(f"Language '{language_name}' already exists in the database.")
+            else:
+                # Insert the new language
+                cursor.execute("INSERT INTO Language (LanguageName) VALUES (%s)", (language_name,))
+                connection.commit()
+                print(f"Language '{language_name}' added successfully.")
+    except pymysql.MySQLError as e:
+        print(f"Error adding language: {e}")
+    finally:
+        connection.close()
 
 # Command-line interface for testing
 if __name__ == "__main__":
@@ -903,6 +961,13 @@ if __name__ == "__main__":
 
     elif action == "test3":
         get_all_topics()
+    elif action == "123":
+        topic_name = input("Enter topic name: ")
+        print(get_subtopics_by_topic(topic_name))
+    
+    elif action == "4":
+        lang = input("Enter Language to Add ")
+        print(add_language(lang))
 
     else:
         print("Invalid action. Please choose 'add', 'drop', or 'edit'.") 

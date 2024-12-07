@@ -77,7 +77,7 @@ interface SubtopicInput {
     topicName: string;
     subtopicName?: string;
 }
-//Fixed: Check me
+//Works!
 async function addBook2(
     title: string,
     author: string,
@@ -156,8 +156,145 @@ async function addBook2(
     }
 }
 
+// Add a language to the database
+async function addLanguage(languageName: string): Promise<void> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.log("Failed to connect to the database.");
+        return;
+    }
 
+    try {
+        // Check if the language already exists
+        const [result] = await connection.execute(
+            "SELECT LanguageID FROM Language WHERE LanguageName = ?",
+            [languageName]
+        );
 
+        if ((result as any[]).length > 0) {
+            console.log(`Language '${languageName}' already exists in the database.`);
+        } else {
+            // Insert the new language
+            await connection.execute(
+                "INSERT INTO Language (LanguageName) VALUES (?)",
+                [languageName]
+            );
+            console.log(`Language '${languageName}' added successfully.`);
+        }
+    } catch (error) {
+        console.error("Error adding language:", error);
+    } finally {
+        await connection.end();
+    }
+}
+
+// Delete a language from the database
+async function deleteLanguage(languageName: string): Promise<void> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.log("Failed to connect to the database.");
+        return;
+    }
+
+    try {
+        // Check if the language exists
+        const [result] = await connection.execute(
+            "SELECT LanguageID FROM Language WHERE LanguageName = ?",
+            [languageName]
+        );
+
+        if ((result as any[]).length === 0) {
+            console.log(`Language '${languageName}' does not exist in the database.`);
+        } else {
+            // Delete the language
+            await connection.execute(
+                "DELETE FROM Language WHERE LanguageName = ?",
+                [languageName]
+            );
+            console.log(`Language '${languageName}' deleted successfully.`);
+        }
+    } catch (error) {
+        console.error("Error deleting language:", error);
+    } finally {
+        await connection.end();
+    }
+}
+
+// Add a topic to the database
+async function addTopic(topicName: string): Promise<void> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return;
+    }
+
+    try {
+        // Check if the topic already exists
+        const [result]: any[] = await connection.execute(
+            "SELECT TopicID FROM Topics WHERE TopicName = ?",
+            [topicName]
+        );
+
+        if (result.length > 0) {
+            console.log(`Topic '${topicName}' already exists in the database.`);
+        } else {
+            // Insert the new topic
+            await connection.execute(
+                "INSERT INTO Topics (TopicName) VALUES (?)",
+                [topicName]
+            );
+            await connection.commit();
+            console.log(`Topic '${topicName}' added successfully.`);
+        }
+    } catch (error) {
+        console.error(`Error adding topic: ${(error as Error).message}`);
+    } finally {
+        await connection.end();
+    }
+}
+
+// Delete a topic from the database
+async function deleteTopic(topicName: string): Promise<void> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return;
+    }
+
+    try {
+        // Check if the topic exists
+        const [result]: any[] = await connection.execute(
+            "SELECT TopicID FROM Topics WHERE TopicName = ?",
+            [topicName]
+        );
+
+        if (result.length === 0) {
+            console.log(`Topic '${topicName}' does not exist in the database.`);
+            return;
+        }
+
+        const topicID = result[0].TopicID;
+
+        // Remove related subtopics or dependencies (optional)
+        await connection.execute(
+            "DELETE FROM Subtopics WHERE TopicID = ?",
+            [topicID]
+        );
+        console.log(`Deleted all subtopics related to topic '${topicName}'.`);
+
+        // Delete the topic
+        await connection.execute(
+            "DELETE FROM Topics WHERE TopicID = ?",
+            [topicID]
+        );
+        await connection.commit();
+        console.log(`Topic '${topicName}' deleted successfully.`);
+    } catch (error) {
+        console.error(`Error deleting topic: ${(error as Error).message}`);
+    } finally {
+        await connection.end();
+    }
+}
 
 // // Function to add a book with multiple topics and subtopics
 // async function addBook(title: string, author: string, isbn: string, description: string): Promise<void> {
@@ -218,11 +355,15 @@ async function dropBook(titleOrIsbn: string): Promise<void> {
     const connection = await connectToDb();
     if (!connection) return;
     try {
-        const [bookResult] = await connection.execute("SELECT ISBN FROM Books WHERE Title = ?", [titleOrIsbn]);
+        // Fetch the ISBN of the book using the title or directly use ISBN
+        const [bookResult] = await connection.execute(
+            "SELECT ISBN FROM Books WHERE Title = ? OR ISBN = ?",
+            [titleOrIsbn, titleOrIsbn]
+        );
         const book = (bookResult as any[])[0];
 
         if (!book) {
-            console.log(`No book found with title: '${titleOrIsbn}'.`);
+            console.log(`No book found with title or ISBN: '${titleOrIsbn}'.`);
             return;
         }
 
@@ -231,6 +372,10 @@ async function dropBook(titleOrIsbn: string): Promise<void> {
         // Delete all related entries in Book_SubTopics
         await connection.execute("DELETE FROM Book_SubTopics WHERE ISBN = ?", [isbn]);
         console.log(`Deleted all subtopic links for book with ISBN ${isbn}.`);
+
+        // Delete all related entries in Book_Language
+        await connection.execute("DELETE FROM Book_Language WHERE ISBN = ?", [isbn]);
+        console.log(`Deleted all language links for book with ISBN ${isbn}.`);
 
         // Delete the book itself
         await connection.execute("DELETE FROM Books WHERE ISBN = ?", [isbn]);
@@ -243,6 +388,35 @@ async function dropBook(titleOrIsbn: string): Promise<void> {
         await connection.end();
     }
 }
+// async function dropBook(titleOrIsbn: string): Promise<void> {
+//     const connection = await connectToDb();
+//     if (!connection) return;
+//     try {
+//         const [bookResult] = await connection.execute("SELECT ISBN FROM Books WHERE Title = ?", [titleOrIsbn]);
+//         const book = (bookResult as any[])[0];
+
+//         if (!book) {
+//             console.log(`No book found with title: '${titleOrIsbn}'.`);
+//             return;
+//         }
+
+//         const isbn = book.ISBN;
+
+//         // Delete all related entries in Book_SubTopics
+//         await connection.execute("DELETE FROM Book_SubTopics WHERE ISBN = ?", [isbn]);
+//         console.log(`Deleted all subtopic links for book with ISBN ${isbn}.`);
+
+//         // Delete the book itself
+//         await connection.execute("DELETE FROM Books WHERE ISBN = ?", [isbn]);
+//         await connection.commit();
+//         console.log(`Book with ISBN ${isbn} deleted successfully.`);
+
+//     } catch (error) {
+//         console.error(`Error dropping book: ${(error as Error).message}`);
+//     } finally {
+//         await connection.end();
+//     }
+// }
 
 async function editBook(searchTerm: string): Promise<void> {
     const connection = await connectToDb();
@@ -697,7 +871,6 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
     //         await connection.end();
     //     }
     // }
-
 /*
 async function getTopicsForBook(bookTitle: string): Promise<string[]> {
     const connection = await connectToDb();
@@ -748,9 +921,8 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
 // }
 */
 
-
 // Function to get all subtopics for a given topic
-export async function getSubtopicsForTopic(topicName: string): Promise<string[]> {
+async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
     const connection = await connectToDb();
     if (!connection) {
         console.error("Failed to connect to the database.");
@@ -758,26 +930,31 @@ export async function getSubtopicsForTopic(topicName: string): Promise<string[]>
     }
 
     try {
-        // Query to fetch all subtopics for the given topic
-        const [results] = await connection.execute(
-            `
-            SELECT s.SubtopicName
-            FROM Subtopics s
-            JOIN Topics t ON s.TopicID = t.TopicID
-            WHERE t.TopicName = ?
-            `,
+        // Get the TopicID for the given topic name
+        const [topicResults] = await connection.execute(
+            "SELECT TopicID FROM Topics WHERE TopicName = ?",
             [topicName]
         );
 
-        if (Array.isArray(results) && results.length > 0) {
-            // Map results to extract subtopic names
-            const subtopics = (results as any[]).map(row => row.SubtopicName);
-            console.log(`Subtopics for topic '${topicName}':`, subtopics);
-            return subtopics;
-        } else {
-            console.log(`No subtopics found for topic '${topicName}'.`);
+        const topic = (topicResults as any[])[0];
+
+        if (!topic) {
+            console.log(`No topic found with name '${topicName}'.`);
             return [];
         }
+
+        const topicId = topic.TopicID;
+
+        // Get all subtopics linked to this TopicID
+        const [subtopicResults] = await connection.execute(
+            "SELECT SubtopicName FROM Subtopics WHERE TopicID = ?",
+            [topicId]
+        );
+
+        const subtopics = subtopicResults as any[];
+
+        // Return a list of subtopic names
+        return subtopics.map(subtopic => subtopic.SubtopicName);
     } catch (error) {
         console.error(`Database error: ${(error as Error).message}`);
         return [];
@@ -785,7 +962,6 @@ export async function getSubtopicsForTopic(topicName: string): Promise<string[]>
         await connection.end();
     }
 }
-
 
 //export { searchBookByTitle, addBook2, dropBook, editBook ,getAllTopics, getTopicsForBook, searchBooksByTopic, searchBooksBySubtopic, getSubtopicsForBook, getAllSubtopics, getSubtopicId };
 
@@ -924,4 +1100,4 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
     }
 }
 
-export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics };
+export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics,getSubtopicsByTopic };
