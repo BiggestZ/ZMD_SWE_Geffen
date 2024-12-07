@@ -52,11 +52,12 @@ const SearchPage = () => {
                     let tags = (book.tagsList).map((tag : any) => {
                         return(
                             <div style = {{
-                                padding: '8px',
-                                background: '#444',
-                                margin: '5px 0',
-                                flex: 'flex-auto',
-                                color: 'white'
+                                padding: '7px',
+                                background: '#555',
+                                margin: '4px',
+                                flex: 'initial',
+                                color: 'white',
+                                borderRadius: '5px'
                             }} key={tag}>
                             {tag}
                             </div>
@@ -68,15 +69,16 @@ const SearchPage = () => {
                             <div style={{
                                 padding: '10px',
                                 border: '1px solid #aaa',
-                                borderRadius: '5px',
+                                borderRadius: '10px',
                                 background: '#ddd',
-                                margin: '5px 0'}}>
+                                margin: '10px',
+                                }}>
 
                                 <div style={{ fontWeight: 'bold', }}>{book.title}</div>
                                 <div style={{ fontWeight: 'bold', direction: 'rtl', textAlign: 'justify'}}>ISBN: {book.isbn}</div>
                                 <div style={{ padding: '2px' }}>{ book.author }</div>
                                 <div style={{ fontSize: 'small', padding: '5px' }}>{book.bookDesc}</div>
-                                {tags}
+                                <div style={{ display: 'flex', flexFlow: 'row', flexWrap: 'wrap' }}>{tags}</div>
                             </div>
                         </li>
                     )
