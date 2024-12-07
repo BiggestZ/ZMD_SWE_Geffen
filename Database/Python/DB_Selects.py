@@ -5,10 +5,11 @@ def connect_to_db():
     # REMEMBER TO REPLACE THE PASSWORD BEFORE COMMITTING
     try:
         connection = pymysql.connect(
-            host='localhost',
-            user='root',
-            password='',
-            database='geffen_db',
+            host= 'sql.cianci.io',      
+            user= 'dkim5',
+            password= 'tKPokYL@*&t65Zw@',
+            database= '2024fall_comp367_geffen',
+            
             cursorclass=pymysql.cursors.DictCursor  # Ensures results are returned as dictionaries
         )
         return connection
@@ -152,7 +153,7 @@ def get_subtopic_id(subtopic_name, topic_name, connection):
 # Function to validate author's name
 def is_valid_author_name(author):
     # Regular expression to allow only letters and spaces
-    return bool(re.match("^[A-Za-z]+$", author))
+    return bool(re.match(r"^[A-Za-z\s]+$", author))
 
 # Function to add a book with multiple topics and subtopics
 def add_book(title, author, isbn, description):
@@ -169,7 +170,7 @@ def add_book(title, author, isbn, description):
                 return
 
             # Insert the book
-            sql = "INSERT INTO Books (Title, Author, ISBN, BookDesc) VALUES (%s, %s, %s, %s)"
+            sql = "INSERT INTO Books (Title, Author, ISBN, Description) VALUES (%s, %s, %s, %s)"
             cursor.execute(sql, (title, author, isbn, description))
             connection.commit()
             print(f"Book '{title}' added successfully.")
@@ -822,6 +823,29 @@ def get_topics_for_book(book_title):
     finally:
         connection.close()
 
+
+        connection.close()
+
+def get_all_topics():
+    connection = connect_to_db()  # Replace with your database connection function
+    topics = []
+    try:
+        with connection.cursor() as cursor:
+            # Execute SQL query to fetch all topics
+            cursor.execute("SELECT TopicName FROM Topics")
+            result = cursor.fetchall()
+            
+            # Extract topic names into a list
+            topics = [row['TopicName'] for row in result]
+    except pymysql.MySQLError as e:
+        print(f"Database error: {e}")
+    finally:
+        connection.close()
+    
+    print(topics)
+    return topics
+
+
 # Command-line interface for testing
 if __name__ == "__main__":
     action = input("Enter action (add, drop, edit, search, add_subtopic, drop_subtopic, edit_subtopic, search_subtopic): ").strip().lower()
@@ -876,6 +900,9 @@ if __name__ == "__main__":
     elif action == "test2":
         search_term = input("Enter search topic to find books: ")
         search_books_by_topic(search_term)
+
+    elif action == "test3":
+        get_all_topics()
 
     else:
         print("Invalid action. Please choose 'add', 'drop', or 'edit'.") 

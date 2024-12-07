@@ -2,81 +2,65 @@
 
 import React, { useEffect, useState } from 'react';
 
-export default function TagTable() {
-  // State to hold the list of sub-tags to display as checkboxes
+interface TagTableProps {
+  resetTrigger: boolean;
+  onResetHandled: () => void;
+  onTagsSelected: (tags: string[]) => void; // Callback to send selected tags to parent
+}
+
+export default function TagTable({ resetTrigger, onResetHandled, onTagsSelected }: TagTableProps) {
   const [subTags, setSubTags] = useState<string[]>([]);
-  
-  // State to track selected tags across categories
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [topics, setTopics] = useState<any[]>([]);
 
-
-  // Function to handle the subTag_View logic and update the displayed sub-tags
   const subTag_View = (selectedValue: "1" | "2" | "3") => {
     const tagOptions = {
-      "1": ["Art", "Language", "Music"],         // culture sub-tags
-      "2": ["Community", "Events", "Networking"], // social sub-tags
-      "3": ["Parenting", "Education", "Health"],  // family sub-tags
+      "1": ["art", "Language", "Music"],
+      "2": ["Community", "Events", "Networking"],
+      "3": ["Parenting", "Education", "Health"],
     };
 
     const newSubTags = tagOptions[selectedValue] || [];
     setSubTags(newSubTags);
   };
 
-  // Handle change event on the <select> element
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value as "1" | "2" | "3";
     subTag_View(selectedValue);
   };
 
-  // Handle checkbox change for each sub-tag
   const handleCheckboxChange = (tag: string) => {
     setSelectedTags((prevSelectedTags) => {
-      // Add the tag if it’s not already selected, otherwise remove it
-      if (prevSelectedTags.includes(tag)) {
-        return prevSelectedTags.filter((t) => t !== tag);
-      } else {
-        return [...prevSelectedTags, tag];
-      }
+      const updatedTags = prevSelectedTags.includes(tag)
+        ? prevSelectedTags.filter((t) => t !== tag)
+        : [...prevSelectedTags, tag];
+      return updatedTags;
     });
   };
 
-  //=====
+  // Notify parent about selected tags after `selectedTags` state updates
   useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        // Call the API endpoint to get the list of topics
-        const response = await fetch('/api/getTopics');
-        if (response.ok) {
-          const data = await response.json();  // Parse the JSON response
-          setTopics(data);  // Store topics in the state
-        } else {
-          console.error('Error fetching topics');
-        }
-      } catch (error) {
-        console.error('Error fetching topics:', error);
-      }
-    };
+    onTagsSelected(selectedTags);
+  }, [selectedTags, onTagsSelected]);
 
-    fetchTopics();
-  }, []);
-  //=====
+  // Reset logic when resetTrigger changes
+  useEffect(() => {
+    if (resetTrigger) {
+      setSubTags([]);
+      setSelectedTags([]);
+      onResetHandled();
+    }
+  }, [resetTrigger, onResetHandled]);
 
   return (
     <div>
-      {/* Dropdown to select the main category */}
-      <select
-        className="form-select"
-        aria-label="Default select example"
-        onChange={handleSelectChange}
-      >
+      <select className="form-select" aria-label="Default select example" onChange={handleSelectChange}>
         <option value="0">Select a tag</option>
         <option value="1">culture</option>
         <option value="2">social</option>
         <option value="3">family</option>
       </select>
 
-      {/* Render the list of sub-tags with checkboxes */}
       {subTags.length > 0 && (
         <div>
           {subTags.map((tag, index) => (
@@ -95,7 +79,6 @@ export default function TagTable() {
         </div>
       )}
 
-      {/* Display selected tags */}
       {selectedTags.length > 0 && (
         <div>
           <h3>Selected Tags:</h3>
@@ -109,3 +92,101 @@ export default function TagTable() {
     </div>
   );
 }
+
+//==================================================================================================
+// "use client";
+
+// import React, { useEffect, useState } from 'react';
+
+// interface TagTableProps {
+//   resetTrigger: boolean;
+//   onResetHandled: () => void;
+//   onTagsSelected: (tags: string[]) => void; // Callback to send selected tags to parent
+// }
+
+// export default function TagTable({ resetTrigger, onResetHandled, onTagsSelected }: TagTableProps) {
+//   const [subTags, setSubTags] = useState<string[]>([]);
+//   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+//   const [topics, setTopics] = useState<any[]>([]);
+
+//   const subTag_View = (selectedValue: "1" | "2" | "3") => {
+//     const tagOptions = {
+//       "1": ["Art", "Language", "Music"],
+//       "2": ["Community", "Events", "Networking"],
+//       "3": ["Parenting", "Education", "Health"],
+//     };
+
+//     const newSubTags = tagOptions[selectedValue] || [];
+//     setSubTags(newSubTags);
+//   };
+
+//   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+//     const selectedValue = e.target.value as "1" | "2" | "3";
+//     subTag_View(selectedValue);
+//   };
+
+//   const handleCheckboxChange = (tag: string) => {
+//     setSelectedTags((prevSelectedTags) => {
+//       const updatedTags = prevSelectedTags.includes(tag)
+//         ? prevSelectedTags.filter((t) => t !== tag)
+//         : [...prevSelectedTags, tag];
+//       return updatedTags;
+//     });
+//   };
+
+//   // Notify parent about selected tags after `selectedTags` state updates
+//   useEffect(() => {
+//     onTagsSelected(selectedTags);
+//   }, [selectedTags, onTagsSelected]);
+
+//   // Reset logic when resetTrigger changes
+//   useEffect(() => {
+//     if (resetTrigger) {
+//       setSubTags([]);
+//       setSelectedTags([]);
+//       onResetHandled();
+//     }
+//   }, [resetTrigger, onResetHandled]);
+
+//   return (
+//     <div>
+//       <select className="form-select" aria-label="Default select example" onChange={handleSelectChange}>
+//         <option value="0">Select a tag</option>
+//         <option value="1">culture</option>
+//         <option value="2">social</option>
+//         <option value="3">family</option>
+//       </select>
+
+//       {subTags.length > 0 && (
+//         <div>
+//           {subTags.map((tag, index) => (
+//             <div key={index}>
+//               <input
+//                 type="checkbox"
+//                 id={tag}
+//                 name={tag}
+//                 value={tag}
+//                 checked={selectedTags.includes(tag)}
+//                 onChange={() => handleCheckboxChange(tag)}
+//               />
+//               <label htmlFor={tag}>{tag}</label>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+
+//       {selectedTags.length > 0 && (
+//         <div>
+//           <h3>Selected Tags:</h3>
+//           <ul>
+//             {selectedTags.map((tag, index) => (
+//               <li key={index}>{tag}</li>
+//             ))}
+//           </ul>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+

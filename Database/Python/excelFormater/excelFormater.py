@@ -45,12 +45,12 @@ title_Language = format_csv(bookRow_in_List)
 
 
 
-print("1: ",getLanguage("7 ate 9: the untold story"))
-print("2: ",getLanguage("a friend like you"))
-print("3: ",getLanguage("A Hundred thousand welcomes"))
-print("4: ",getLanguage("I'm hungry Tengo Hambre"))
-print("5: ",getLanguage("Mawkiljemk Mi'kmawiktuk (Counting in Mi'kmaw)"))
-print("6: ",getLanguage("Cesaria Feels the Beat "))
+# print("1: ",getLanguage("7 ate 9: the untold story"))
+# print("2: ",getLanguage("a friend like you"))
+# print("3: ",getLanguage("A Hundred thousand welcomes"))
+# print("4: ",getLanguage("I'm hungry Tengo Hambre"))
+# print("5: ",getLanguage("Mawkiljemk Mi'kmawiktuk (Counting in Mi'kmaw)"))
+# print("6: ",getLanguage("Cesaria Feels the Beat "))
 
 
 

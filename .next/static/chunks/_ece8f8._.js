@@ -14,6 +14,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$MagnifyingGlass$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MagnifyingGlass$3e$__ = __turbopack_import__("[project]/node_modules/phosphor-react/dist/icons/MagnifyingGlass.esm.js [app-client] (ecmascript) <export default as MagnifyingGlass>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Bookmark$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Bookmark$3e$__ = __turbopack_import__("[project]/node_modules/phosphor-react/dist/icons/Bookmark.esm.js [app-client] (ecmascript) <export default as Bookmark>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$FilePlus$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__FilePlus$3e$__ = __turbopack_import__("[project]/node_modules/phosphor-react/dist/icons/FilePlus.esm.js [app-client] (ecmascript) <export default as FilePlus>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$FileMinus$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__FileMinus$3e$__ = __turbopack_import__("[project]/node_modules/phosphor-react/dist/icons/FileMinus.esm.js [app-client] (ecmascript) <export default as FileMinus>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Notebook$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Notebook$3e$__ = __turbopack_import__("[project]/node_modules/phosphor-react/dist/icons/Notebook.esm.js [app-client] (ecmascript) <export default as Notebook>");
 ;
 var _s = __turbopack_refresh__.signature();
 "use client";
@@ -24,6 +26,7 @@ const NavBarLinks = ()=>{
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const buttonStyle = {
         display: 'flex',
+        alignItems: 'center',
         background: 'none',
         border: 'none',
         cursor: 'pointer',
@@ -31,7 +34,7 @@ const NavBarLinks = ()=>{
         gap: '0.5rem'
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "flex w-full h-fit gap-12",
+        className: "flex w-full h-fit gap-12 flex-row",
         children: [
             " ",
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -42,14 +45,14 @@ const NavBarLinks = ()=>{
                         size: 30
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/navbarlinks.tsx",
-                        lineNumber: 20,
+                        lineNumber: 21,
                         columnNumber: 72
                     }, this),
                     "Home"
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/navbarlinks.tsx",
-                lineNumber: 20,
+                lineNumber: 21,
                 columnNumber: 11
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -60,14 +63,14 @@ const NavBarLinks = ()=>{
                         size: 30
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/navbarlinks.tsx",
-                        lineNumber: 21,
+                        lineNumber: 22,
                         columnNumber: 78
                     }, this),
                     "Explore"
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/navbarlinks.tsx",
-                lineNumber: 21,
+                lineNumber: 22,
                 columnNumber: 11
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -78,14 +81,14 @@ const NavBarLinks = ()=>{
                         size: 30
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/navbarlinks.tsx",
-                        lineNumber: 22,
+                        lineNumber: 23,
                         columnNumber: 81
                     }, this),
                     "Saved"
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/navbarlinks.tsx",
-                lineNumber: 22,
+                lineNumber: 23,
                 columnNumber: 11
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -96,20 +99,110 @@ const NavBarLinks = ()=>{
                         size: 30
                     }, void 0, false, {
                         fileName: "[project]/src/app/components/navbarlinks.tsx",
-                        lineNumber: 23,
+                        lineNumber: 24,
                         columnNumber: 78
                     }, this),
-                    "Add New"
+                    "Add New Book"
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/components/navbarlinks.tsx",
-                lineNumber: 23,
+                lineNumber: 24,
+                columnNumber: 11
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                onClick: ()=>router.push('/deleteBook'),
+                style: buttonStyle,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$FileMinus$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__FileMinus$3e$__["FileMinus"], {
+                        size: 30
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/components/navbarlinks.tsx",
+                        lineNumber: 25,
+                        columnNumber: 82
+                    }, this),
+                    "Delete Book"
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/components/navbarlinks.tsx",
+                lineNumber: 25,
+                columnNumber: 11
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                onClick: ()=>router.push('/editBook'),
+                style: buttonStyle,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Notebook$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Notebook$3e$__["Notebook"], {
+                        size: 30
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/components/navbarlinks.tsx",
+                        lineNumber: 26,
+                        columnNumber: 80
+                    }, this),
+                    "Edit Book"
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/components/navbarlinks.tsx",
+                lineNumber: 26,
+                columnNumber: 11
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                onClick: ()=>router.push('/AED_Tag'),
+                style: buttonStyle,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Notebook$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Notebook$3e$__["Notebook"], {
+                        size: 30
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/components/navbarlinks.tsx",
+                        lineNumber: 27,
+                        columnNumber: 79
+                    }, this),
+                    "Add, Delete tag"
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/components/navbarlinks.tsx",
+                lineNumber: 27,
+                columnNumber: 11
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                onClick: ()=>router.push('/testPage'),
+                style: buttonStyle,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Notebook$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Notebook$3e$__["Notebook"], {
+                        size: 30
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/components/navbarlinks.tsx",
+                        lineNumber: 28,
+                        columnNumber: 80
+                    }, this),
+                    "test page"
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/components/navbarlinks.tsx",
+                lineNumber: 28,
+                columnNumber: 11
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                onClick: ()=>router.push('/testPage2'),
+                style: buttonStyle,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$phosphor$2d$react$2f$dist$2f$icons$2f$Notebook$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Notebook$3e$__["Notebook"], {
+                        size: 30
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/components/navbarlinks.tsx",
+                        lineNumber: 29,
+                        columnNumber: 81
+                    }, this),
+                    "test page 2"
+                ]
+            }, void 0, true, {
+                fileName: "[project]/src/app/components/navbarlinks.tsx",
+                lineNumber: 29,
                 columnNumber: 11
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/components/navbarlinks.tsx",
-        lineNumber: 19,
+        lineNumber: 20,
         columnNumber: 9
     }, this);
 };

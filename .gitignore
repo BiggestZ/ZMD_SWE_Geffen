@@ -1,1 +1,9 @@
 node_modules
+<<<<<<< HEAD
+=======
+package-lock.json
+.DS_Store
+Thumbs.db
+.env
+.next
+>>>>>>> 30027030351f9f6d03369f3b52e2760394039a4c

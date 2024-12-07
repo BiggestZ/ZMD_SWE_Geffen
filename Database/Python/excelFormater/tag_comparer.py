@@ -113,16 +113,30 @@ def addLanguage_to_csv(filepath):
     originalList = csv_to_list(filepath)
     tempList = []
     for row in originalList:
-        # print("\n")
-        # print(row[1])
-        # print("\n")
         tempRow = row
         tempRow.append(getLanguage(row[1]))
-        # print(tempRow)
         tempList.append(tempRow)
 
     return tempList
 #==================
+def fillCell(list):
+    for row in list:
+        print("\n")
+        print("row before: ",row)
+        if row[3] == "":
+            row[3] = "No Description"
+        
+        if row[4] == "[]":
+            row[4] = "empty tag"
+        
+        if row[5] == "[]":
+            row[5] = "empty tag"
+        print("row after:",row)
+        print("\n")
+ 
+    return row
+#==================
+
 def write_list_to_csv(data_list, file_path):
     # Create a DataFrame from the list
     df = pd.DataFrame(data_list, columns=['ISBN','Title','Author','Description','Unformatted Tags','Formatted Tags','Language'])
@@ -169,9 +183,11 @@ def write_list_to_csv(data_list, file_path):
 
 
 #==================
+#added language to master2
 master_filepath = '/Users/dannykim/Documents/Pycharm Projects/ZMD_SWE_Geffen/Database/Python/master.csv'
-masterFile = addLanguage_to_csv(master_filepath)
+masterFile = fillCell(addLanguage_to_csv(master_filepath))
 #print(masterFile)
+# fillCell(masterFile)
 master2_filepath = 'Database/Python/excelFormater/master2.csv'
 write_list_to_csv(masterFile,master2_filepath )
 
