@@ -3,8 +3,8 @@ interface Book {
     author: string;
     isbn: string;
     bookDesc?: string;
-    tagsList: string[];
-    topicsList: string[];
+    tagsList?: string[];
+    topicsList?: string[];
   }
 
 type Subtopic = {

@@ -543,13 +543,6 @@ var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_
         var dispatcher = ReactSharedInternals.A;
         return null === dispatcher ? null : dispatcher.getOwner();
     }
-    function hasValidRef(config) {
-        if (hasOwnProperty.call(config, "ref")) {
-            var getter = Object.getOwnPropertyDescriptor(config, "ref").get;
-            if (getter && getter.isReactWarning) return !1;
-        }
-        return void 0 !== config.ref;
-    }
     function hasValidKey(config) {
         if (hasOwnProperty.call(config, "key")) {
             var getter = Object.getOwnPropertyDescriptor(config, "key").get;
@@ -573,8 +566,8 @@ var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_
         componentName = this.props.ref;
         return void 0 !== componentName ? componentName : null;
     }
-    function ReactElement(type, key, _ref, self, source, owner, props) {
-        _ref = props.ref;
+    function ReactElement(type, key, self, source, owner, props) {
+        self = props.ref;
         type = {
             $$typeof: REACT_ELEMENT_TYPE,
             type: type,
@@ -582,7 +575,7 @@ var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_
             props: props,
             _owner: owner
         };
-        null !== (void 0 !== _ref ? _ref : null) ? Object.defineProperty(type, "ref", {
+        null !== (void 0 !== self ? self : null) ? Object.defineProperty(type, "ref", {
             enumerable: !1,
             get: elementRefGetterWithDeprecationWarning
         }) : Object.defineProperty(type, "ref", {
@@ -630,13 +623,12 @@ var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_
         children = null;
         void 0 !== maybeKey && (checkKeyStringCoercion(maybeKey), children = "" + maybeKey);
         hasValidKey(config) && (checkKeyStringCoercion(config.key), children = "" + config.key);
-        hasValidRef(config);
         if ("key" in config) {
             maybeKey = {};
             for(var propName in config)"key" !== propName && (maybeKey[propName] = config[propName]);
         } else maybeKey = config;
-        children && (config = "function" === typeof type ? type.displayName || type.name || "Unknown" : type, children && defineKeyPropWarningGetter(maybeKey, config));
-        return ReactElement(type, children, null, self, source, getOwner(), maybeKey);
+        children && defineKeyPropWarningGetter(maybeKey, "function" === typeof type ? type.displayName || type.name || "Unknown" : type);
+        return ReactElement(type, children, self, source, getOwner(), maybeKey);
     }
     function validateChildKeys(node, parentType) {
         if ("object" === typeof node && node && node.$$typeof !== REACT_CLIENT_REFERENCE) {
