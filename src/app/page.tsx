@@ -7,7 +7,7 @@ export default function Home() {
     <div className="flex w-full justify-center space-y-16 space-x-10 grid grid-flow-rows auto-rows-min">
       <div className="flex space-y-10" />
       <h1 className="flex text-8xl font-bold justify-self-center">Picture Books</h1>
-      <div className="flex p-5 grid grid-cols-2">
+      <div className="flex grid grid-cols-2">
         <div className="flex grid grid-flow-rows auto-rows-min space-y-5 p-5">
           <div className="text-2xl font-bold">
             Research

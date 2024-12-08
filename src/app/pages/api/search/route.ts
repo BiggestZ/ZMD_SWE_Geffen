@@ -4,7 +4,8 @@ import { getBooksList,getAllBooks,getAllSubtopics } from '@/app/components/book_
 import { Book } from '@/types';
 
 export const API_ROUTES = {
-    SEARCH: 'pages/api/search/',
+    SEARCH_BY_TAGS: 'pages/api/search/',
+    SEARCH_BY_NAME: 'pages/api/searchByName/'
   };
 
 export async function GET(req: Request) {

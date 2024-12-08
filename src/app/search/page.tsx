@@ -1,7 +1,6 @@
 'use client';
 
 import axios from "axios";
-import TagTable from "../components/tagTable";
 import { useState } from 'react';
 import { API_ROUTES } from "../pages/api/search/route";
 import { BookEntry } from "../components/book";
@@ -10,27 +9,30 @@ import TopicSelector from "../components/TopicSelector";
 const SearchPage = () => {
 
     const [searchResults, setSearchResults] = useState([]);
-    const [resetTrigger, setResetTrigger] = useState(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
-
-    const handleResetHandled = () => {
-        setResetTrigger(false);
-    };
 
     // Search books
     const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-        const response = await axios.get(API_ROUTES.SEARCH, {params: { subtopic:selectedTags[0] }});
-
-        console.log("book response.data:", response.data)
-        console.log("book response.data.books:", response.data.filtered)
-    
-        setSearchResults(response.data.filtered);
+            const response = await axios.get(API_ROUTES.SEARCH_BY_NAME, {params: { title: searchQuery }});
+            setSearchResults(response.data.books);
 
         } catch (error) {
-        console.error('Error searching books:', error);
+            console.error('Error searching by title: ', error)
+        }
+    }
+
+    const handleTagsSearch = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const response = await axios.get(API_ROUTES.SEARCH_BY_TAGS, {params: { subtopic:selectedTags[0] }});
+        
+            setSearchResults(response.data.filtered);
+
+        } catch (error) {
+            console.error('Error searching by tags:', error);
         }
     };
 
@@ -58,7 +60,7 @@ const SearchPage = () => {
                         <form onSubmit={handleSearch}>        
                     
                     <h2 className="grow-0">Search by Topic</h2>
-                    {/*<TopicSelector onSubmit={handleTopicSelectorSubmit} />*/}
+                    <TopicSelector onSubmit={handleTopicSelectorSubmit} />
                     <button type="submit" style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}>Search</button>
                 </form>
             </div>
