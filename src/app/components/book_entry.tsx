@@ -150,6 +150,7 @@ async function addBook2(
         await connection.commit();
         console.log("All valid subtopics processed successfully.");
     } catch (error) {
+        console.error(`Error adding subtopics: ${subtopics}`);
         console.error(`Error adding book with subtopics: ${(error as Error).message}`);
     } finally {
         await connection.end();
@@ -1007,7 +1008,6 @@ async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
 
 
 
-//export { searchBookByTitle, addBook2, dropBook, editBook ,getAllTopics, getTopicsForBook, searchBooksByTopic, searchBooksBySubtopic, getSubtopicsForBook, getAllSubtopics, getSubtopicId };
 
 // DANNY ============================================================================ DANNY
 // Function to search for books by title

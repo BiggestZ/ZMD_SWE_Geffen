@@ -82,23 +82,23 @@ interface TopicSelectorProps {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Saved Tags:', savedTags); 
-    onSubmit(savedTags);
+    console.log('savedSubtopics:', savedSubtopics); 
+    onSubmit(savedSubtopics);
     
   };
 
   return (
-    <div style={{ padding: '20px', color: 'black'  }}>
+    <div style={{ padding: '20px', color: 'white'  }}>
       <h2>Topic Selector</h2>
 
-      <div style={{ color: 'black' }}>
+      <div style={{ color: 'white' }}>
         <label>
           Select a Topic:
           {loadingTopics ? (
             <span>Loading topics...</span>
           ) : (
             <select
-              style={{ color: 'black' }}
+              style={{ color: 'white' }}
               value={selectedTopic}
               onChange={(e) => {
                 setSelectedTopic(e.target.value);
@@ -173,7 +173,7 @@ interface TopicSelectorProps {
             padding: '10px 20px',
             backgroundColor: 'blue',
             color: 'white',
-            border: 'none',
+            border: 'white',
             cursor: 'pointer',
           }}
         >

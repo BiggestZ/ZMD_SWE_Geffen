@@ -163,8 +163,27 @@ export default function Home() {
       />
 
       <hr />
-      <button type="button" onClick={resetForm}>Reset form</button>
-      <button type="submit" onClick={(e) => handleSubmit(e)}>Submit form</button>
+      <button type="button" onClick={resetForm}
+      style={{
+        marginTop: '20px',
+        padding: '10px 20px',
+        backgroundColor: 'blue',
+        color: 'white',
+        border: 'white',
+        cursor: 'pointer',
+      }}
+        >Reset form</button>
+      <button type="submit" onClick={(e) => handleSubmit(e)}
+        style={{
+          marginTop: '20px',
+          padding: '10px 20px',
+          backgroundColor: 'blue',
+          color: 'white',
+          border: 'white',
+          cursor: 'pointer',
+        }}
+        
+        >Submit form</button>
     </form>
   );
 }
