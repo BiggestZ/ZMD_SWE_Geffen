@@ -4,8 +4,8 @@ import NavBarLinks from "./navbarlinks";
 
 const Navbar: React.FC = () => {
     return (
-        <nav style={{ background: 'pink',display: 'flex',justifyContent: 'start',padding: '1em',alignItems: 'center',position:'sticky', top:0 }}>
-            <div style={{ display: 'flex',alignItems: 'center',justifyContent: 'space-around'}}>
+        <nav style={{ background: 'pink', display: 'flex', justifyContent: 'start',padding: '1em',alignItems: 'center',position:'sticky', top:0 }}>
+            <div style={{ display: 'flex', flexFlow: 'row', alignItems: 'center',justifyContent: 'space-around'}}>
                 <NavBarLinks />
             </div>
         </nav>

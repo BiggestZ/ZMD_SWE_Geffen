@@ -648,9 +648,7 @@ async function getBooksList(): Promise<Book[]> {
                 title: Title,
                 author: Author,
                 isbn: ISBN,
-                bookDesc: Description,
-                tagsList: [],
-                topicsList: []
+                bookDesc: Description
             }
             booksList.push(newBook);
             })
@@ -1100,4 +1098,4 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
     }
 }
 
-export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics, getBooksList, getSubtopicsByTopic };
+export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook, searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics, getBooksList, getSubtopicsByTopic, getAllBooks,getAllTopicsOld };

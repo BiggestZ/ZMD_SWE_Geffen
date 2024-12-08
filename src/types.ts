@@ -4,7 +4,7 @@ interface Book {
     isbn: string;
     bookDesc?: string;
     tagsList?: string[];
-    topicsList?: string[];
+    language?: string[];
   }
 
 type Subtopic = {
