@@ -105,27 +105,89 @@ def search_topics(search_term):
         connection.close()
 
 def search_book_by_title(title):
+    """
+    Search for books by title and fetch associated details including languages.
+
+    Args:
+        title (str): The title or partial title of the book.
+
+    Returns:
+        None
+    """
     connection = connect_to_db()
+    if not connection:
+        print("Failed to connect to the database.")
+        return
+
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT * FROM Books WHERE Title LIKE %s"
-            cursor.execute(sql, (f"%{title}%",))
-            result = cursor.fetchall()
-            
-            if result:
-                print("Search Results:")
-                for book in result:
-                    print(f"Title: {book['Title']}")
-                    print(f"Author: {book['Author']}")
-                    print(f"ISBN: {book['ISBN']}")
-                    print(f"Description: {book['BookDesc']}")
-                    print("-" * 40)
-            else:
-                print("No books found with that title.")
+            # Fetch the book details based on the title
+            cursor.execute(
+                "SELECT ISBN, Title, Author, Description FROM Books WHERE Title LIKE %s",
+                (f"%{title}%",)
+            )
+            books = cursor.fetchall()
+
+            if not books:
+                print(f"No books found with title '{title}'.")
+                return
+
+            print("Search Results:")
+            for book in books:
+                isbn = book['ISBN']
+                print(f"Title: {book['Title']}")
+                print(f"Author: {book['Author']}")
+                print(f"ISBN: {isbn}")
+                print(f"Description: {book.get('BookDesc', 'No description available')}")
+
+                # Fetch the languages associated with the book
+                cursor.execute(
+                    """
+                    SELECT l.LanguageName
+                    FROM Book_Language bl
+                    JOIN Language l ON bl.LanguageID = l.LanguageID
+                    WHERE bl.ISBN = %s
+                    """,
+                    (isbn,)
+                )
+                languages = cursor.fetchall()
+
+                if languages:
+                    language_names = [lang['LanguageName'] for lang in languages]
+                    print(f"Languages: {', '.join(language_names)}")
+                else:
+                    print("Languages: None found.")
+
+                print("-" * 40)
+
     except pymysql.MySQLError as e:
-        print(f"Error searching for book: {e}")
+        print(f"Database error: {e}")
     finally:
         connection.close()
+
+
+# def search_book_by_title(title):
+#     connection = connect_to_db()
+#     try:
+#         with connection.cursor() as cursor:
+#             sql = "SELECT * FROM Books WHERE Title LIKE %s"
+#             cursor.execute(sql, (f"%{title}%",))
+#             result = cursor.fetchall()
+            
+#             if result:
+#                 print("Search Results:")
+#                 for book in result:
+#                     print(f"Title: {book['Title']}")
+#                     print(f"Author: {book['Author']}")
+#                     print(f"ISBN: {book['ISBN']}")
+#                     print(f"Description: {book['BookDesc']}")
+#                     print("-" * 40)
+#             else:
+#                 print("No books found with that title.")
+#     except pymysql.MySQLError as e:
+#         print(f"Error searching for book: {e}")
+#     finally:
+#         connection.close()
 
 # Function to get or verify if a subtopic exists
 def get_subtopic_id(subtopic_name, topic_name, connection):
@@ -1024,6 +1086,9 @@ if __name__ == "__main__":
     elif action == "5":
         book_id = input("Enter Book ID: ")
         print(get_languages_for_book_by_title(book_id))
-
+    
+    elif action == "6":
+        topic_name = input("Enter topic name: ")
+        print(get_subtopics_by_topic(topic_name))
     else:
         print("Invalid action. Please choose 'add', 'drop', or 'edit'.") 
