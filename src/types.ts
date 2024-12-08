@@ -7,4 +7,8 @@ interface Book {
     language?: string[];
   }
 
-export type { Book };
+  type Subtopic = {
+    SubtopicName: string;
+}
+
+export type { Book, Subtopic };

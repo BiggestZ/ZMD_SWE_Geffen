@@ -5,7 +5,7 @@ import NavBarLinks from "./navbarlinks";
 const Navbar: React.FC = () => {
     return (
         <nav style={{ 
-            background: 'pink', 
+            background: '#075985', 
             display: 'flex', 
             justifyContent: 'start',
             padding: '1em',
