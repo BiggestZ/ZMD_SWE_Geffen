@@ -648,9 +648,7 @@ async function getBooksList(): Promise<Book[]> {
                 title: Title,
                 author: Author,
                 isbn: ISBN,
-                bookDesc: Description,
-                tagsList: [],
-                topicsList: []
+                bookDesc: Description
             }
             booksList.push(newBook);
             })
@@ -922,6 +920,47 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
 */
 
 // Function to get all subtopics for a given topic
+// async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
+//     const connection = await connectToDb();
+//     if (!connection) {
+//         console.error("Failed to connect to the database.");
+//         return [];
+//     }
+
+//     try {
+//         // Get the TopicID for the given topic name
+//         const [topicResults] = await connection.execute(
+//             "SELECT TopicID FROM Topics WHERE TopicName = ?",
+//             [topicName]
+//         );
+
+//         const topic = (topicResults as any[])[0];
+
+//         if (!topic) {
+//             console.log(`No topic found with name '${topicName}'.`);
+//             return [];
+//         }
+
+//         const topicId = topic.TopicID;
+
+//         // Get all subtopics linked to this TopicID
+//         const [subtopicResults] = await connection.execute(
+//             "SELECT SubtopicName FROM Subtopics WHERE TopicID = ?",
+//             [topicId]
+//         );
+
+//         const subtopics = subtopicResults as any[];
+
+//         // Return a list of subtopic names
+//         return subtopics.map(subtopic => subtopic.SubtopicName);
+//     } catch (error) {
+//         console.error(`Database error: ${(error as Error).message}`);
+//         return [];
+//     } finally {
+//         await connection.end();
+//     }
+// }
+// Function to get all subtopics for a given topic
 async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
     console.log(`book_entry topicName getSubtopicByTopic:${topicName}`);
     console.log(`Type of topicName: ${typeof topicName}`);
@@ -953,10 +992,12 @@ async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
             [topicId]
         );
 
+        // Resolve and ensure subtopics are properly logged
         const subtopics = subtopicResults as any[];
+        console.log(`Subtopics for topic '${topicName}':`, subtopics);
         console.log(`Subtopics for topic in book_entry:'${subtopics.map(subtopic => subtopic.SubtopicName)}':`);
         // Return a list of subtopic names
-        return subtopics.map(subtopic => subtopic.SubtopicName);
+        return subtopics.map((subtopic) => subtopic.SubtopicName);
     } catch (error) {
         console.error(`Database error: ${(error as Error).message}`);
         return [];
@@ -964,6 +1005,8 @@ async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
         await connection.end();
     }
 }
+
+
 
 //export { searchBookByTitle, addBook2, dropBook, editBook ,getAllTopics, getTopicsForBook, searchBooksByTopic, searchBooksBySubtopic, getSubtopicsForBook, getAllSubtopics, getSubtopicId };
 
@@ -1151,4 +1194,4 @@ export async function getLanguagesForBookByTitle(bookTitle: string): Promise<str
     }
 }
 
-export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook,searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics, getBooksList, getSubtopicsByTopic };
+export { searchBookByTitle, addBook2, dropBook, editBook, getBookByTitle, getSubtopicsForBook,searchBooksBySubtopic, searchBooksByTopic, getAllSubtopics, getAllTopics, getBooksList, getSubtopicsByTopic, getAllBooks,getAllTopicsOld };
