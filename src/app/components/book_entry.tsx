@@ -961,45 +961,44 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
 //     }
 // }
 // Function to get all subtopics for a given topic
+import { Connection, RowDataPacket } from 'mysql2/promise';
 async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
-    console.log(`book_entry topicName getSubtopicByTopic:${topicName}`);
-    console.log(`Type of topicName: ${typeof topicName}`);
-    const connection = await connectToDb();
-    if (!connection) {
+    /**
+     * Retrieve all subtopics related to a given topic name.
+     */
+    let connection: Connection;
+    try {
+        connection = await connectToDb();  // Replace with your actual connection function
+    } catch (error) {
         console.error("Failed to connect to the database.");
         return [];
     }
 
     try {
         // Get the TopicID for the given topic name
-        const [topicResults] = await connection.execute(
+        const [topics] = await connection.execute<RowDataPacket[]>(
             "SELECT TopicID FROM Topics WHERE TopicName = ?",
             [topicName]
         );
 
-        const topic = (topicResults as any[])[0];
-
-        if (!topic) {
+        if (topics.length === 0) {
             console.log(`No topic found with name '${topicName}'.`);
             return [];
         }
 
-        const topicId = topic.TopicID;
+        const topicId = topics[0].TopicID;
 
         // Get all subtopics linked to this TopicID
-        const [subtopicResults] = await connection.execute(
+        const [subtopics] = await connection.execute<RowDataPacket[]>(
             "SELECT SubtopicName FROM Subtopics WHERE TopicID = ?",
             [topicId]
         );
 
-        // Resolve and ensure subtopics are properly logged
-        const subtopics = subtopicResults as any[];
-        console.log(`Subtopics for topic '${topicName}':`, subtopics);
-        console.log(`Subtopics for topic in book_entry:'${subtopics.map(subtopic => subtopic.SubtopicName)}':`);
         // Return a list of subtopic names
-        return subtopics.map((subtopic) => subtopic.SubtopicName);
+        return subtopics.map(subtopic => subtopic.SubtopicName);
+
     } catch (error) {
-        console.error(`Database error: ${(error as Error).message}`);
+        console.error(`Database error: ${error}`);
         return [];
     } finally {
         await connection.end();

@@ -25,7 +25,7 @@
       //const topics = await getAllTopics(); 
       //FIXME
        //const subTags = ["subtag1","subtag2","subtag3", "multiple meanings", "fear", "self-identity"];
-      const subTags = getSubtopicsByTopic(topic);
+      const subTags = await getSubtopicsByTopic(topic);
       console.log('topic, subtopics:',topic, subTags);
   
       if (!subTags) {
