@@ -920,6 +920,47 @@ async function getTopicsForBook(bookTitle: string): Promise<string[]> {
 */
 
 // Function to get all subtopics for a given topic
+// async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
+//     const connection = await connectToDb();
+//     if (!connection) {
+//         console.error("Failed to connect to the database.");
+//         return [];
+//     }
+
+//     try {
+//         // Get the TopicID for the given topic name
+//         const [topicResults] = await connection.execute(
+//             "SELECT TopicID FROM Topics WHERE TopicName = ?",
+//             [topicName]
+//         );
+
+//         const topic = (topicResults as any[])[0];
+
+//         if (!topic) {
+//             console.log(`No topic found with name '${topicName}'.`);
+//             return [];
+//         }
+
+//         const topicId = topic.TopicID;
+
+//         // Get all subtopics linked to this TopicID
+//         const [subtopicResults] = await connection.execute(
+//             "SELECT SubtopicName FROM Subtopics WHERE TopicID = ?",
+//             [topicId]
+//         );
+
+//         const subtopics = subtopicResults as any[];
+
+//         // Return a list of subtopic names
+//         return subtopics.map(subtopic => subtopic.SubtopicName);
+//     } catch (error) {
+//         console.error(`Database error: ${(error as Error).message}`);
+//         return [];
+//     } finally {
+//         await connection.end();
+//     }
+// }
+// Function to get all subtopics for a given topic
 async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
     const connection = await connectToDb();
     if (!connection) {
@@ -949,10 +990,12 @@ async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
             [topicId]
         );
 
+        // Resolve and ensure subtopics are properly logged
         const subtopics = subtopicResults as any[];
+        console.log(`Subtopics for topic '${topicName}':`, subtopics);
 
         // Return a list of subtopic names
-        return subtopics.map(subtopic => subtopic.SubtopicName);
+        return subtopics.map((subtopic) => subtopic.SubtopicName);
     } catch (error) {
         console.error(`Database error: ${(error as Error).message}`);
         return [];
@@ -960,6 +1003,8 @@ async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
         await connection.end();
     }
 }
+
+
 
 //export { searchBookByTitle, addBook2, dropBook, editBook ,getAllTopics, getTopicsForBook, searchBooksByTopic, searchBooksBySubtopic, getSubtopicsForBook, getAllSubtopics, getSubtopicId };
 
@@ -1095,6 +1140,55 @@ async function inputEditedBook(searchTerm: string): Promise<void> {
       console.error(`Error updating book: ${error}`);
     } finally {
       connection.end();
+    }
+}
+interface Language {
+    LanguageName: string;
+}
+
+export async function getLanguagesForBookByTitle(bookTitle: string): Promise<string[]> {
+    const connection = await connectToDb();
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return [];
+    }
+
+    try {
+        // Fetch the ISBN for the given book title
+        const [bookResult] = await connection.execute(
+            "SELECT ISBN FROM Books WHERE Title = ?",
+            [bookTitle]
+        );
+
+        const book = (bookResult as any[])[0]; // Cast the result to any[]
+
+        if (!book) {
+            console.log(`No book found with title '${bookTitle}'.`);
+            return [];
+        }
+
+        const isbn: string = book.ISBN;
+
+        // Fetch associated languages
+        const [languageResults] = await connection.execute(
+            `
+            SELECT l.LanguageName
+            FROM Book_Language bl
+            JOIN Language l ON bl.LanguageID = l.LanguageID
+            WHERE bl.ISBN = ?
+            `,
+            [isbn]
+        );
+
+        const languages = languageResults as Language[];
+
+        // Return language names as a list
+        return languages.map((language) => language.LanguageName);
+    } catch (error) {
+        console.error(`Database error: ${(error as Error).message}`);
+        return [];
+    } finally {
+        await connection.end();
     }
 }
 

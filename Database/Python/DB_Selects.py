@@ -904,6 +904,58 @@ def add_language(language_name):
     finally:
         connection.close()
 
+def get_languages_for_book_by_title(book_title):
+    """
+    Fetch all languages associated with a given book by its title.
+
+    Args:
+        book_title (str): The title of the book.
+
+    Returns:
+        list: A list of language names associated with the book.
+    """
+    connection = connect_to_db()
+    if not connection:
+        print("Failed to connect to the database.")
+        return []
+
+    try:
+        with connection.cursor() as cursor:
+            # Fetch the ISBN for the given book title
+            cursor.execute(
+                "SELECT ISBN FROM Books WHERE Title = %s",
+                (book_title,)
+            )
+            book = cursor.fetchone()
+            
+            if not book:
+                print(f"No book found with title '{book_title}'.")
+                return []
+            #print("Book[0]: ", book['ISBN'])
+            
+            isbn = book['ISBN']  # Access the ISBN using the key
+            
+            # Fetch associated languages
+            cursor.execute(
+                """
+                SELECT l.LanguageName
+                FROM Book_Language bl
+                JOIN Language l ON bl.LanguageID = l.LanguageID
+                WHERE bl.ISBN = %s
+                """,
+                (isbn,)
+            )
+            languages = cursor.fetchall()
+            #print("Languages: ", languages)
+            
+            # Return language names as a list
+            return [language['LanguageName'] for language in languages]
+    except pymysql.MySQLError as e:
+        print(f"Database error: {e}")
+        return []
+    finally:
+        connection.close()
+
 # Command-line interface for testing
 if __name__ == "__main__":
     action = input("Enter action (add, drop, edit, search, add_subtopic, drop_subtopic, edit_subtopic, search_subtopic): ").strip().lower()
@@ -968,6 +1020,10 @@ if __name__ == "__main__":
     elif action == "4":
         lang = input("Enter Language to Add ")
         print(add_language(lang))
+    
+    elif action == "5":
+        book_id = input("Enter Book ID: ")
+        print(get_languages_for_book_by_title(book_id))
 
     else:
         print("Invalid action. Please choose 'add', 'drop', or 'edit'.") 
