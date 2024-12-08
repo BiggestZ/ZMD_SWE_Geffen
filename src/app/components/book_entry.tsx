@@ -992,9 +992,7 @@ async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
             [topicId]
         );
 
-        // Resolve and ensure subtopics are properly logged
         const subtopics = subtopicResults as any[];
-        console.log(`Subtopics for topic '${topicName}':`, subtopics);
 
         // Return a list of subtopic names
         return subtopics.map((subtopic) => subtopic.SubtopicName);
@@ -1005,9 +1003,6 @@ async function getSubtopicsByTopic(topicName: string): Promise<string[]> {
         await connection.end();
     }
 }
-
-
-
 //export { searchBookByTitle, addBook2, dropBook, editBook ,getAllTopics, getTopicsForBook, searchBooksByTopic, searchBooksBySubtopic, getSubtopicsForBook, getAllSubtopics, getSubtopicId };
 
 // DANNY ============================================================================ DANNY
