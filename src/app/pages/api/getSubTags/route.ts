@@ -2,7 +2,7 @@
 
   import connectToDB from "../../../components/connectToDB"
   import { NextRequest, NextResponse } from 'next/server';
-  import { getSubtopicsForTopic } from '../../../components/book_entry';
+  import { getSubtopicsByTopic } from '../../../components/book_entry';
 
   export async function GET(req: NextRequest, res: NextResponse) {
     console.log('subtopics in getSubTags API');
@@ -18,14 +18,15 @@
       const { searchParams } = new URL(req.url);
       const topic = searchParams.get("topic");
       console.log('title in getSubtag route.ts:', topic);
+
       
   
       // request for all topics in the database
       //const topics = await getAllTopics(); 
       //FIXME
-       const subTags = ["subtag1","subtag2","subtag3", "multiple meanings", "fear", "self-identity"];
-     // const subTags = getSubtopicsForTopic(topic);
-      console.log('subtopics:', subTags);
+       //const subTags = ["subtag1","subtag2","subtag3", "multiple meanings", "fear", "self-identity"];
+      const subTags = getSubtopicsByTopic(topic);
+      console.log('topic, subtopics:',topic, subTags);
   
       if (!subTags) {
         return NextResponse.json(
