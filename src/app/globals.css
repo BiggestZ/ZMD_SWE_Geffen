@@ -1,4 +1,4 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -11,6 +11,7 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    
   }
 }
 
@@ -18,4 +19,45 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial,Helvetica,sans-serif;
+} */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --input-background: #ffffff;
+  --input-foreground: #171717;
+  --component-background: #f0f0f0;
+  --component-foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --input-background: #333333;
+    --input-foreground: #ededed;
+    --component-background: #444444;
+    --component-foreground: #ededed;
+  }
+}
+
+body {
+  @apply bg-[var(--background)] text-[var(--foreground)];
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input, textarea {
+  background-color: var(--input-background);
+  color: var(--input-foreground);
+  border: 1px solid var(--foreground); /* Optional: Add a border for better visibility */
+}
+
+select, .dropdown, .component {
+  background-color: var(--component-background);
+  color: var(--component-foreground);
+  border: 1px solid var(--foreground); /* Optional: Add a border for better visibility */
 }
