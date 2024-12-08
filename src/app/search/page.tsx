@@ -1,8 +1,7 @@
 'use client';
 
 import axios from "axios";
-import { BookEntry } from "../components/book";
-import TagTable from "../components/tagTableSearch";
+import TagTable from "../components/tagTable";
 import { useState } from 'react';
 import { API_ROUTES } from "../pages/api/search/route";
 
