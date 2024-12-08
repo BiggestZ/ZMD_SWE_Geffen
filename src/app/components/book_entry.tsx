@@ -10,16 +10,46 @@ interface Book {
   }
 
 // Function to search for books by title
+// async function searchBookByTitle(title: string): Promise<void> {
+//     const connection = await connectToDb();
+//     if (!connection) return;
+//     try {
+//         const [result] = await connection.execute(
+//             "SELECT * FROM Books WHERE Title LIKE ?",
+//             [`%${title}%`]
+//         );
+
+//         const books = result as any[];
+
+//         if (books.length > 0) {
+//             console.log("Search Results:");
+//             for (const book of books) {
+//                 console.log(`Title: ${book.Title}`);
+//                 console.log(`Author: ${book.Author}`);
+//                 console.log(`ISBN: ${book.ISBN}`);
+//                 console.log(`Description: ${book.BookDesc}`);
+//                 console.log("-".repeat(40));
+//             }
+//         } else {
+//             console.log("No books found with that title.");
+//         }
+//     } catch (error) {
+//         console.error(`Error searching for book: ${(error as Error).message}`);
+//     } finally {
+//         await connection.end();
+//     }
+// }
+// Function to search for books by title
 async function searchBookByTitle(title: string): Promise<void> {
     const connection = await connectToDb();
     if (!connection) return;
     try {
-        const [result] = await connection.execute(
+        const [bookResults] = await connection.execute(
             "SELECT * FROM Books WHERE Title LIKE ?",
             [`%${title}%`]
         );
 
-        const books = result as any[];
+        const books = bookResults as any[];
 
         if (books.length > 0) {
             console.log("Search Results:");
@@ -28,6 +58,25 @@ async function searchBookByTitle(title: string): Promise<void> {
                 console.log(`Author: ${book.Author}`);
                 console.log(`ISBN: ${book.ISBN}`);
                 console.log(`Description: ${book.BookDesc}`);
+
+                // Fetch languages for the current book
+                const [languageResults] = await connection.execute(
+                    `
+                    SELECT l.LanguageName
+                    FROM Book_Language bl
+                    JOIN Language l ON bl.LanguageID = l.LanguageID
+                    WHERE bl.ISBN = ?
+                    `,
+                    [book.ISBN]
+                );
+
+                const languages = languageResults as any[];
+                if (languages.length > 0) {
+                    console.log("Languages: " + languages.map(lang => lang.LanguageName).join(", "));
+                } else {
+                    console.log("Languages: None found.");
+                }
+
                 console.log("-".repeat(40));
             }
         } else {
@@ -1018,15 +1067,12 @@ async function getBookByTitle(title: string): Promise<any[]> {
         console.error("Connection Error in book_entry");
         return [];
     }
-
     try {
         const [result] = await connection.execute(
             "SELECT * FROM Books WHERE Title LIKE ?",
             [`%${title}%`]
         );
-
         const books = result as any[];
-
         if (books.length > 0) {
             console.log("Search Results:");
             for (const book of books) {
