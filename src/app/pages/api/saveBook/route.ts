@@ -41,20 +41,20 @@ export async function POST(req: Request) {
     console.log('Received editDetails route.ts in saveBook:', { editDetails });
     //console.log('Received editDetails.data route.ts in saveBook:', { ISBN, Title, Author, Description, description, Language });
 
-  await dropBook(isbn);
-  console.log('Dropped book:', isbn);
+  await dropBook(ISBN);
+  console.log('Dropped book:', ISBN);
   
   if (updatedTags && updatedTags.length > 0) {
     
     console.log('Received updatedTags route.ts in saveBook::', updatedTags );
     console.log('typeof updatedTags in route.ts in saveBook::', typeof updatedTags );
     
-    addBook2(Title, Author, ISBN, Description, Language, updatedTags);
+    addBook2(Title, Author, isbn, Description, Language, updatedTags);
   } else {
     console.log('Received initialTags route.ts in saveBook::', { initialTags });
     if (initialTags) {
       
-      addBook2(Title, Author, ISBN, Description, Language, initialTags);
+      addBook2(Title, Author, isbn, Description, Language, initialTags);
     }
   }
   
