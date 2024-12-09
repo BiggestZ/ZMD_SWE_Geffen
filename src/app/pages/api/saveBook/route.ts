@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import connectToDB from "../../../components/connectToDB"
 import {addBook2,dropBook} from "../../../components/book_entry";
+import { collectMeta } from 'next/dist/build/utils';
 type PayloadWithInitialTags = {
   editDetails: any;
   initialTags: string[];
@@ -36,25 +37,28 @@ export async function POST(req: Request) {
     }
     
 
-    console.log('Received isbn route.ts in saveBook:', { isbn });
+    // console.log('Received isbn route.ts in saveBook:', { ISBN });
 
-    console.log('Received editDetails route.ts in saveBook:', { editDetails });
-    //console.log('Received editDetails.data route.ts in saveBook:', { ISBN, Title, Author, Description, description, Language });
-
-  await dropBook(isbn);
-  console.log('Dropped book:', isbn);
+  console.log('Received editDetails route.ts in saveBook:', { editDetails });
+    
+  await dropBook(ISBN);
+  console.log('Dropped book: ISBN', ISBN);
   
+  const isbnToUse = isbn || ISBN;
+  console.log('isbnToUse:', isbnToUse);
   if (updatedTags && updatedTags.length > 0) {
     
-    console.log('Received updatedTags route.ts in saveBook::', updatedTags );
-    console.log('typeof updatedTags in route.ts in saveBook::', typeof updatedTags );
+    // console.log('Received updatedTags route.ts in saveBook::', updatedTags );
+    // console.log('typeof updatedTags in route.ts in saveBook::', typeof updatedTags );
     
-    addBook2(Title, Author, ISBN, Description, Language, updatedTags);
+    addBook2(Title, Author, isbn, Description, Language, updatedTags);
+    console.log('Added book in route.ts in saveBook (updatedTags):', Title, Author, isbnToUse, Description, Language, updatedTags);
   } else {
-    console.log('Received initialTags route.ts in saveBook::', { initialTags });
+    // console.log('Received initialTags route.ts in saveBook::', { initialTags });
     if (initialTags) {
       
-      addBook2(Title, Author, ISBN, Description, Language, initialTags);
+      addBook2(Title, Author, isbn, Description, Language, initialTags);
+      console.log('Added book in route.ts in saveBook (initialTags):', Title, Author, isbnToUse, Description, Language, updatedTags);
     }
   }
   

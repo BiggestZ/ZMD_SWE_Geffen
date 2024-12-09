@@ -107,6 +107,8 @@ const EditBooksPage = () => {
     setInitialTitle(book.Title);
     setEditDetails(book); // Pre-fill with the book's current details
     
+    editDetails.isbn = book.ISBN; //add isbn to editDetails for unchanged isbn
+    console.log("selected isbn:", editDetails.isbn)
     
   };
 
