@@ -5,10 +5,10 @@ import axios from 'axios';
 import { API_ROUTES } from '../pages/api/getTags/route';
 
 interface TopicSelectorProps {
-    onSubmit: (savedTag: string) => void;
+    tags: (savedTag: string) => void;
   }
 
-  const TopicSelector: React.FC<TopicSelectorProps> = ({ onSubmit }) => {
+  const TopicSelector: React.FC<TopicSelectorProps> = ({ tags }) => {
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>('');
   const [subtopics, setSubtopics] = useState<string[]>([]);
@@ -63,15 +63,10 @@ interface TopicSelectorProps {
     };
 
     fetchSubtopics();
-  }, [selectedTopic]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('savedSubtopics:', selectedSubtopic); 
-    onSubmit(selectedSubtopic);
-    
-  };
-
+    tags(selectedSubtopic)
+  }, [selectedTopic, selectedSubtopic, tags]);
+  
   return (
       <div className='w-36'>
         <label>
@@ -126,22 +121,6 @@ interface TopicSelectorProps {
             </div>
           )}
         </div>
-      )}
-
-      {selectedTopic && selectedSubtopic.length > 0 && (
-        <button
-          onClick={handleSubmit}
-          style={{
-            marginTop: '20px',
-            padding: '10px 20px',
-            backgroundColor: '#075985',
-            color: 'white',
-            border: 'white',
-            cursor: 'pointer',
-          }}
-        >
-          Save
-        </button>
       )}
     </div>
   );

@@ -27,7 +27,7 @@ const SearchPage = () => {
     const handleTagsSearch = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.get(API_ROUTES.SEARCH_BY_TAGS, {params: { subtopic:selectedTags[0] }});
+            const response = await axios.get(API_ROUTES.SEARCH_BY_TAGS, {params: { subtopic:selectedTag }});
         
             setSearchResults(response.data.filtered);
 
@@ -36,33 +36,27 @@ const SearchPage = () => {
         }
     };
 
-    const handleTopicSelectorSubmit = (savedTag: string) => {
-        console.log('Received saved tags:', savedTag);
-        setSelectedTag(savedTag)
-      };
-
     return (
-        <div className="flex space-x-10 static left-0 h-full">
+        <div className="flex space-x-10 static left-0 h-screen">
             <div className = "flex bg-slate-200 overscroll-contain w-52 justify-top grid grid-auto-rows auto-rows-min">
-                <h2 className="flex-wrap">Search by Title</h2>
-                        <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="search"
-                                style={{ padding: '5px', fontSize: '16px' }}
-                            />
-                            <button type="submit" style={{ backgroundColor: '#075985', padding: '10px', fontSize: '16px', cursor: 'pointer', color: 'white'}}>
-                                Search
-                            </button>
-                        </form>
-                        <form onSubmit={handleSearch}>        
-                    
-                    <h2 className="grow-0">Search by Topic</h2>
-                        <TopicSelector onSubmit={handleTopicSelectorSubmit} />
-                    <button type="submit" style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}>Search</button>
+                <h1 className="flex-wrap">Search by Title</h1>
+                <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="search"
+                        style={{ padding: '5px', fontSize: '16px' }}
+                    />
+                    <button type="submit" style={{ backgroundColor: '#075985', padding: '10px', fontSize: '16px', cursor: 'pointer', color: 'white'}}>
+                        Search
+                    </button>
                 </form>
+                <form onSubmit={handleTagsSearch}>        
+                    <h2 className="grow-0">Search by Topic</h2>
+                    <TopicSelector tags={setSelectedTag} />
+                    <button type="submit" style={{ backgroundColor: '#075985', padding: '10px', fontSize: '16px', cursor: 'pointer', color: 'white' }}>Search</button>
+                    </form>
             </div>
             <div className = "flex w-36" />
             <div className = "flex w-fit">
