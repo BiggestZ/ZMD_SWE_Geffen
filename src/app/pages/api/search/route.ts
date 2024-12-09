@@ -35,12 +35,12 @@ export async function GET(req: Request) {
     const booksList = await getAllBooks();
     const subtopicsList = await getAllSubtopics();
 
-    function matchBooks(booksArray : Array<Book>, filter?: string) : Array<Book> {
+    function matchBooks(booksArray : Array<Book>, filter: string) : Array<Book> {
         
       let finalList : Array<Book> = []
+      let test = booksList[filter]
 
-      if (filter) {
-          let test = booksList[filter]
+      if (test) {
           for (const name of test) {
               for (const book of booksArray) {
                   if (book.title == name) {
@@ -49,11 +49,8 @@ export async function GET(req: Request) {
                   }
               }
           }
-          return finalList;
-      }
-      else {
-          return booksArray;
-      }
+        }
+      return finalList;
   }
   
   let filtered = matchBooks(allBooks,formatSubtopic)

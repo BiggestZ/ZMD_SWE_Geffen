@@ -6,6 +6,10 @@ import { API_ROUTES } from "../pages/api/search/route";
 import { BookEntry } from "../components/book";
 import TopicSelector from "../components/searchTopicSelector";
 
+// TODO
+// placeholder message if no books found
+// load in full database if no search query entered/on load?
+
 const SearchPage = () => {
 
     const [searchResults, setSearchResults] = useState([]);
@@ -45,7 +49,7 @@ const SearchPage = () => {
 
     return (
         <div className="flex space-x-10 static left-0 h-screen">
-            <div className = "flex overscroll-contain w-96 justify-top grid grid-auto-rows auto-rows-min">
+            <div className = "flex overscroll-contain w-64 justify-top grid grid-auto-rows auto-rows-min">
                 <h1 className="flex-wrap">Search by Title</h1>
                 <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                     <input
