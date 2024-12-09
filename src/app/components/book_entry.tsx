@@ -159,8 +159,8 @@ async function addBook2(
 
         // Check if the language exists in the database
         const [languageResult]: any[] = await connection.execute(
-            "SELECT LanguageID FROM Language WHERE LanguageName = ?",
-            [language.toLowerCase()]
+            "SELECT LanguageID FROM Language WHERE LOWER(LanguageName) = LOWER(?)",
+            [language]
         );
 
         // If exists, link the book to the language
