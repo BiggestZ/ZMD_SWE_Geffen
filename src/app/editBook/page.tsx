@@ -71,7 +71,7 @@ const EditBooksPage = () => {
       //console.log("selectedBook:", selectedBook.Title)
       try {
         const response = await axios.get(API_ROUTES.GET_TAG_FROM_BOOK, {
-          params: { title: selectedBook.Title }
+          params: { title: selectedBook.title }
         });
         const data = response.data;
         console.log("HERE TAGS HEHEHE pls work:", data)
@@ -103,6 +103,7 @@ const EditBooksPage = () => {
   //================================================================================================
   // Select a book to edit
   const handleSelectBook = (book: any) => {
+    console.log("book selected in page.tsx in editBook:", book)
     setSelectedBook(book);
     setInitialTitle(book.Title);
     setEditDetails(book); // Pre-fill with the book's current details
@@ -228,7 +229,7 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
 
       <li
         //key={book.isbn || book.title} // Fallback to title if id is missing
-        key={`${book.ISBN}-${book.Title}`}
+        key={`${book.isbn}-${book.title}`}
         //FIXME
         onClick={() => handleSelectBook(book)}
         style={{
@@ -242,7 +243,7 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
       >
         
         {/* {searchResults[0]?.Title ? `${searchResults[0]?.Title} by ${book.author || 'Unknown'}` : 'Error: Unknown Title'} */}
-        {book.Title ? `${book.Title} by ${book.Author || 'Unknown'}` : 'Error: Unknown Title'}
+        {book.title ? `${book.title} by ${book.author || 'Unknown'}` : 'Error: Unknown Title'}
         {/* //FIXME */}
 
       </li>
@@ -259,7 +260,7 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
         </>
       ) : (
         <div>
-          <h2>Editing Book: {selectedBook.Title}</h2>
+          <h2>Editing Book: {selectedBook.title}</h2>
           <form  style={{ display: 'flex', flexDirection: 'column', gap: '10px'}}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 <label htmlFor="Title" style={{ marginRight: '10px', fontSize: '16px' }}>Title:</label>
@@ -267,9 +268,9 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
                     id="Title"
                     type="text"
                     //value={editDetails.description !== undefined ? editDetails.description : selectedBook.Description}
-                    value={editDetails.Title !== undefined ? editDetails.Title:  selectedBook.Title}
+                    value={editDetails.Title !== undefined ? editDetails.Title:  selectedBook.title}
                     onChange={(e) => handleEditChange('Title', e.target.value)}
-                    placeholder={selectedBook.Title}
+                    placeholder={selectedBook.title}
                     style={{ padding: '10px', fontSize: '16px', width: '300px' }}
                 />
             </div>
@@ -278,9 +279,9 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
                 <input
                     id="author"
                     type="text"
-                    value={editDetails.Author !== undefined ? editDetails.Author: selectedBook.Author}
+                    value={editDetails.Author !== undefined ? editDetails.Author: selectedBook.author}
                     onChange={(e) => handleEditChange('Author', e.target.value)}
-                    placeholder={selectedBook.Author}
+                    placeholder={selectedBook.author}
                     style={{ padding: '10px', fontSize: '16px', width: '300px' }}
                 />
             </div>
@@ -289,9 +290,9 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
                 <input
                     id="isbn"
                     type="text"
-                    value={editDetails.isbn !== undefined ? editDetails.isbn: selectedBook.ISBN}
+                    value={editDetails.isbn !== undefined ? editDetails.isbn: selectedBook.isbn}
                     onChange={(e) => handleEditChange('isbn', e.target.value)}
-                    placeholder={selectedBook.ISBN}
+                    placeholder={selectedBook.isbn}
                     pattern="\d{13}" // Regex pattern to allow only 13 digits
                     maxLength={13} // Limit input to 13 characters
                     style={{ padding: '10px', fontSize: '16px', width: '300px' }}
@@ -302,9 +303,9 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
                 <input
                     id="language"
                     type="text"
-                    value={editDetails.Language !== undefined ? editDetails.Language: selectedBook.Language}
+                    value={editDetails.Language !== undefined ? editDetails.Language: selectedBook.languages}
                     onChange={(e) => handleEditChange('Language', e.target.value)}
-                    placeholder={selectedBook.Language}
+                    placeholder={selectedBook.languages}
                     
                     style={{ padding: '10px', fontSize: '16px', width: '300px' }}
                 />
@@ -313,9 +314,9 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
             <label htmlFor="description" style={{ marginRight: '10px', fontSize: '16px' }}>Description:</label>
             <textarea
                 id="description"
-                value={editDetails.Description !== undefined ? editDetails.Description : selectedBook.Description}
+                value={editDetails.Description !== undefined ? editDetails.Description : selectedBook.description}
                 onChange={(e) => handleEditChange('Description', e.target.value)}
-                placeholder={selectedBook.Description}
+                placeholder={selectedBook.description}
                 style={{ padding: '10px', fontSize: '16px', width: '300px', height: '100px', resize: 'vertical' }} // Adjust width and height
             />
         </div>

@@ -9,41 +9,16 @@ interface Book {
     Description: string;
   }
 
-// Function to search for books by title
-// async function searchBookByTitle(title: string): Promise<void> {
+
+
+// async function searchBookByTitle(title: string):  Promise<any[]> {
 //     const connection = await connectToDb();
-//     if (!connection) return;
-//     try {
-//         const [result] = await connection.execute(
-//             "SELECT * FROM Books WHERE Title LIKE ?",
-//             [`%${title}%`]
-//         );
-
-//         const books = result as any[];
-
-//         if (books.length > 0) {
-//             console.log("Search Results:");
-//             for (const book of books) {
-//                 console.log(`Title: ${book.Title}`);
-//                 console.log(`Author: ${book.Author}`);
-//                 console.log(`ISBN: ${book.ISBN}`);
-//                 console.log(`Description: ${book.BookDesc}`);
-//                 console.log("-".repeat(40));
-//             }
-//         } else {
-//             console.log("No books found with that title.");
-//         }
-//     } catch (error) {
-//         console.error(`Error searching for book: ${(error as Error).message}`);
-//     } finally {
-//         await connection.end();
+//     if (!connection) {
+//         console.error("Failed to connect to the database.");
+//         return [];
 //     }
-// }
-// Function to search for books by title 2.0
-// async function searchBookByTitle(title: string): Promise<void> {
-//     const connection = await connectToDb();
-//     if (!connection) return;
 //     try {
+//         // Fetch books matching the title
 //         const [bookResults] = await connection.execute(
 //             "SELECT * FROM Books WHERE Title LIKE ?",
 //             [`%${title}%`]
@@ -51,54 +26,50 @@ interface Book {
 
 //         const books = bookResults as any[];
 
-//         if (books.length > 0) {
-//             console.log("Search Results:");
-//             for (const book of books) {
-//                 console.log(`Title: ${book.Title}`);
-//                 console.log(`Author: ${book.Author}`);
-//                 console.log(`ISBN: ${book.ISBN}`);
-//                 console.log(`Description: ${book.Description}`);
-
-//                 // Fetch languages for the current book
-//                 const [languageResults] = await connection.execute(
-//                     `
-//                     SELECT l.LanguageName
-//                     FROM Book_Language bl
-//                     JOIN Language l ON bl.LanguageID = l.LanguageID
-//                     WHERE bl.ISBN = ?
-//                     `,
-//                     [book.ISBN]
-//                 );
-
-//                 const languages = (languageResults as any[]).map((lang) => lang.LanguageName);
-                
-//                 return {
-//                     book: {
-//                         title: book.Title,
-//                         author: book.Author,
-//                         isbn: book.ISBN,
-//                         description: book.Description || "No Description Avaliable",
-//                     },
-//                     languages
-//                 };
-
-//                 console.log("-".repeat(40));
-//             }
-//         } else {
+//         if (books.length === 0) {
 //             console.log("No books found with that title.");
+//             return { books: [] };
 //         }
+
+//         const booksWithLanguages: { title: string; author: string; isbn: string; description: string; languages: string[] }[] = [];
+
+//         for (const book of books) {
+//             // Fetch languages for each book
+//             const [languageResults] = await connection.execute(
+//                 `
+//                 SELECT l.LanguageName
+//                 FROM Book_Language bl
+//                 JOIN Language l ON bl.LanguageID = l.LanguageID
+//                 WHERE bl.ISBN = ?
+//                 `,
+//                 [book.ISBN]
+//             );
+
+//             const languages = (languageResults as any[]).map((lang) => lang.LanguageName);
+
+//             booksWithLanguages.push({
+//                 title: book.Title,
+//                 author: book.Author,
+//                 isbn: book.ISBN,
+//                 description: book.Description || "No Description Available",
+//                 languages,
+//             });
+//         }
+
+//         // Return all books and their associated languages
+//         return { books: booksWithLanguages };
 //     } catch (error) {
 //         console.error(`Error searching for book: ${(error as Error).message}`);
+//         return null;
 //     } finally {
 //         await connection.end();
 //     }
 // }
-
-async function searchBookByTitle(title: string): Promise<{ books: { title: string; author: string; isbn: string; description: string; languages: string[] }[] } | null> {
+async function searchBookByTitle(title: string): Promise<any[]> {
     const connection = await connectToDb();
     if (!connection) {
         console.error("Failed to connect to the database.");
-        return null;
+        return [];
     }
     try {
         // Fetch books matching the title
@@ -111,7 +82,7 @@ async function searchBookByTitle(title: string): Promise<{ books: { title: strin
 
         if (books.length === 0) {
             console.log("No books found with that title.");
-            return { books: [] };
+            return [];
         }
 
         const booksWithLanguages: { title: string; author: string; isbn: string; description: string; languages: string[] }[] = [];
@@ -140,15 +111,16 @@ async function searchBookByTitle(title: string): Promise<{ books: { title: strin
         }
 
         // Return all books and their associated languages
-        return { books: booksWithLanguages };
+        return booksWithLanguages;
     } catch (error) {
         console.error(`Error searching for book: ${(error as Error).message}`);
-        return null;
+        return [];
     } finally {
         await connection.end();
     }
 }
 
+//=======================================================
 // Function to validate author's name
 function isValidAuthorName(author: string): boolean {
     return /^[A-Za-z\s]+$/.test(author);
