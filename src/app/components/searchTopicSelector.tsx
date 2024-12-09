@@ -4,11 +4,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_ROUTES } from '../pages/api/getTags/route';
 
-interface TopicSelectorProps {
+interface ThisTopicSelectorProps {
     tags: (savedTag: string) => void;
+    resetTrigger: boolean;
+    onResetHandled: () => void;
   }
 
-  const TopicSelector: React.FC<TopicSelectorProps> = ({ tags }) => {
+  const TopicSelector: React.FC<ThisTopicSelectorProps> = ({ tags, resetTrigger, onResetHandled}) => {
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>('');
   const [subtopics, setSubtopics] = useState<string[]>([]);
@@ -39,6 +41,14 @@ interface TopicSelectorProps {
   }, []);
 
   useEffect(() => {
+    if (resetTrigger) {
+      setSelectedTopic('');
+      setSelectedSubtopic('');
+      onResetHandled();
+    }
+  },[resetTrigger, onResetHandled])
+
+  useEffect(() => {
     if (!selectedTopic) return;
 
     const fetchSubtopics = async () => {
@@ -63,12 +73,14 @@ interface TopicSelectorProps {
     };
 
     fetchSubtopics();
+  }, [selectedTopic]);
 
+  useEffect(() => {
     tags(selectedSubtopic)
-  }, [selectedTopic, selectedSubtopic, tags]);
+  }, [tags, selectedSubtopic])
   
   return (
-      <div className='w-36'>
+      <div className='max-w-xl'>
         <label>
           Select a Topic:
           {loadingTopics ? (
