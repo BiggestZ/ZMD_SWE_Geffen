@@ -1,15 +1,7 @@
-export const API_ROUTES = {
-
-    EDIT_BOOK: 'pages/api/editBook/',
-    SAVE_BOOK: 'pages/api/saveBook/',
-    UPDATE_TAGS: 'pages/api/updateTags/',
-    GET_TAG_FROM_BOOK: 'pages/api/getTagFromBook/',
-    
-  };
-
 import { NextResponse } from 'next/server';
 import connectToDB from '../../../components/connectToDB';
-import { editBook, getBookByTitle,getSubtopicsForBook } from '../../../components/book_entry';
+import { getBooksList, getBookByTitle,getAllSubtopics } from '../../../components/book_entry';
+import { Book } from '@/types';
 
 export async function GET(req: Request) {
   try {
@@ -33,14 +25,32 @@ export async function GET(req: Request) {
     }
 
     // Search for books in the database
-    const books = await getBookByTitle(title); 
+    const search = await getBookByTitle(title); 
+   // const allBooks = await getBooksList();
+    const subtopics = await getAllSubtopics();
     
-
-    if (!books) {
+    let books : Book[] = [];
+    
+    if (!search) {
       return NextResponse.json(
         { message: 'No books found', books: [] },
         { status: 404 }
       );
+    }
+    else {
+        search.forEach((book : any) => {
+          
+          let newBook : Book = {
+            title: book.Title,
+            author: book.Author,
+            isbn: book.ISBN,
+            bookDesc: book.Description,
+            tagsList: subtopics[book.Title]
+          }
+
+          books.push(newBook)
+        }
+        )
     }
 
     // Return the found books

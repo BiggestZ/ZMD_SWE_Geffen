@@ -4,19 +4,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_ROUTES } from '../pages/api/getTags/route';
 
-interface TopicSelectorProps {
-    onSubmit: (savedTags: string[]) => void;
+interface ThisTopicSelectorProps {
+    tags: (savedTag: string) => void;
+    resetTrigger: boolean;
+    onResetHandled: () => void;
   }
 
-  const TopicSelector: React.FC<TopicSelectorProps> = ({ onSubmit }) => {
+  const TopicSelector: React.FC<ThisTopicSelectorProps> = ({ tags, resetTrigger, onResetHandled}) => {
   const [topics, setTopics] = useState<string[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>('');
   const [subtopics, setSubtopics] = useState<string[]>([]);
-  const [selectedSubtopics, setSelectedSubtopics] = useState<string[]>([]);
+  const [selectedSubtopic, setSelectedSubtopic] = useState<string>('');
   const [loadingTopics, setLoadingTopics] = useState<boolean>(false);
   const [loadingSubtopics, setLoadingSubtopics] = useState<boolean>(false);
-  const [savedTags, setSavedTags] = useState<string[]>([]);
-  const [savedSubtopics, setSavedSubtopics] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -39,6 +39,14 @@ interface TopicSelectorProps {
 
     fetchTopics();
   }, []);
+
+  useEffect(() => {
+    if (resetTrigger) {
+      setSelectedTopic('');
+      setSelectedSubtopic('');
+      onResetHandled();
+    }
+  },[resetTrigger, onResetHandled])
 
   useEffect(() => {
     if (!selectedTopic) return;
@@ -67,42 +75,22 @@ interface TopicSelectorProps {
     fetchSubtopics();
   }, [selectedTopic]);
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Selected Topic:', selectedTopic);
-    console.log('Selected Subtopics:', selectedSubtopics);
-    setSavedTags(selectedSubtopics);
-    e.preventDefault();
-    setSavedSubtopics((prevSavedSubtopics) => {
-        const newSubtopics = selectedSubtopics.filter(subtopic => !prevSavedSubtopics.includes(subtopic));
-        return [...prevSavedSubtopics, ...newSubtopics];
-      });
-      console.log('Saved Subtopics:', savedSubtopics); 
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('savedSubtopics:', savedSubtopics); 
-    onSubmit(savedSubtopics);
-    
-  };
-
+  useEffect(() => {
+    tags(selectedSubtopic)
+  }, [tags, selectedSubtopic])
+  
   return (
-    <div style={{ padding: '20px', color: 'white'  }}>
-      <h2>Topic Selector</h2>
-
-      <div >
+      <div className='max-w-xl'>
         <label>
           Select a Topic:
           {loadingTopics ? (
             <span>Loading topics...</span>
           ) : (
             <select
-              
               value={selectedTopic}
               onChange={(e) => {
                 setSelectedTopic(e.target.value);
-                setSelectedSubtopics([]);
+                setSelectedSubtopic('');
               }}
             >
               <option value="">--Choose a Topic--</option>
@@ -114,11 +102,11 @@ interface TopicSelectorProps {
             </select>
           )}
         </label>
-      </div>
 
       {selectedTopic && (
         <div>
           <h3>Subtopics for: {selectedTopic}</h3>
+          <h4>Please select only one:</h4>
           {loadingSubtopics ? (
             <span>Loading subtopics...</span>
           ) : (
@@ -128,15 +116,11 @@ interface TopicSelectorProps {
                   <div key={index}>
                     <label>
                       <input
-                        type="checkbox"
+                        type='checkbox'
                         value={subtopic}
                         onChange={(e) => {
                           const checked = e.target.checked;
-                          setSelectedSubtopics((prev) =>
-                            checked
-                              ? [...prev, subtopic]
-                              : prev.filter((item) => item !== subtopic)
-                          );
+                          setSelectedSubtopic(subtopic);
                         }}
                       />
                       {subtopic}
@@ -149,36 +133,6 @@ interface TopicSelectorProps {
             </div>
           )}
         </div>
-      )}
-
-      <button
-        onClick={handleSave}
-        style={{
-          marginTop: '20px',
-          padding: '10px 20px',
-          backgroundColor: 'blue',
-          color: 'white',
-          border: 'none',
-          cursor: 'pointer',
-        }}
-      >
-        save
-      </button>
-
-      {selectedTopic && selectedSubtopics.length > 0 && (
-        <button
-          onClick={handleSubmit}
-          style={{
-            marginTop: '20px',
-            padding: '10px 20px',
-            backgroundColor: 'blue',
-            color: 'white',
-            border: 'white',
-            cursor: 'pointer',
-          }}
-        >
-          Submit
-        </button>
       )}
     </div>
   );

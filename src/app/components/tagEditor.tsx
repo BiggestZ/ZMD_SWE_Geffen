@@ -49,7 +49,7 @@ const tagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
               padding: '5px 10px',
               border: '1px solid #ccc',
               borderRadius: '5px',
-              backgroundColor: '#000000',
+              
             }}
           >
             {tag}
