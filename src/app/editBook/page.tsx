@@ -109,7 +109,7 @@ const EditBooksPage = () => {
     
     editDetails.isbn = book.ISBN; //add isbn to editDetails for unchanged isbn
     console.log("selected isbn:", editDetails.isbn)
-    
+    console.log("book information selected in page.tsx in editBook:", book)
   };
 
 

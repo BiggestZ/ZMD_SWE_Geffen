@@ -88,22 +88,23 @@ interface TopicSelectorProps {
   };
 
   return (
-    <div style={{ padding: '20px', color: 'white'  }}>
+    <div style={{ padding: '20px', color: 'blue'}}>
       <h2>Topic Selector</h2>
 
-      <div >
+      <div style = {{color: 'blueviolet'}}>
         <label>
           Select a Topic:
           {loadingTopics ? (
             <span>Loading topics...</span>
           ) : (
             <select
-              
+              style={{ color: 'red' ,border: '1px solid gray'  }}
               value={selectedTopic}
               onChange={(e) => {
                 setSelectedTopic(e.target.value);
                 setSelectedSubtopics([]);
               }}
+              
             >
               <option value="">--Choose a Topic--</option>
               {topics.map((topic, index) => (
@@ -111,6 +112,7 @@ interface TopicSelectorProps {
                   {topic}
                 </option>
               ))}
+              
             </select>
           )}
         </label>

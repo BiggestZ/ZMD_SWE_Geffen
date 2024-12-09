@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     if (!isbn || !title || !author || !tags) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
-    console.log('Received data route.ts:', { isbn, title, author, tags });
+    console.log('Received data route.ts:', { isbn, title, author, tags ,description, language});
     console.log('Received data route.ts tags:',  tags );
     console.log('typeof tags:',  typeof tags );
     // Log the received data (database logic here)
