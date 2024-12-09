@@ -6,7 +6,7 @@ interface Book {
     title: string;
     author: string;
     isbn: string;
-    bookDesc: string;
+    Description: string;
   }
 
 // Function to search for books by title
@@ -39,11 +39,69 @@ interface Book {
 //         await connection.end();
 //     }
 // }
-// Function to search for books by title
-async function searchBookByTitle(title: string): Promise<void> {
+// Function to search for books by title 2.0
+// async function searchBookByTitle(title: string): Promise<void> {
+//     const connection = await connectToDb();
+//     if (!connection) return;
+//     try {
+//         const [bookResults] = await connection.execute(
+//             "SELECT * FROM Books WHERE Title LIKE ?",
+//             [`%${title}%`]
+//         );
+
+//         const books = bookResults as any[];
+
+//         if (books.length > 0) {
+//             console.log("Search Results:");
+//             for (const book of books) {
+//                 console.log(`Title: ${book.Title}`);
+//                 console.log(`Author: ${book.Author}`);
+//                 console.log(`ISBN: ${book.ISBN}`);
+//                 console.log(`Description: ${book.Description}`);
+
+//                 // Fetch languages for the current book
+//                 const [languageResults] = await connection.execute(
+//                     `
+//                     SELECT l.LanguageName
+//                     FROM Book_Language bl
+//                     JOIN Language l ON bl.LanguageID = l.LanguageID
+//                     WHERE bl.ISBN = ?
+//                     `,
+//                     [book.ISBN]
+//                 );
+
+//                 const languages = (languageResults as any[]).map((lang) => lang.LanguageName);
+                
+//                 return {
+//                     book: {
+//                         title: book.Title,
+//                         author: book.Author,
+//                         isbn: book.ISBN,
+//                         description: book.Description || "No Description Avaliable",
+//                     },
+//                     languages
+//                 };
+
+//                 console.log("-".repeat(40));
+//             }
+//         } else {
+//             console.log("No books found with that title.");
+//         }
+//     } catch (error) {
+//         console.error(`Error searching for book: ${(error as Error).message}`);
+//     } finally {
+//         await connection.end();
+//     }
+// }
+
+async function searchBookByTitle(title: string): Promise<{ books: { title: string; author: string; isbn: string; description: string; languages: string[] }[] } | null> {
     const connection = await connectToDb();
-    if (!connection) return;
+    if (!connection) {
+        console.error("Failed to connect to the database.");
+        return null;
+    }
     try {
+        // Fetch books matching the title
         const [bookResults] = await connection.execute(
             "SELECT * FROM Books WHERE Title LIKE ?",
             [`%${title}%`]
@@ -51,39 +109,41 @@ async function searchBookByTitle(title: string): Promise<void> {
 
         const books = bookResults as any[];
 
-        if (books.length > 0) {
-            console.log("Search Results:");
-            for (const book of books) {
-                console.log(`Title: ${book.Title}`);
-                console.log(`Author: ${book.Author}`);
-                console.log(`ISBN: ${book.ISBN}`);
-                console.log(`Description: ${book.BookDesc}`);
-
-                // Fetch languages for the current book
-                const [languageResults] = await connection.execute(
-                    `
-                    SELECT l.LanguageName
-                    FROM Book_Language bl
-                    JOIN Language l ON bl.LanguageID = l.LanguageID
-                    WHERE bl.ISBN = ?
-                    `,
-                    [book.ISBN]
-                );
-
-                const languages = languageResults as any[];
-                if (languages.length > 0) {
-                    console.log("Languages: " + languages.map(lang => lang.LanguageName).join(", "));
-                } else {
-                    console.log("Languages: None found.");
-                }
-
-                console.log("-".repeat(40));
-            }
-        } else {
+        if (books.length === 0) {
             console.log("No books found with that title.");
+            return { books: [] };
         }
+
+        const booksWithLanguages: { title: string; author: string; isbn: string; description: string; languages: string[] }[] = [];
+
+        for (const book of books) {
+            // Fetch languages for each book
+            const [languageResults] = await connection.execute(
+                `
+                SELECT l.LanguageName
+                FROM Book_Language bl
+                JOIN Language l ON bl.LanguageID = l.LanguageID
+                WHERE bl.ISBN = ?
+                `,
+                [book.ISBN]
+            );
+
+            const languages = (languageResults as any[]).map((lang) => lang.LanguageName);
+
+            booksWithLanguages.push({
+                title: book.Title,
+                author: book.Author,
+                isbn: book.ISBN,
+                description: book.Description || "No Description Available",
+                languages,
+            });
+        }
+
+        // Return all books and their associated languages
+        return { books: booksWithLanguages };
     } catch (error) {
         console.error(`Error searching for book: ${(error as Error).message}`);
+        return null;
     } finally {
         await connection.end();
     }
@@ -1094,9 +1154,6 @@ async function getBookByTitle(title: string): Promise<any[]> {
         await connection.end();
     }
 }
-
-
-//================================================================================================
 
 // fuction for inputing edited books into database
 async function inputEditedBook(searchTerm: string): Promise<void> {
