@@ -55,14 +55,17 @@ export default function Home() {
       if (response.status === 200) {
         console.log('Form submitted successfully:', response.data);
         resetForm(); // Optionally reset the form
+        alert("book has been added successfully");
       } else {
         console.error('Error submitting form 1:', response.statusText);
       }
     } catch (error) {
       console.error('Error submitting form 2:', error);
+      alert("ERROR book has NOT been saved");
       if (axios.isAxiosError(error)) {
         // This is an Axios error
         console.error('Axios Error here:', error.message);
+        alert("ERROR book has NOT been saved");
       }
     
       

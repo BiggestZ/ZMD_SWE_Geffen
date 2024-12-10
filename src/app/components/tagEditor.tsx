@@ -73,7 +73,7 @@ const tagEditor: React.FC<TagEditorProps> = ({ initialTags, onTagsUpdate }) => {
         ))}
       </div>
 
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px',border: '1px solid #ccc'  }}>
         <input
           type="text"
           value={newTag}

@@ -17,7 +17,6 @@ const EditBooksPage = () => {
     Title: '',
     Author: '',
     Description: '',
-    description: '',
     Language: '',
     updatedTags: [],
 });
@@ -104,6 +103,7 @@ const EditBooksPage = () => {
   // Select a book to edit
   const handleSelectBook = (book: any) => {
     console.log("book selected in page.tsx in editBook:", book)
+    
     setSelectedBook(book);
     setInitialTitle(book.Title);
     setEditDetails(book); // Pre-fill with the book's current details
@@ -185,6 +185,7 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
         initialTitle,
     };
 }
+  console.log('Payload in editBook page:', payload);
 
   try {
       const response = await axios.post(API_ROUTES.SAVE_BOOK, payload);
@@ -193,6 +194,9 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
 
   } catch (error) {
       console.error('Error saving book:', error);
+  }
+  finally{
+    alert("book has been saved");
   }
 
 
@@ -267,35 +271,34 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
                 <input
                     id="Title"
                     type="text"
-                    //value={editDetails.description !== undefined ? editDetails.description : selectedBook.Description}
                     value={editDetails.Title !== undefined ? editDetails.Title:  selectedBook.title}
                     onChange={(e) => handleEditChange('Title', e.target.value)}
                     placeholder={selectedBook.title}
-                    style={{ padding: '10px', fontSize: '16px', width: '300px' }}
+                    style={{ padding: '10px', fontSize: '16px', width: '300px',border: '1px solid #ccc' }}
                 />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                <label htmlFor="author" style={{ marginRight: '10px', fontSize: '16px' }}>Author:</label>
+                <label htmlFor="Author" style={{ marginRight: '10px', fontSize: '16px' }}>Author:</label>
                 <input
-                    id="author"
+                    id="Author"
                     type="text"
                     value={editDetails.Author !== undefined ? editDetails.Author: selectedBook.author}
                     onChange={(e) => handleEditChange('Author', e.target.value)}
                     placeholder={selectedBook.author}
-                    style={{ padding: '10px', fontSize: '16px', width: '300px' }}
+                    style={{ padding: '10px', fontSize: '16px', width: '300px' ,border: '1px solid #ccc' }}
                 />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 <label htmlFor="isbn" style={{ marginRight: '10px', fontSize: '16px' }}>ISBN:</label>
                 <input
-                    id="isbn"
+                    id="ISBN"
                     type="text"
-                    value={editDetails.isbn !== undefined ? editDetails.isbn: selectedBook.isbn}
-                    onChange={(e) => handleEditChange('isbn', e.target.value)}
+                    value={editDetails.ISBN !== undefined ? editDetails.ISBN: selectedBook.isbn}
+                    onChange={(e) => handleEditChange('ISBN', e.target.value)}
                     placeholder={selectedBook.isbn}
                     pattern="\d{13}" // Regex pattern to allow only 13 digits
                     maxLength={13} // Limit input to 13 characters
-                    style={{ padding: '10px', fontSize: '16px', width: '300px' }}
+                    style={{ padding: '10px', fontSize: '16px', width: '300px',border: '1px solid #ccc'  }}
                 />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
@@ -307,7 +310,7 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
                     onChange={(e) => handleEditChange('Language', e.target.value)}
                     placeholder={selectedBook.languages}
                     
-                    style={{ padding: '10px', fontSize: '16px', width: '300px' }}
+                    style={{ padding: '10px', fontSize: '16px', width: '300px',border: '1px solid #ccc'  }}
                 />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
@@ -317,7 +320,7 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
                 value={editDetails.Description !== undefined ? editDetails.Description : selectedBook.description}
                 onChange={(e) => handleEditChange('Description', e.target.value)}
                 placeholder={selectedBook.description}
-                style={{ padding: '10px', fontSize: '16px', width: '300px', height: '100px', resize: 'vertical' }} // Adjust width and height
+                style={{ padding: '10px', fontSize: '16px', width: '300px', height: '100px', resize: 'vertical',border: '1px solid #ccc'  }} // Adjust width and height
             />
         </div>
 
@@ -340,21 +343,21 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
             <button
               type="button"
               onClick={handleSave}
-              style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}
+              style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' ,border: '1px solid #ccc' }}
             >
               Save Changes
             </button>
             <button
               type="button"
               onClick={() => setSelectedBook(null)}
-              style={{ padding: '10px', fontSize: '16px', cursor: 'pointer', backgroundColor: 'lightgray' }}
+              style={{ padding: '10px', fontSize: '16px', cursor: 'pointer', backgroundColor: 'lightgray',border: '1px solid #ccc'  }}
             >
               Cancel
             </button>
             
 
           </form>
-          {message && <p style={{ marginTop: '10px', color: message.includes('success') ? 'green' : 'red' }}>{message}</p>}
+          {message && <p style={{ marginTop: '10px', color: message.includes('success') ? 'green' : 'red' ,border: '1px solid #ccc' }}>{message}</p>}
         </div>
       )}
     </div>

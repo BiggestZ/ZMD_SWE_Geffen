@@ -171,6 +171,7 @@ async function addBook2(
     if (!connection) return;
 
     try {
+        console.log(`data in addBook2 book_entry: ${title}, ${author}, ${isbn}, ${description}, ${language}, ${subtopics}`);
         // Validate ISBN length
         if (isbn.length !== 13 || !/^\d+$/.test(isbn)) {
             console.log("Error: ISBN must be exactly 13 characters long and contain only numbers.");
