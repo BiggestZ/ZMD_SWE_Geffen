@@ -10,6 +10,7 @@ export const API_ROUTES = {
 import connectToDB from "../../../components/connectToDB"
 import { addSubtopic, checkTopicSubtopic } from '../../../components/subtopics';
 import { NextResponse } from 'next/server';
+import { addTopic} from '../../../components/topics';
 
 
 export async function POST(req: Request) {
@@ -45,6 +46,7 @@ export async function POST(req: Request) {
       }
       else if (topic == tag) 
         {
+          addTopic(topic)
           addSubtopic(topic,tag)
           return NextResponse.json({ message: 'Topic added to the database' },{status: 520});
           

@@ -109,7 +109,7 @@ const TagActionsPage = () => {
           type="text"
           value={tag}
           onChange={(e) => setTag(e.target.value)}
-          placeholder="Enter tag name"
+          placeholder="Enter subtopic name"
           style={{ padding: '10px', fontSize: '16px',border: '1px solid gray' }}
         />
         <button onClick={handleAddTag} style={{ padding: '10px', fontSize: '16px', cursor: 'pointer', background: 'green', color: 'white' }}>
