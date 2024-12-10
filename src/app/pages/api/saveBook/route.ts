@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     // console.log('Received isbn route.ts in saveBook:', { ISBN });
 
   console.log('Received editDetails route.ts in saveBook:', { editDetails });
-    
+  //console.log('language[0]:', language[0]);
   await dropBook(isbn);
   console.log('Dropped book: ISBN', isbn);
   
@@ -48,8 +48,8 @@ export async function POST(req: Request) {
   const titleToUse = Title || title;
   const authorToUse = Author || author;
   const descriptionToUse = Description || description ;
-  const languageToUse = Language || language[0];
-
+  const languageToUse = Language || language;
+  
   console.log('isbnToUse:', isbnToUse);
   if (updatedTags && updatedTags.length > 0) {
     
