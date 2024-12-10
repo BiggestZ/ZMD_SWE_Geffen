@@ -166,6 +166,11 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
     console.log('updatedTags in editBook::', updatedTags); // Ensure updatedTags is defined in your component
     console.log('initialTags in editBook::', initialTags); // Ensure selectedBook is defined in your component
 
+    editDetails.isbn = selectedBook.isbn; //add isbn to editDetails for unchanged isbn
+    editDetails.title = selectedBook.title; //add title to editDetails for unchanged title
+    editDetails.author = selectedBook.author; //add author to editDetails for unchanged author
+    editDetails.description = selectedBook.description; //add description to editDetails for unchanged description
+    editDetails.language = selectedBook.languages; //add language to editDetails for unchanged language
    
     
     let payload: Payload;
