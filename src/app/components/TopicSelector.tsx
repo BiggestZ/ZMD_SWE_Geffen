@@ -82,6 +82,7 @@ interface TopicSelectorProps {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    handleSave(e);
     console.log('savedSubtopics:', savedSubtopics); 
     onSubmit(savedSubtopics);
     
