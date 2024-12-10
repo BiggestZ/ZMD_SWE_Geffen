@@ -94,7 +94,7 @@ const TagActionsPage = () => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto', textAlign: 'center',border: '1px solid gray' }}>
       <h1>Tag Actions</h1>
       <form style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         
@@ -103,14 +103,14 @@ const TagActionsPage = () => {
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
           placeholder="Enter topic (cap sensitive)"
-          style={{ padding: '10px', fontSize: '16px' }}
+          style={{ padding: '10px', fontSize: '16px',border: '1px solid gray' }}
         />
         <input
           type="text"
           value={tag}
           onChange={(e) => setTag(e.target.value)}
           placeholder="Enter tag name"
-          style={{ padding: '10px', fontSize: '16px' }}
+          style={{ padding: '10px', fontSize: '16px',border: '1px solid gray' }}
         />
         <button onClick={handleAddTag} style={{ padding: '10px', fontSize: '16px', cursor: 'pointer', background: 'green', color: 'white' }}>
           Add Tag

@@ -24,6 +24,7 @@ const DeleteBookPage = () => {
 
       if (response.status === 200) {
         setMessage('Book deleted successfully!');
+        alert("Book deleted successfully!");
       } else {
         setMessage('Book not found or could not be deleted.');
       }
@@ -37,9 +38,9 @@ const DeleteBookPage = () => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
+    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto', textAlign: 'center' , border: '1px solid gray'}}>
       <h1>Delete Book</h1>
-      <form onSubmit={handleDelete} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <form onSubmit={handleDelete} style={{ display: 'flex', flexDirection: 'column', gap: '10px', border: '1px solid gray' }}>
         <input
           type="text"
           value={title}
@@ -47,7 +48,7 @@ const DeleteBookPage = () => {
           placeholder="Enter book title or ISBN"
           style={{ padding: '10px', fontSize: '16px' }}
         />
-        <button type="submit" style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}>
+        <button type="submit" style={{ padding: '10px', fontSize: '16px', cursor: 'pointer', border: '1px solid gray' }}>
           Delete Book
         </button>
       </form>

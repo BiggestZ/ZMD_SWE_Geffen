@@ -207,20 +207,20 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
 
   return (
     
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', textAlign: 'center', border: '1px solid gray' }}>
       <h1>Edit Books</h1>
       
       {!selectedBook ? (
         <>
-          <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <form onSubmit={handleSearch} style={{ display: 'flex', flexDirection: 'column', gap: '10px' , border: '1px solid gray'}}>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by title, author, or ISBN"
+              placeholder="Search by title"
               style={{ padding: '10px', fontSize: '16px' }}
             />
-            <button type="submit" style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}>
+            <button type="submit" style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' , border: '1px solid gray'}}>
               Search
             </button>
           </form>

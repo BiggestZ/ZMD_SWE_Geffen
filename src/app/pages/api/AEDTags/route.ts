@@ -41,21 +41,28 @@ export async function POST(req: Request) {
       if ((topicSubtopicIds.topicId == null) && (topicSubtopicIds.subtopicId == null)) 
       {
         //server error
-        return NextResponse.json({ error: 'Server Error, Try Again' },{status: 510});
+        return NextResponse.json({ error: 'Error, Try Again' },{status: 510});
       }
-      else if (topicSubtopicIds.topicId == null) 
+      else if (topic == tag) 
+        {
+          addSubtopic(topic,tag)
+          return NextResponse.json({ message: 'Topic added to the database' },{status: 520});
+          
+        }
+      else if (topicSubtopicIds.topicId == null && topicSubtopicIds.subtopicId != null) 
       {
+        //addSubtopic(topic, tag)
         return NextResponse.json({ error: 'Topic doesnt exist in the database' },{status: 520});
         //addSubtopic(topic, tag)
         //topicId, subtopicId
       }
-      else if (topicSubtopicIds.subtopicId != null){
+      else if (topicSubtopicIds.topicId != null && topicSubtopicIds.subtopicId != null){
       
-        return NextResponse.json({ error: 'Tag already exists in the topic.' },{status: 400});
+        return NextResponse.json({ error: 'Already in the DataBase' },{status: 400});
       }
         else if (topicSubtopicIds.topicId != null && topicSubtopicIds.subtopicId == null) 
         {
-            console.log('addSubtopic(topic, tag)')
+            addSubtopic(topic, tag)
         }
       return NextResponse.json({ message: 'Form data saved successfully!' });
       
