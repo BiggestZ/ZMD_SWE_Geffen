@@ -13,7 +13,7 @@ export default function Home() {
   const [description, setDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [language, setLanguage] = useState('');
-
+  const [message, setMessage] = useState(''); // Added state for message
   const [isMounted, setIsMounted] = useState(false); // This will ensure the component only renders client-side
 
   // Ensure client-side-only behavior for hydration fix
@@ -56,16 +56,20 @@ export default function Home() {
         console.log('Form submitted successfully:', response.data);
         resetForm(); // Optionally reset the form
         alert("book has been added successfully");
+        setMessage("Book has been added successfully!"); // Set success message
       } else {
         console.error('Error submitting form 1:', response.statusText);
+        setMessage("Error submitting form."); // Set error message
       }
     } catch (error) {
       console.error('Error submitting form 2:', error);
       alert("ERROR book has NOT been saved");
+      setMessage("Error submitting form."); // Set error message
       if (axios.isAxiosError(error)) {
         // This is an Axios error
         console.error('Axios Error here:', error.message);
         alert("ERROR book has NOT been saved");
+        setMessage("Error submitting form."); // Set error message
       }
     
       
@@ -79,6 +83,7 @@ export default function Home() {
     setAuthor('');
     setDescription('');
     setSelectedTags([]); // Clear selected tags
+    setMessage("Form has been reset."); // Set reset message
   };
 
   const handleResetHandled = () => {
@@ -87,12 +92,13 @@ export default function Home() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Add New Test</h1>
+      <h1>Add New Book Page</h1>
       <label>
        ISBN:
        <input
         type="text"
         id="isbn"
+        style = {{border: '1px solid #ccc'}}
         value={isbn}
         pattern="\d{13}"
         onChange={(e) => {
@@ -109,6 +115,7 @@ export default function Home() {
           type="text"
           title="title"
           value={title}
+          style = {{border: '1px solid #ccc'}}
           onChange={(e) => setTitle(e.target.value)}
         />
       </label>
@@ -117,6 +124,7 @@ export default function Home() {
         <input
           type="text"
           name="name"
+          style = {{border: '1px solid #ccc'}}
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
         />
@@ -127,6 +135,7 @@ export default function Home() {
           type="text"
           name="name"
           value={language}
+          style = {{border: '1px solid #ccc'}}
           onChange={(e) => setLanguage(e.target.value)}
         />
       </label>
@@ -163,6 +172,7 @@ export default function Home() {
       /> */}
       <TopicSelector 
       onSubmit={handleTopicSelectorSubmit}
+      
       />
 
       <hr />
@@ -187,6 +197,7 @@ export default function Home() {
         }}
         
         >Submit form</button>
+      {message && <p style={{ marginTop: '20px', color: 'green' }}>{message}</p>} {/* Added message display */}
     </form>
   );
 }

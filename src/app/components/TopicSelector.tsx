@@ -89,17 +89,17 @@ interface TopicSelectorProps {
   };
 
   return (
-    <div style={{ padding: '20px', color: 'blue'}}>
+    <div style={{ border: '1px solid gray' }}>
       <h2>Topic Selector</h2>
 
-      <div style = {{color: 'blueviolet'}}>
+      <div >
         <label>
           Select a Topic:
           {loadingTopics ? (
-            <span>Loading topics...</span>
+            <span>Loading topics...  </span>
           ) : (
             <select
-              style={{ color: 'red' ,border: '1px solid gray'  }}
+              style={{ border: '1px solid gray'  }}
               value={selectedTopic}
               onChange={(e) => {
                 setSelectedTopic(e.target.value);

@@ -24,8 +24,8 @@ const NavBarLinks: React.FC = () => {
           <button onClick={() => router.push('/deleteBook')} style={buttonStyle}><FileMinus size={30} />Delete Book</button>
           <button onClick={() => router.push('/editBook')} style={buttonStyle}><Notebook size={30} />Edit Book</button>
           <button onClick={() => router.push('/AED_Tag')} style={buttonStyle}><Notebook size={30} />Add, Delete tag</button>
-          <button onClick={() => router.push('/testPage')} style={buttonStyle}><Notebook size={30} />test page</button>
-          <button onClick={() => router.push('/testPage2')} style={buttonStyle}><Notebook size={30} />test page 2</button>
+          {/* <button onClick={() => router.push('/testPage')} style={buttonStyle}><Notebook size={30} />test page</button>
+          <button onClick={() => router.push('/testPage2')} style={buttonStyle}><Notebook size={30} />test page 2</button> */}
         </div>
       );
     };
