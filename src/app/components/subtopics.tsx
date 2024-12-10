@@ -49,12 +49,6 @@ async function checkTopicSubtopic(topicName: string, subtopicName: string, conne
         // Check if topic exists
         const [topicRows] = await connection.execute("SELECT TopicID FROM Topics WHERE TopicName = ?", [topicName]);
         const topic = (topicRows as any[])[0];
-
-        // If topic does not exist, return null
-        if (!topic) {
-            console.log(`Topic '${topicName}' does not exist in the database.`);
-            return { topicId: null, subtopicId: null }; // Topic does not exist
-        }
         
         // Get the topic ID
         const topicId = topic.TopicID;
@@ -62,12 +56,6 @@ async function checkTopicSubtopic(topicName: string, subtopicName: string, conne
         // Check if subtopic exists and is linked to the topic
         const [subtopicRows] = await connection.execute("SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ? AND TopicID = ?", [subtopicName, topicId]);
         const subtopic = (subtopicRows as any[])[0];
-
-        // If subtopic does not exist, return null
-        if (!subtopic) {
-            console.log(`Subtopic '${subtopicName}' under topic '${topicName}' does not exist in the database.`);
-            return { topicId, subtopicId: null }; // Subtopic does not exist
-        }
 
         // Set the subtopic ID
         const subtopicId = subtopic.SubtopicID;

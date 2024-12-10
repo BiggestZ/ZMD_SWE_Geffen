@@ -41,20 +41,24 @@ export async function POST(req: Request) {
 
       if ((topicSubtopicIds.topicId == null) && (topicSubtopicIds.subtopicId == null)) 
       {
-        //server error
-        return NextResponse.json({ error: 'Error, Try Again' },{status: 510});
-      }
-      else if (topic == tag) 
-        {
+        if(topic == tag){
           addTopic(topic)
           addSubtopic(topic,tag)
-          return NextResponse.json({ message: 'Topic added to the database' },{status: 520});
           
         }
+        //server error
+        return NextResponse.json({ message: 'Topic added to the database' },{status: 520});
+      }
+      // else if (topic == tag) 
+      //   {
+      //     addTopic(topic)
+      //     addSubtopic(topic,tag)
+      //     return NextResponse.json({ message: 'Topic added to the database' },{status: 520});
+      //   }
       else if (topicSubtopicIds.topicId == null && topicSubtopicIds.subtopicId != null) 
       {
         //addSubtopic(topic, tag)
-        return NextResponse.json({ error: 'Topic doesnt exist in the database' },{status: 520});
+        return NextResponse.json({ error: 'Topic doesnt exist in the database' },{status: 530});
         //addSubtopic(topic, tag)
         //topicId, subtopicId
       }
