@@ -1,5 +1,6 @@
 import connectToDb from './connectToDB';
 import mysql, {RowDataPacket} from 'mysql2/promise';
+import { addTopic } from './topics';
 
 interface Book {
     title: string;
@@ -49,6 +50,12 @@ async function checkTopicSubtopic(topicName: string, subtopicName: string, conne
         // Check if topic exists
         const [topicRows] = await connection.execute("SELECT TopicID FROM Topics WHERE TopicName = ?", [topicName]);
         const topic = (topicRows as any[])[0];
+
+        // If topic does not exist, return null for both IDs
+        if (!topic) {
+            console.log(`No topic found with the name '${topicName}'.`);
+            return { topicId: null, subtopicId: null };
+        }
         
         // Get the topic ID
         const topicId = topic.TopicID;
@@ -56,6 +63,12 @@ async function checkTopicSubtopic(topicName: string, subtopicName: string, conne
         // Check if subtopic exists and is linked to the topic
         const [subtopicRows] = await connection.execute("SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ? AND TopicID = ?", [subtopicName, topicId]);
         const subtopic = (subtopicRows as any[])[0];
+
+        // If subtopic does not exist, return null for subtopic ID
+        if (!subtopic) {
+            console.log(`No subtopic found with the name '${subtopicName}' under topic '${topicName}'.`);
+            return { topicId, subtopicId: null };
+        }
 
         // Set the subtopic ID
         const subtopicId = subtopic.SubtopicID;
@@ -80,13 +93,25 @@ async function addSubtopic(topicName: string, subtopicName: string): Promise<voi
         const topic = (topicResult as any[])[0];
         if (!topic) {
             console.log(`No topic found with the name '${topicName}'.`);
-            return;
+            await addTopic(topicName);
+            console.log(`Topic '${topicName}' added to the database.`);
         }
+
+        const [topicResult2] = await connection.execute(
+            "SELECT TopicID FROM Topics WHERE TopicName = ?",
+            [topicName]
+        );
+
+        const topic2 = (topicResult2 as any[])[0];
+        console.log("This is topicName:", topicName, "Yay.");
+        console.log("This is topic:", topic, "Yay.");
+        console.log('This is topic2:', topic2, 'Yay.');
+        console.log('This is topic2 ID:', topic2.TopicID, 'Yay.');
 
         // Check if subtopic already exists
         const [subtopicResult] = await connection.execute(
             "SELECT SubtopicID FROM Subtopics WHERE SubtopicName = ? AND TopicID = ?",
-            [subtopicName, topic.TopicID]
+            [subtopicName, topic2.TopicID]
         );
 
         if ((subtopicResult as any[]).length > 0) {
@@ -97,7 +122,7 @@ async function addSubtopic(topicName: string, subtopicName: string): Promise<voi
         // Insert the new subtopic
         await connection.execute(
             "INSERT INTO Subtopics (SubtopicName, TopicID) VALUES (?, ?)",
-            [subtopicName, topic.TopicID]
+            [subtopicName, topic2.TopicID]
         );
 
         console.log(`Subtopic '${subtopicName}' added under topic '${topicName}'.`);

@@ -42,12 +42,11 @@ export async function POST(req: Request) {
       if ((topicSubtopicIds.topicId == null) && (topicSubtopicIds.subtopicId == null)) 
       {
         if(topic == tag){
-          addTopic(topic)
           addSubtopic(topic,tag)
           
         }
         //server error
-        return NextResponse.json({ message: 'Topic added to the database' },{status: 520});
+        return NextResponse.json({ message: 'Topic added to the database' },{status: 200});
       }
       // else if (topic == tag) 
       //   {
