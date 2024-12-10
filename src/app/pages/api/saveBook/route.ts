@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const { editDetails } = body as Payload;
-    const { ISBN, Title, Author, Description, isbn, Language } = editDetails;
+    const { title, author, isbn, description, language,Title, Author, ISBN, Description, Language } = editDetails;
     let initialTags: string[] | undefined;
     let updatedTags: string[] | undefined;
    
@@ -45,19 +45,24 @@ export async function POST(req: Request) {
   console.log('Dropped book: ISBN', isbn);
   
   const isbnToUse = ISBN || isbn;
+  const titleToUse = Title || title;
+  const authorToUse = Author || author;
+  const descriptionToUse = Description || description ;
+  const languageToUse = Language || language[0];
+
   console.log('isbnToUse:', isbnToUse);
   if (updatedTags && updatedTags.length > 0) {
     
     // console.log('Received updatedTags route.ts in saveBook::', updatedTags );
     // console.log('typeof updatedTags in route.ts in saveBook::', typeof updatedTags );
     
-    addBook2(Title, Author, isbnToUse, Description, Language, updatedTags);
+    addBook2(titleToUse, authorToUse, isbnToUse, descriptionToUse, languageToUse, updatedTags);
     console.log('Added book in route.ts in saveBook (updatedTags):', Title, Author, isbnToUse, Description, Language, updatedTags);
   } else {
     // console.log('Received initialTags route.ts in saveBook::', { initialTags });
     if (initialTags) {
       
-      addBook2(Title, Author, isbnToUse, Description, Language, initialTags);
+      addBook2(titleToUse, authorToUse, isbnToUse, descriptionToUse, languageToUse, initialTags);
       console.log('Added book in route.ts in saveBook (initialTags):', Title, Author, isbnToUse, Description, Language, updatedTags);
     }
   }
