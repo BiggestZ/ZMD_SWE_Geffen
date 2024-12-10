@@ -48,7 +48,9 @@ export async function POST(req: Request) {
   const titleToUse = Title || title;
   const authorToUse = Author || author;
   const descriptionToUse = Description || description ;
-  const languageToUse = Language || language;
+  const languageToUse = Language || (Array.isArray(language) ? language[0] : language);
+  console.log('language to use:', languageToUse);
+  console.log('language:', typeof language);
   
   console.log('isbnToUse:', isbnToUse);
   if (updatedTags && updatedTags.length > 0) {
