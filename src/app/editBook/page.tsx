@@ -5,6 +5,7 @@ import axios from 'axios';
 import { API_ROUTES } from '../pages/api/editBook/route';
 //import { Book } from "@/types";
 import TagEditor  from "../components/tagEditor";
+import { title } from 'process';
 //import  handleTagChange from "../components/tagEditor";
 
 
@@ -18,6 +19,11 @@ const EditBooksPage = () => {
     Author: '',
     Description: '',
     Language: '',
+    isbn: '',
+    title: '',
+    author: '',
+    description: '',
+    language: '',
     updatedTags: [],
 });
   const [message, setMessage] = useState('');
@@ -165,7 +171,7 @@ type Payload = PayloadWithInitialTags | PayloadWithUpdatedTags;
     console.log('editDetails in editBook:', editDetails); // Ensure editDetails is defined in your component
     console.log('updatedTags in editBook::', updatedTags); // Ensure updatedTags is defined in your component
     console.log('initialTags in editBook::', initialTags); // Ensure selectedBook is defined in your component
-
+    console.log('selectedBook.title: ', selectedBook.title); // Ensure selectedBook is defined in your component
     editDetails.isbn = selectedBook.isbn; //add isbn to editDetails for unchanged isbn
     editDetails.title = selectedBook.title; //add title to editDetails for unchanged title
     editDetails.author = selectedBook.author; //add author to editDetails for unchanged author
